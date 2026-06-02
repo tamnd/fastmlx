@@ -301,15 +301,16 @@ func (c *Client) cleanup() {
 	}
 }
 
-// dialReal opens the configured transport. Only stdio is wired today; the SSE
-// and streamable-http transports are HTTP variants of the same JSON-RPC layer
-// and land next.
+// dialReal opens the configured transport. Stdio launches a subprocess; the SSE
+// and streamable-http transports are HTTP variants of the same JSON-RPC layer.
 func dialReal(ctx context.Context, cfg ServerConfig) (transport, error) {
 	switch cfg.Transport {
 	case TransportStdio:
 		return dialStdio(ctx, cfg)
-	case TransportSSE, TransportStreamableHTTP:
-		return nil, fmt.Errorf("%s transport is not yet implemented", cfg.Transport)
+	case TransportSSE:
+		return dialSSE(ctx, cfg)
+	case TransportStreamableHTTP:
+		return dialStreamableHTTP(ctx, cfg)
 	default:
 		return nil, fmt.Errorf("unknown transport: %s", cfg.Transport)
 	}

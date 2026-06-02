@@ -190,11 +190,21 @@ func TestClientDisconnect(t *testing.T) {
 	}
 }
 
-func TestDialRealUnsupportedTransports(t *testing.T) {
-	for _, tp := range []Transport{TransportSSE, TransportStreamableHTTP} {
-		_, err := dialReal(context.Background(), ServerConfig{Name: "x", Transport: tp, URL: "http://x"})
-		if err == nil {
-			t.Errorf("%s: expected not-implemented error", tp)
-		}
+func TestDialRealUnknownTransport(t *testing.T) {
+	_, err := dialReal(context.Background(), ServerConfig{Name: "x", Transport: Transport("carrier-pigeon")})
+	if err == nil {
+		t.Error("expected an error for an unknown transport")
 	}
+}
+
+func TestDialRealStreamableHTTPNoUpfrontConnect(t *testing.T) {
+	// streamable-http connects lazily on the first request, so dialing builds a
+	// transport without contacting the (here unreachable) server.
+	tr, err := dialReal(context.Background(), ServerConfig{
+		Name: "x", Transport: TransportStreamableHTTP, URL: "http://127.0.0.1:1/mcp",
+	})
+	if err != nil {
+		t.Fatalf("dial should not connect: %v", err)
+	}
+	_ = tr.close()
 }
