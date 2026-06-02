@@ -89,13 +89,6 @@ func (rt *Router) ListModels(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Embeddings is a stub until the embedding engine lands (spec milestone).
-func (rt *Router) Embeddings(w http.ResponseWriter, r *http.Request) {
-	writeError(w, http.StatusNotImplemented,
-		"embeddings are served by the embedding engine, which lands in a later milestone",
-		"not_implemented_error", "")
-}
-
 // resolveSampling applies the sampling cascade: request param -> engine defaults
 // -> hardcoded fallback. Only fields explicitly set on the request override the
 // defaults (pointer fields distinguish unset from zero).

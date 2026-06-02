@@ -1,0 +1,137 @@
+{
+  "responses": [
+    {
+      "model": "all-MiniLM-L6-v2",
+      "embeddings": [
+        [
+          0.1,
+          0.2,
+          -0.3
+        ],
+        [
+          1.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "total_tokens": 7,
+      "encoding_format": "float",
+      "dimensions": null,
+      "expected": "{\"object\":\"list\",\"data\":[{\"object\":\"embedding\",\"index\":0,\"embedding\":[0.1,0.2,-0.3]},{\"object\":\"embedding\",\"index\":1,\"embedding\":[1.0,0.0,-1.0]}],\"model\":\"all-MiniLM-L6-v2\",\"usage\":{\"prompt_tokens\":7,\"total_tokens\":7}}"
+    },
+    {
+      "model": "bge-small",
+      "embeddings": [
+        [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "total_tokens": 3,
+      "encoding_format": "base64",
+      "dimensions": null,
+      "expected": "{\"object\":\"list\",\"data\":[{\"object\":\"embedding\",\"index\":0,\"embedding\":\"AAAAPwAAAD8AAAA/AAAAPw==\"}],\"model\":\"bge-small\",\"usage\":{\"prompt_tokens\":3,\"total_tokens\":3}}"
+    },
+    {
+      "model": "trunc-model",
+      "embeddings": [
+        [
+          0.6,
+          0.8,
+          0.1,
+          0.2,
+          0.3
+        ]
+      ],
+      "total_tokens": 4,
+      "encoding_format": "float",
+      "dimensions": 2,
+      "expected": "{\"object\":\"list\",\"data\":[{\"object\":\"embedding\",\"index\":0,\"embedding\":[0.6,0.8]}],\"model\":\"trunc-model\",\"usage\":{\"prompt_tokens\":4,\"total_tokens\":4}}"
+    },
+    {
+      "model": "single",
+      "embeddings": [
+        [
+          0.123456789,
+          -0.987654321
+        ]
+      ],
+      "total_tokens": 2,
+      "encoding_format": "float",
+      "dimensions": null,
+      "expected": "{\"object\":\"list\",\"data\":[{\"object\":\"embedding\",\"index\":0,\"embedding\":[0.123456789,-0.987654321]}],\"model\":\"single\",\"usage\":{\"prompt_tokens\":2,\"total_tokens\":2}}"
+    }
+  ],
+  "base64": [
+    {
+      "input": [
+        0.1,
+        0.2,
+        0.3
+      ],
+      "expected": "zczMPc3MTD6amZk+"
+    },
+    {
+      "input": [
+        1.0,
+        -1.0
+      ],
+      "expected": "AACAPwAAgL8="
+    },
+    {
+      "input": [
+        0.0
+      ],
+      "expected": "AAAAAA=="
+    }
+  ],
+  "truncate": [
+    {
+      "input": [
+        0.6,
+        0.8,
+        0.1
+      ],
+      "dimensions": 2,
+      "expected": [
+        0.6,
+        0.8
+      ]
+    },
+    {
+      "input": [
+        3.0,
+        4.0
+      ],
+      "dimensions": 1,
+      "expected": [
+        1.0
+      ]
+    },
+    {
+      "input": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "dimensions": 5,
+      "expected": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "input": [
+        0.0,
+        0.0
+      ],
+      "dimensions": 1,
+      "expected": [
+        0.0
+      ]
+    }
+  ]
+}
