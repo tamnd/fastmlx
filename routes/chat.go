@@ -10,6 +10,7 @@ import (
 
 	"github.com/tamnd/fastmlx/api"
 	"github.com/tamnd/fastmlx/engine"
+	"github.com/tamnd/fastmlx/mcp"
 )
 
 // ChatCompletions handles POST /v1/chat/completions (streaming + non-streaming).
@@ -35,6 +36,11 @@ func (rt *Router) ChatCompletions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	tools := toEngineTools(req.Tools)
+	if rt.mcp != nil {
+		// With an MCP manager attached, the model sees the discovered MCP tools
+		// merged with any user-supplied tools (user tools win on a name clash).
+		tools = mergeMCPTools(rt.mcp.AllTools(), req.Tools)
+	}
 	prompt, err := rt.eng.BuildPrompt(msgs, tools, engine.PromptOptions{AddGenerationPrompt: true})
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error(), "internal_error", "")
@@ -179,6 +185,61 @@ func toEngineTools(tools []api.Tool) []engine.Tool {
 	out := make([]engine.Tool, len(tools))
 	for i, t := range tools {
 		out[i] = engine.Tool{Name: t.Function.Name, Description: t.Function.Description, Parameters: t.Function.Parameters}
+	}
+	return out
+}
+
+// defaultMCPToolSchema is the empty-object schema substituted when an MCP tool
+// reports no input schema, matching the reference fallback.
+var defaultMCPToolSchema = json.RawMessage(`{"type":"object","properties":{}}`)
+
+// mcpToolSchema returns the tool's input schema, or the empty-object fallback
+// when the schema is absent or an empty object (the reference truthiness check).
+func mcpToolSchema(raw json.RawMessage) json.RawMessage {
+	if len(raw) == 0 {
+		return defaultMCPToolSchema
+	}
+	var obj map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &obj); err != nil || len(obj) == 0 {
+		return defaultMCPToolSchema
+	}
+	return raw
+}
+
+// mergeMCPTools builds the tool list the model sees: the discovered MCP tools
+// first (namespaced "server__tool", in discovery order), then any user tools
+// appended. A user tool whose name clashes with an MCP tool overrides it in
+// place so the original ordering is preserved; a user tool with no name is
+// skipped. Mirrors api.MergeTools at the engine.Tool layer.
+func mergeMCPTools(mcpTools []mcp.Tool, userTools []api.Tool) []engine.Tool {
+	order := make([]string, 0, len(mcpTools)+len(userTools))
+	byName := make(map[string]engine.Tool)
+	add := func(name string, tool engine.Tool) {
+		if _, seen := byName[name]; !seen {
+			order = append(order, name)
+		}
+		byName[name] = tool
+	}
+	for _, t := range mcpTools {
+		add(t.FullName(), engine.Tool{
+			Name:        t.FullName(),
+			Description: t.Description,
+			Parameters:  mcpToolSchema(t.InputSchema),
+		})
+	}
+	for _, t := range userTools {
+		if t.Function.Name == "" {
+			continue
+		}
+		add(t.Function.Name, engine.Tool{
+			Name:        t.Function.Name,
+			Description: t.Function.Description,
+			Parameters:  t.Function.Parameters,
+		})
+	}
+	out := make([]engine.Tool, 0, len(order))
+	for _, name := range order {
+		out = append(out, byName[name])
 	}
 	return out
 }
