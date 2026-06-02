@@ -1,0 +1,201 @@
+{
+  "dtype_bytes": {
+    "F64": 8,
+    "F32": 4,
+    "F16": 2,
+    "BF16": 2,
+    "I64": 8,
+    "I32": 4,
+    "I16": 2,
+    "I8": 1,
+    "U64": 8,
+    "U32": 4,
+    "U16": 2,
+    "U8": 1,
+    "BOOL": 1
+  },
+  "sort_map": {
+    "trending": "trendingScore",
+    "downloads": "downloads",
+    "created": "createdAt",
+    "updated": "lastModified",
+    "most_params": "downloads",
+    "least_params": "downloads",
+    "largest": "downloads",
+    "smallest": "downloads"
+  },
+  "disk_size": [
+    {
+      "st": {
+        "parameters": {
+          "BF16": 7000000000
+        }
+      },
+      "bytes": 14000000000,
+      "params": 7000000000
+    },
+    {
+      "st": {
+        "parameters": {
+          "F16": 1500000000,
+          "F32": 200000000
+        }
+      },
+      "bytes": 3800000000,
+      "params": 1700000000
+    },
+    {
+      "st": {
+        "parameters": {
+          "U8": 4000000000,
+          "F16": 500000000
+        }
+      },
+      "bytes": 5000000000,
+      "params": 4500000000
+    },
+    {
+      "st": {
+        "parameters": {}
+      },
+      "bytes": 0,
+      "params": 0
+    },
+    {
+      "st": {},
+      "bytes": 0,
+      "params": 0
+    },
+    {
+      "st": {
+        "parameters": {
+          "WEIRD": 1000
+        }
+      },
+      "bytes": 1000,
+      "params": 1000
+    }
+  ],
+  "format_size": [
+    {
+      "bytes": 0,
+      "out": "0.0 KB"
+    },
+    {
+      "bytes": 512,
+      "out": "0.5 KB"
+    },
+    {
+      "bytes": 1024,
+      "out": "1.0 KB"
+    },
+    {
+      "bytes": 1536,
+      "out": "1.5 KB"
+    },
+    {
+      "bytes": 1048576,
+      "out": "1.0 MB"
+    },
+    {
+      "bytes": 1572864,
+      "out": "1.5 MB"
+    },
+    {
+      "bytes": 1073741824,
+      "out": "1.0 GB"
+    },
+    {
+      "bytes": 7516192768,
+      "out": "7.0 GB"
+    },
+    {
+      "bytes": 13000000000,
+      "out": "12.1 GB"
+    }
+  ],
+  "format_param": [
+    {
+      "n": 0,
+      "out": "0"
+    },
+    {
+      "n": 999,
+      "out": "999"
+    },
+    {
+      "n": 1000,
+      "out": "1000"
+    },
+    {
+      "n": 1500000,
+      "out": "1.5M"
+    },
+    {
+      "n": 6999000000,
+      "out": "7.0B"
+    },
+    {
+      "n": 7000000000,
+      "out": "7.0B"
+    },
+    {
+      "n": 13000000000,
+      "out": "13.0B"
+    },
+    {
+      "n": 1200000000000,
+      "out": "1.2T"
+    }
+  ],
+  "repo_id": [
+    {
+      "in": "mlx-community/Llama-3-8B",
+      "ok": true,
+      "cleaned": "mlx-community/Llama-3-8B",
+      "error": ""
+    },
+    {
+      "in": "  owner/model  ",
+      "ok": true,
+      "cleaned": "owner/model",
+      "error": ""
+    },
+    {
+      "in": "noslash",
+      "ok": false,
+      "cleaned": null,
+      "error": "Invalid repository ID: 'noslash'. Expected format: 'owner/model' (e.g., 'mlx-community/Llama-3-8B-4bit')"
+    },
+    {
+      "in": "a/b/c",
+      "ok": false,
+      "cleaned": null,
+      "error": "Invalid repository ID: 'a/b/c'. Expected format: 'owner/model' (e.g., 'mlx-community/Llama-3-8B-4bit')"
+    },
+    {
+      "in": "/leading",
+      "ok": true,
+      "cleaned": "/leading",
+      "error": ""
+    },
+    {
+      "in": "trailing/",
+      "ok": true,
+      "cleaned": "trailing/",
+      "error": ""
+    },
+    {
+      "in": "",
+      "ok": false,
+      "cleaned": null,
+      "error": "Invalid repository ID: ''. Expected format: 'owner/model' (e.g., 'mlx-community/Llama-3-8B-4bit')"
+    },
+    {
+      "in": "owner/",
+      "ok": true,
+      "cleaned": "owner/",
+      "error": ""
+    }
+  ]
+}
