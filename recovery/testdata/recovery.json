@@ -1,0 +1,80 @@
+{
+  "patterns": [
+    "'NoneType' object is not subscriptable",
+    "'NoneType' object is not iterable",
+    "BatchKVCache",
+    "KVCache",
+    "cache.keys",
+    "cache.values",
+    "'NoneType' object has no attribute",
+    "not broadcastable",
+    "cannot be broadcast",
+    "shape mismatch"
+  ],
+  "cases": [
+    {
+      "msg": "'NoneType' object is not subscriptable",
+      "corrupt": true
+    },
+    {
+      "msg": "'NoneType' object is not iterable",
+      "corrupt": true
+    },
+    {
+      "msg": "BatchKVCache step failed",
+      "corrupt": true
+    },
+    {
+      "msg": "KVCache",
+      "corrupt": true
+    },
+    {
+      "msg": "error in cache.keys lookup",
+      "corrupt": true
+    },
+    {
+      "msg": "cache.values mismatch",
+      "corrupt": true
+    },
+    {
+      "msg": "'NoneType' object has no attribute 'shape'",
+      "corrupt": true
+    },
+    {
+      "msg": "tensors not broadcastable together",
+      "corrupt": true
+    },
+    {
+      "msg": "operands cannot be broadcast",
+      "corrupt": true
+    },
+    {
+      "msg": "shape mismatch in attention",
+      "corrupt": true
+    },
+    {
+      "msg": "some unrelated error message",
+      "corrupt": false
+    },
+    {
+      "msg": "",
+      "corrupt": false
+    },
+    {
+      "msg": "out of memory",
+      "corrupt": false
+    },
+    {
+      "msg": "Request aborted by client",
+      "corrupt": false
+    },
+    {
+      "msg": "prefix block hash collision",
+      "corrupt": false
+    },
+    {
+      "msg": "wrapped: 'NoneType' object is not subscriptable (inner)",
+      "corrupt": true
+    }
+  ]
+}
