@@ -1,0 +1,13 @@
+# Binaries
+/fastmlx
+*.test
+*.out
+
+# MLX / mlx-c build artifacts (v0.4+)
+/third_party/install/
+/third_party/mlx/build/
+/third_party/mlx-c/build/
+
+# Go
+/vendor/
+.DS_Store
