@@ -51,6 +51,8 @@ func (rt *Router) Register(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/chat/completions", rt.ChatCompletions)
 	mux.HandleFunc("POST /v1/completions", rt.Completions)
 	mux.HandleFunc("POST /v1/embeddings", rt.Embeddings)
+	mux.HandleFunc("POST /v1/messages", rt.Messages)
+	mux.HandleFunc("POST /v1/responses", rt.Responses)
 }
 
 // Health reports liveness.
