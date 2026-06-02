@@ -1,0 +1,89 @@
+{
+  "format_size": [
+    {
+      "bytes": 0,
+      "expected": "0.00B"
+    },
+    {
+      "bytes": 1,
+      "expected": "1.00B"
+    },
+    {
+      "bytes": 512,
+      "expected": "512.00B"
+    },
+    {
+      "bytes": 1023,
+      "expected": "1023.00B"
+    },
+    {
+      "bytes": 1024,
+      "expected": "1.00KB"
+    },
+    {
+      "bytes": 1536,
+      "expected": "1.50KB"
+    },
+    {
+      "bytes": 1048576,
+      "expected": "1.00MB"
+    },
+    {
+      "bytes": 1610612736,
+      "expected": "1.50GB"
+    },
+    {
+      "bytes": 5497558138880,
+      "expected": "5.00TB"
+    },
+    {
+      "bytes": 1125899906842624,
+      "expected": "1.00PB"
+    },
+    {
+      "bytes": -2048,
+      "expected": "-2.00KB"
+    },
+    {
+      "bytes": 999,
+      "expected": "999.00B"
+    },
+    {
+      "bytes": 123456789,
+      "expected": "117.74MB"
+    },
+    {
+      "bytes": 2199023255552,
+      "expected": "2.00TB"
+    }
+  ],
+  "errors": {
+    "too_large": {
+      "model_id": "qwen3-32b",
+      "model_size": 34359738368,
+      "ceiling": 17179869184,
+      "expected": "Model 'qwen3-32b' (32.00GB) does not fit under the memory ceiling (16.00GB). Free system memory or lower memory_guard_tier."
+    },
+    "not_found": {
+      "model_id": "ghost",
+      "available": [
+        "a",
+        "b"
+      ],
+      "expected": "Model 'ghost' not found. Available models: a, b"
+    },
+    "not_found_empty": {
+      "model_id": "ghost",
+      "available": [],
+      "expected": "Model 'ghost' not found. Available models: (none)"
+    },
+    "insufficient": {
+      "model_id": "llama-8b",
+      "projected": 20000000000,
+      "ceiling": 17179869184,
+      "current": 12000000000,
+      "model": 8000000000,
+      "expected": "Cannot load llama-8b: projected memory 18.63GB would exceed the memory ceiling 16.00GB (current: 11.18GB, model: 7.45GB). Free system memory or lower memory_guard_tier."
+    }
+  }
+}
