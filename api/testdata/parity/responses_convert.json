@@ -1,0 +1,310 @@
+{
+  "cases": [
+    {
+      "label": "text_only",
+      "input": {
+        "text": "Hello there",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 10,
+        "completion_tokens": 5,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"Hello there\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":10,\"output_tokens\":5,\"total_tokens\":15,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "empty_text",
+      "input": {
+        "text": "",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 4,
+        "completion_tokens": 0,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":4,\"output_tokens\":0,\"total_tokens\":4,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "text_with_whitespace",
+      "input": {
+        "text": "  trimmed  ",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 3,
+        "completion_tokens": 2,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"trimmed\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":3,\"output_tokens\":2,\"total_tokens\":5,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "reasoning_and_text",
+      "input": {
+        "text": "the answer",
+        "reasoning": "I thought about it",
+        "native_reasoning": true,
+        "tool_calls": [],
+        "prompt_tokens": 10,
+        "completion_tokens": 8,
+        "reasoning_tokens": 4,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"reasoning\",\"id\":\"rs_PARITY\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":[{\"type\":\"summary_text\",\"text\":\"I thought about it\"}]},{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"the answer\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":10,\"output_tokens\":8,\"total_tokens\":18,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":4}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "reasoning_present_but_not_native",
+      "input": {
+        "text": "answer",
+        "reasoning": "hidden cot",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 6,
+        "completion_tokens": 3,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"answer\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":6,\"output_tokens\":3,\"total_tokens\":9,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "native_reasoning_blank_text",
+      "input": {
+        "text": "",
+        "reasoning": "just thinking",
+        "native_reasoning": true,
+        "tool_calls": [],
+        "prompt_tokens": 5,
+        "completion_tokens": 4,
+        "reasoning_tokens": 2,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"reasoning\",\"id\":\"rs_PARITY\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":[{\"type\":\"summary_text\",\"text\":\"just thinking\"}]},{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":5,\"output_tokens\":4,\"total_tokens\":9,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":2}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "single_tool_call",
+      "input": {
+        "text": "",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [
+          {
+            "name": "get_weather",
+            "arguments": "{\"city\": \"Paris\"}",
+            "call_id": "call_1"
+          }
+        ],
+        "prompt_tokens": 12,
+        "completion_tokens": 6,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null},{\"type\":\"function_call\",\"id\":\"fc_PARITY_0\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":\"call_1\",\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\": \\\"Paris\\\"}\",\"summary\":null}],\"usage\":{\"input_tokens\":12,\"output_tokens\":6,\"total_tokens\":18,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "text_and_tool_calls",
+      "input": {
+        "text": "let me check",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [
+          {
+            "name": "a",
+            "arguments": "{\"x\": 1}",
+            "call_id": "call_a"
+          },
+          {
+            "name": "b",
+            "arguments": "{\"y\": 2}",
+            "call_id": "call_b"
+          }
+        ],
+        "prompt_tokens": 20,
+        "completion_tokens": 10,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"let me check\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null},{\"type\":\"function_call\",\"id\":\"fc_PARITY_0\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":\"call_a\",\"name\":\"a\",\"arguments\":\"{\\\"x\\\": 1}\",\"summary\":null},{\"type\":\"function_call\",\"id\":\"fc_PARITY_1\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":\"call_b\",\"name\":\"b\",\"arguments\":\"{\\\"y\\\": 2}\",\"summary\":null}],\"usage\":{\"input_tokens\":20,\"output_tokens\":10,\"total_tokens\":30,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "reasoning_text_and_tool",
+      "input": {
+        "text": "calling now",
+        "reasoning": "need a tool",
+        "native_reasoning": true,
+        "tool_calls": [
+          {
+            "name": "f",
+            "arguments": "{}",
+            "call_id": "call_f"
+          }
+        ],
+        "prompt_tokens": 15,
+        "completion_tokens": 9,
+        "reasoning_tokens": 3,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"reasoning\",\"id\":\"rs_PARITY\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":[{\"type\":\"summary_text\",\"text\":\"need a tool\"}]},{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"calling now\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null},{\"type\":\"function_call\",\"id\":\"fc_PARITY_0\",\"status\":\"completed\",\"role\":null,\"content\":null,\"call_id\":\"call_f\",\"name\":\"f\",\"arguments\":\"{}\",\"summary\":null}],\"usage\":{\"input_tokens\":15,\"output_tokens\":9,\"total_tokens\":24,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":3}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "cached_tokens",
+      "input": {
+        "text": "cached reply",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 100,
+        "completion_tokens": 5,
+        "reasoning_tokens": 0,
+        "cached_tokens": 80,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"cached reply\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":100,\"output_tokens\":5,\"total_tokens\":105,\"input_tokens_details\":{\"cached_tokens\":80},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "sampling_echo",
+      "input": {
+        "text": "with params",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 8,
+        "completion_tokens": 4,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "max_output_tokens": 128,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"with params\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":8,\"output_tokens\":4,\"total_tokens\":12,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":0.7,\"top_p\":0.9,\"max_output_tokens\":128,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "previous_response_chain",
+      "input": {
+        "text": "continued",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 5,
+        "completion_tokens": 3,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": "resp_PREV"
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"continued\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":5,\"output_tokens\":3,\"total_tokens\":8,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":\"resp_PREV\",\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "unicode_text",
+      "input": {
+        "text": "café ☕ 日本語",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 6,
+        "completion_tokens": 4,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": "auto",
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"café ☕ 日本語\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":6,\"output_tokens\":4,\"total_tokens\":10,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":\"auto\",\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    },
+    {
+      "label": "tool_choice_object",
+      "input": {
+        "text": "x",
+        "reasoning": "",
+        "native_reasoning": false,
+        "tool_calls": [],
+        "prompt_tokens": 2,
+        "completion_tokens": 1,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "temperature": null,
+        "top_p": null,
+        "max_output_tokens": null,
+        "tool_choice": {
+          "type": "function",
+          "name": "f"
+        },
+        "tools": [],
+        "previous_response_id": null
+      },
+      "raw": "{\"id\":\"resp_PARITY\",\"object\":\"response\",\"created_at\":0,\"model\":\"m\",\"status\":\"completed\",\"output\":[{\"type\":\"message\",\"id\":\"msg_PARITY\",\"status\":\"completed\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"x\",\"annotations\":[]}],\"call_id\":null,\"name\":null,\"arguments\":null,\"summary\":null}],\"usage\":{\"input_tokens\":2,\"output_tokens\":1,\"total_tokens\":3,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens_details\":{\"reasoning_tokens\":0}},\"text\":null,\"tool_choice\":{\"type\":\"function\",\"name\":\"f\"},\"tools\":[],\"temperature\":null,\"top_p\":null,\"max_output_tokens\":null,\"previous_response_id\":null,\"metadata\":{},\"truncation\":null,\"error\":null}"
+    }
+  ]
+}
