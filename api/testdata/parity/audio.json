@@ -1,0 +1,45 @@
+{
+  "transcription": [
+    {
+      "text": "hello world",
+      "language": null,
+      "duration": null,
+      "segments": null,
+      "expected": "{\"text\":\"hello world\",\"language\":null,\"duration\":null,\"segments\":null}"
+    },
+    {
+      "text": "bonjour",
+      "language": "fr",
+      "duration": 1.5,
+      "segments": null,
+      "expected": "{\"text\":\"bonjour\",\"language\":\"fr\",\"duration\":1.5,\"segments\":null}"
+    },
+    {
+      "text": "two segs",
+      "language": "en",
+      "duration": 3.25,
+      "segments": [
+        {
+          "id": 0,
+          "start": 0.0,
+          "end": 1.5,
+          "text": "two"
+        },
+        {
+          "id": 1,
+          "start": 1.5,
+          "end": 3.25,
+          "text": "segs"
+        }
+      ],
+      "expected": "{\"text\":\"two segs\",\"language\":\"en\",\"duration\":3.25,\"segments\":[{\"id\":0,\"start\":0.0,\"end\":1.5,\"text\":\"two\"},{\"id\":1,\"start\":1.5,\"end\":3.25,\"text\":\"segs\"}]}"
+    },
+    {
+      "text": "unicode: café 你好",
+      "language": null,
+      "duration": null,
+      "segments": null,
+      "expected": "{\"text\":\"unicode: café 你好\",\"language\":null,\"duration\":null,\"segments\":null}"
+    }
+  ]
+}
