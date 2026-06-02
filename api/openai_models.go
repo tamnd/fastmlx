@@ -85,11 +85,14 @@ type Tool struct {
 	Function FunctionDef `json:"function"`
 }
 
-// FunctionDef is the schema of a callable function.
+// FunctionDef is the schema of a callable function. Strict is a pointer so the
+// Responses tool conversion can carry through a literal false (the reference
+// emits "strict" whenever the source value is not null).
 type FunctionDef struct {
 	Name        string          `json:"name"`
 	Description string          `json:"description,omitempty"`
 	Parameters  json.RawMessage `json:"parameters,omitempty"`
+	Strict      *bool           `json:"strict,omitempty"`
 }
 
 // ToolCall is a model-emitted tool invocation.

@@ -1,0 +1,973 @@
+{
+  "input_cases": [
+    {
+      "label": "none_input",
+      "input": null,
+      "instructions": null,
+      "previous_messages": null,
+      "result": []
+    },
+    {
+      "label": "none_input_with_instructions",
+      "input": null,
+      "instructions": "be terse",
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "system",
+          "content": "be terse"
+        }
+      ]
+    },
+    {
+      "label": "string_input",
+      "input": "hello there",
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "hello there"
+        }
+      ]
+    },
+    {
+      "label": "string_input_with_instructions",
+      "input": "hello there",
+      "instructions": "be terse",
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "system",
+          "content": "be terse"
+        },
+        {
+          "role": "user",
+          "content": "hello there"
+        }
+      ]
+    },
+    {
+      "label": "easy_user_message",
+      "input": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "developer_role_to_system",
+      "input": [
+        {
+          "role": "developer",
+          "content": "internal rules"
+        },
+        {
+          "role": "user",
+          "content": "go"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "system",
+          "content": "internal rules"
+        },
+        {
+          "role": "user",
+          "content": "go"
+        }
+      ]
+    },
+    {
+      "label": "explicit_message_type",
+      "input": [
+        {
+          "type": "message",
+          "role": "user",
+          "content": "typed"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "typed"
+        }
+      ]
+    },
+    {
+      "label": "content_parts_text",
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "first"
+            },
+            {
+              "type": "input_text",
+              "text": "second"
+            }
+          ]
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "first\nsecond"
+        }
+      ]
+    },
+    {
+      "label": "content_parts_output_text",
+      "input": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "reply"
+            }
+          ]
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "content": "reply"
+        }
+      ]
+    },
+    {
+      "label": "content_parts_with_image",
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "describe"
+            },
+            {
+              "type": "input_image",
+              "image_url": "https://example.com/a.png",
+              "detail": "high"
+            }
+          ]
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "describe"
+            },
+            {
+              "type": "input_image",
+              "image_url": "https://example.com/a.png",
+              "detail": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "content_parts_image_url_fallback",
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_image",
+              "url": "https://example.com/b.png"
+            }
+          ]
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_image",
+              "image_url": "https://example.com/b.png",
+              "detail": "auto"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "content_empty_list",
+      "input": [
+        {
+          "role": "user",
+          "content": []
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ]
+    },
+    {
+      "label": "string_part_in_list",
+      "input": [
+        {
+          "role": "user",
+          "content": [
+            "plain string part"
+          ]
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "plain string part"
+        }
+      ]
+    },
+    {
+      "label": "single_function_call",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_a",
+          "name": "get_weather",
+          "arguments": "{\"city\": \"Paris\"}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a",
+              "type": "function",
+              "function": {
+                "name": "get_weather",
+                "arguments": {
+                  "city": "Paris"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "function_call_no_args",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_b",
+          "name": "ping"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_b",
+              "type": "function",
+              "function": {
+                "name": "ping",
+                "arguments": {}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "function_call_plain_string_args",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_c",
+          "name": "echo",
+          "arguments": "not json"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c",
+              "type": "function",
+              "function": {
+                "name": "echo",
+                "arguments": "not json"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "two_function_calls_grouped",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_d",
+          "name": "a",
+          "arguments": "{\"x\": 1}"
+        },
+        {
+          "type": "function_call",
+          "call_id": "call_e",
+          "name": "b",
+          "arguments": "{\"y\": 2}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_d",
+              "type": "function",
+              "function": {
+                "name": "a",
+                "arguments": {
+                  "x": 1
+                }
+              }
+            },
+            {
+              "id": "call_e",
+              "type": "function",
+              "function": {
+                "name": "b",
+                "arguments": {
+                  "y": 2
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "assistant_then_function_call_merges",
+      "input": [
+        {
+          "role": "assistant",
+          "content": "let me look"
+        },
+        {
+          "type": "function_call",
+          "call_id": "call_f",
+          "name": "look",
+          "arguments": "{}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "content": "let me look",
+          "tool_calls": [
+            {
+              "id": "call_f",
+              "type": "function",
+              "function": {
+                "name": "look",
+                "arguments": {}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "function_call_then_output",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_g",
+          "name": "calc",
+          "arguments": "{\"a\": 2}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "call_g",
+          "output": "4"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_g",
+              "type": "function",
+              "function": {
+                "name": "calc",
+                "arguments": {
+                  "a": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_g",
+          "content": "4"
+        }
+      ]
+    },
+    {
+      "label": "function_call_output_complex",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_h",
+          "name": "lookup",
+          "arguments": "{}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "call_h",
+          "output": "{\"rows\": [1, 2, 3], \"ok\": true}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_h",
+              "type": "function",
+              "function": {
+                "name": "lookup",
+                "arguments": {}
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_h",
+          "content": "{\"rows\": [1, 2, 3], \"ok\": true}"
+        }
+      ]
+    },
+    {
+      "label": "reasoning_then_assistant",
+      "input": [
+        {
+          "type": "reasoning",
+          "summary": [
+            {
+              "type": "summary_text",
+              "text": "think a"
+            },
+            {
+              "type": "summary_text",
+              "text": "think b"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "the answer"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "content": "the answer",
+          "reasoning_content": "think a\nthink b"
+        }
+      ]
+    },
+    {
+      "label": "reasoning_then_function_call",
+      "input": [
+        {
+          "type": "reasoning",
+          "summary": [
+            {
+              "type": "summary_text",
+              "text": "reasoned"
+            }
+          ]
+        },
+        {
+          "type": "function_call",
+          "call_id": "call_i",
+          "name": "act",
+          "arguments": "{}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_i",
+              "type": "function",
+              "function": {
+                "name": "act",
+                "arguments": {}
+              }
+            }
+          ],
+          "reasoning_content": "reasoned"
+        }
+      ]
+    },
+    {
+      "label": "full_agent_turn",
+      "input": [
+        {
+          "role": "user",
+          "content": "weather in Paris?"
+        },
+        {
+          "type": "reasoning",
+          "summary": [
+            {
+              "type": "summary_text",
+              "text": "need a tool"
+            }
+          ]
+        },
+        {
+          "type": "function_call",
+          "call_id": "call_j",
+          "name": "get_weather",
+          "arguments": "{\"city\": \"Paris\"}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "call_j",
+          "output": "sunny"
+        },
+        {
+          "role": "assistant",
+          "content": "It is sunny in Paris."
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "weather in Paris?"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_j",
+              "type": "function",
+              "function": {
+                "name": "get_weather",
+                "arguments": {
+                  "city": "Paris"
+                }
+              }
+            }
+          ],
+          "reasoning_content": "need a tool"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_j",
+          "content": "sunny"
+        },
+        {
+          "role": "assistant",
+          "content": "It is sunny in Paris."
+        }
+      ]
+    },
+    {
+      "label": "instructions_and_developer_merge",
+      "input": [
+        {
+          "role": "developer",
+          "content": "dev note"
+        },
+        {
+          "role": "user",
+          "content": "go"
+        }
+      ],
+      "instructions": "top instruction",
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "system",
+          "content": "top instruction\n\ndev note"
+        },
+        {
+          "role": "user",
+          "content": "go"
+        }
+      ]
+    },
+    {
+      "label": "previous_messages_chain",
+      "input": [
+        {
+          "role": "user",
+          "content": "follow up"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": [
+        {
+          "role": "user",
+          "content": "earlier"
+        },
+        {
+          "role": "assistant",
+          "content": "earlier reply"
+        }
+      ],
+      "result": [
+        {
+          "role": "user",
+          "content": "earlier"
+        },
+        {
+          "role": "assistant",
+          "content": "earlier reply"
+        },
+        {
+          "role": "user",
+          "content": "follow up"
+        }
+      ]
+    },
+    {
+      "label": "previous_messages_no_merge_tool_call",
+      "input": [
+        {
+          "type": "function_call",
+          "call_id": "call_k",
+          "name": "f",
+          "arguments": "{}"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": [
+        {
+          "role": "assistant",
+          "content": "prior"
+        }
+      ],
+      "result": [
+        {
+          "role": "assistant",
+          "content": "prior"
+        },
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_k",
+              "type": "function",
+              "function": {
+                "name": "f",
+                "arguments": {}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "unicode_content",
+      "input": [
+        {
+          "role": "user",
+          "content": "café ☕ 日本語"
+        }
+      ],
+      "instructions": null,
+      "previous_messages": null,
+      "result": [
+        {
+          "role": "user",
+          "content": "café ☕ 日本語"
+        }
+      ]
+    }
+  ],
+  "tool_cases": [
+    {
+      "label": "single_function",
+      "tools": [
+        {
+          "type": "function",
+          "name": "get_weather",
+          "description": "Get weather",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get weather",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "function_no_description",
+      "tools": [
+        {
+          "type": "function",
+          "name": "ping",
+          "parameters": {
+            "type": "object"
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "ping",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "function_strict_true",
+      "tools": [
+        {
+          "type": "function",
+          "name": "f",
+          "parameters": {
+            "type": "object"
+          },
+          "strict": true
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "f",
+            "parameters": {
+              "type": "object"
+            },
+            "strict": true
+          }
+        }
+      ]
+    },
+    {
+      "label": "function_strict_false",
+      "tools": [
+        {
+          "type": "function",
+          "name": "g",
+          "parameters": {
+            "type": "object"
+          },
+          "strict": false
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "g",
+            "parameters": {
+              "type": "object"
+            },
+            "strict": false
+          }
+        }
+      ]
+    },
+    {
+      "label": "function_no_parameters",
+      "tools": [
+        {
+          "type": "function",
+          "name": "h",
+          "description": "no params"
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "h",
+            "description": "no params"
+          }
+        }
+      ]
+    },
+    {
+      "label": "skip_non_function",
+      "tools": [
+        {
+          "type": "web_search"
+        },
+        {
+          "type": "function",
+          "name": "kept",
+          "parameters": {
+            "type": "object"
+          }
+        },
+        {
+          "type": "mcp",
+          "name": "ignored"
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "kept",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "all_non_function",
+      "tools": [
+        {
+          "type": "web_search"
+        },
+        {
+          "type": "local_shell"
+        }
+      ],
+      "result": null
+    },
+    {
+      "label": "function_missing_name",
+      "tools": [
+        {
+          "type": "function",
+          "parameters": {
+            "type": "object"
+          }
+        }
+      ],
+      "result": null
+    },
+    {
+      "label": "empty_tools",
+      "tools": [],
+      "result": null
+    },
+    {
+      "label": "unicode_tool",
+      "tools": [
+        {
+          "type": "function",
+          "name": "search",
+          "description": "Recherche café",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "q": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "search",
+            "description": "Recherche café",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
