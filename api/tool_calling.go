@@ -360,11 +360,19 @@ func (v jval) write(b *strings.Builder) {
 	}
 }
 
-// pythonQuote writes s as a JSON string using Python's escaping rules with
-// ensure_ascii=False: escape the quote, backslash, and the named control
-// characters; emit other control characters as \u00xx; pass everything else
-// (including non-ASCII) through unchanged.
+// pythonQuote writes s as a JSON string with ensure_ascii=False (non-ASCII
+// passed through), the mode the tool-call re-serialization uses.
 func pythonQuote(b *strings.Builder, s string) {
+	escapeString(b, s, false)
+}
+
+// escapeString writes s as a JSON string using Python's escaping rules: escape
+// the quote, backslash, and the named control characters, and emit any other
+// control character as \u00xx. When asciiOnly is set (Python's default
+// ensure_ascii=True), every character outside printable ASCII is escaped too,
+// with a surrogate pair for code points above U+FFFF; otherwise non-ASCII is
+// passed through unchanged.
+func escapeString(b *strings.Builder, s string, asciiOnly bool) {
 	b.WriteByte('"')
 	for _, r := range s {
 		switch r {
@@ -383,14 +391,29 @@ func pythonQuote(b *strings.Builder, s string) {
 		case '\f':
 			b.WriteString(`\f`)
 		default:
-			if r < 0x20 {
-				b.WriteString(`\u00`)
-				b.WriteByte(hexDigits[(r>>4)&0xf])
-				b.WriteByte(hexDigits[r&0xf])
-			} else {
+			switch {
+			case r < 0x20:
+				writeUnicodeEscape(b, uint32(r))
+			case asciiOnly && r > 0x7e:
+				if r > 0xffff {
+					c := uint32(r) - 0x10000
+					writeUnicodeEscape(b, 0xd800+(c>>10))
+					writeUnicodeEscape(b, 0xdc00+(c&0x3ff))
+				} else {
+					writeUnicodeEscape(b, uint32(r))
+				}
+			default:
 				b.WriteRune(r)
 			}
 		}
 	}
 	b.WriteByte('"')
+}
+
+func writeUnicodeEscape(b *strings.Builder, c uint32) {
+	b.WriteString(`\u`)
+	b.WriteByte(hexDigits[(c>>12)&0xf])
+	b.WriteByte(hexDigits[(c>>8)&0xf])
+	b.WriteByte(hexDigits[(c>>4)&0xf])
+	b.WriteByte(hexDigits[c&0xf])
 }

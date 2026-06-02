@@ -1,0 +1,148 @@
+{
+  "finish": [
+    {
+      "finish_reason": "stop",
+      "has_tool_calls": false,
+      "result": "end_turn"
+    },
+    {
+      "finish_reason": "stop",
+      "has_tool_calls": true,
+      "result": "tool_use"
+    },
+    {
+      "finish_reason": "length",
+      "has_tool_calls": false,
+      "result": "max_tokens"
+    },
+    {
+      "finish_reason": "length",
+      "has_tool_calls": true,
+      "result": "tool_use"
+    },
+    {
+      "finish_reason": "tool_calls",
+      "has_tool_calls": false,
+      "result": "tool_use"
+    },
+    {
+      "finish_reason": "tool_calls",
+      "has_tool_calls": true,
+      "result": "tool_use"
+    },
+    {
+      "finish_reason": "unknown",
+      "has_tool_calls": false,
+      "result": "end_turn"
+    },
+    {
+      "finish_reason": "unknown",
+      "has_tool_calls": true,
+      "result": "tool_use"
+    },
+    {
+      "finish_reason": null,
+      "has_tool_calls": false,
+      "result": null
+    },
+    {
+      "finish_reason": null,
+      "has_tool_calls": true,
+      "result": "tool_use"
+    }
+  ],
+  "events": [
+    {
+      "label": "message_start",
+      "result": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_abc\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"claude-test\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 12, \"output_tokens\": 0}}}\n\n"
+    },
+    {
+      "label": "message_start_zero",
+      "result": "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_1\", \"type\": \"message\", \"role\": \"assistant\", \"model\": \"m\", \"content\": [], \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 0, \"output_tokens\": 0}}}\n\n"
+    },
+    {
+      "label": "cbs_text",
+      "result": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\n"
+    },
+    {
+      "label": "cbs_tool_use",
+      "result": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 1, \"content_block\": {\"type\": \"tool_use\", \"id\": \"toolu_x\", \"name\": \"get_weather\", \"input\": {}}}\n\n"
+    },
+    {
+      "label": "cbs_tool_use_defaults",
+      "result": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 2, \"content_block\": {\"type\": \"tool_use\", \"id\": \"\", \"name\": \"\", \"input\": {}}}\n\n"
+    },
+    {
+      "label": "cbs_thinking",
+      "result": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"thinking\", \"thinking\": \"\", \"signature\": \"fastmlx-reasoning\"}}\n\n"
+    },
+    {
+      "label": "cbs_other",
+      "result": "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 3, \"content_block\": {\"type\": \"image\"}}\n\n"
+    },
+    {
+      "label": "thinking_delta",
+      "result": "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"thinking_delta\", \"thinking\": \"let me think\"}}\n\n"
+    },
+    {
+      "label": "text_delta",
+      "result": "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"Hello, world\"}}\n\n"
+    },
+    {
+      "label": "text_delta_unicode",
+      "result": "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"caf\\u00e9 \\u65e5\\u672c\\u8a9e \\u2603\"}}\n\n"
+    },
+    {
+      "label": "text_delta_escapes",
+      "result": "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 1, \"delta\": {\"type\": \"text_delta\", \"text\": \"line1\\nline2\\t\\\"q\\\"\\\\\"}}\n\n"
+    },
+    {
+      "label": "input_json_delta",
+      "result": "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 1, \"delta\": {\"type\": \"input_json_delta\", \"partial_json\": \"{\\\"city\\\": \\\"Paris\\\"}\"}}\n\n"
+    },
+    {
+      "label": "cb_stop",
+      "result": "event: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 2}\n\n"
+    },
+    {
+      "label": "msg_delta_basic",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 42}}\n\n"
+    },
+    {
+      "label": "msg_delta_seq",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"stop_sequence\", \"stop_sequence\": \"STOP\"}, \"usage\": {\"output_tokens\": 5}}\n\n"
+    },
+    {
+      "label": "msg_delta_input",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 10, \"input_tokens\": 100}}\n\n"
+    },
+    {
+      "label": "msg_delta_cache",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"end_turn\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 10, \"input_tokens\": 0, \"cache_creation_input_tokens\": 70, \"cache_read_input_tokens\": 30}}\n\n"
+    },
+    {
+      "label": "msg_delta_cache_over",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": \"max_tokens\", \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 7, \"input_tokens\": 0, \"cache_creation_input_tokens\": 0, \"cache_read_input_tokens\": 50}}\n\n"
+    },
+    {
+      "label": "msg_delta_none",
+      "result": "event: message_delta\ndata: {\"type\": \"message_delta\", \"delta\": {\"stop_reason\": null, \"stop_sequence\": null}, \"usage\": {\"output_tokens\": 0}}\n\n"
+    },
+    {
+      "label": "msg_stop",
+      "result": "event: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+    },
+    {
+      "label": "ping",
+      "result": "event: ping\ndata: {\"type\": \"ping\"}\n\n"
+    },
+    {
+      "label": "error",
+      "result": "event: error\ndata: {\"type\": \"error\", \"error\": {\"type\": \"invalid_request_error\", \"message\": \"bad input\"}}\n\n"
+    },
+    {
+      "label": "error_unicode",
+      "result": "event: error\ndata: {\"type\": \"error\", \"error\": {\"type\": \"overloaded_error\", \"message\": \"trop de requ\\u00eates\"}}\n\n"
+    }
+  ]
+}
