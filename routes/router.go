@@ -35,6 +35,7 @@ type Engine interface {
 type Router struct {
 	eng     Engine
 	started time.Time
+	mcp     mcpManager // nil until an MCP manager is attached
 }
 
 // New builds a router over an engine.
@@ -55,6 +56,9 @@ func (rt *Router) Register(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/messages/count_tokens", rt.CountTokens)
 	mux.HandleFunc("POST /v1/responses", rt.Responses)
 	mux.HandleFunc("POST /v1/rerank", rt.Rerank)
+	mux.HandleFunc("GET /v1/mcp/tools", rt.MCPTools)
+	mux.HandleFunc("GET /v1/mcp/servers", rt.MCPServers)
+	mux.HandleFunc("POST /v1/mcp/execute", rt.MCPExecute)
 }
 
 // Health reports liveness.
