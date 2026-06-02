@@ -1,0 +1,780 @@
+{
+  "cases": [
+    {
+      "label": "simple_string",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ]
+    },
+    {
+      "label": "system_string",
+      "system": "be helpful",
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "system",
+          "content": "be helpful"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "system_list",
+      "system": [
+        {
+          "type": "text",
+          "text": "line one"
+        },
+        {
+          "type": "text",
+          "text": "line two"
+        }
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "system",
+          "content": "line one\nline two"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "system_list_billing_filtered",
+      "system": [
+        {
+          "type": "text",
+          "text": "x-anthropic-billing-header: abc123"
+        },
+        {
+          "type": "text",
+          "text": "real system"
+        }
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "system",
+          "content": "real system"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "in_message_system_extracted",
+      "system": null,
+      "messages": [
+        {
+          "role": "system",
+          "content": "inline system"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "system",
+          "content": "inline system"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "in_message_system_merged_with_field",
+      "system": "field system",
+      "messages": [
+        {
+          "role": "system",
+          "content": [
+            {
+              "type": "text",
+              "text": "inline a"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "system",
+          "content": "field system\n\ninline a"
+        },
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "label": "multi_text_blocks",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "first"
+            },
+            {
+              "type": "text",
+              "text": "second"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "first\nsecond"
+        }
+      ]
+    },
+    {
+      "label": "empty_block_list",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": []
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ]
+    },
+    {
+      "label": "fallback_tool_use",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "let me check"
+            },
+            {
+              "type": "tool_use",
+              "id": "tu_1",
+              "name": "get_weather",
+              "input": {
+                "city": "Paris"
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "let me check\n[Calling tool: get_weather({\"city\": \"Paris\"})]",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "fallback_tool_result",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu_1",
+              "content": "sunny, 20C"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "[Tool Result (tu_1)]: sunny, 20C",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "fallback_tool_result_error",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu_9",
+              "content": "boom",
+              "is_error": true
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "[Tool Error (tu_9)]: boom",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "fallback_tool_result_blocks",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu_2",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "part a"
+                },
+                {
+                  "type": "text",
+                  "text": "part b"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "[Tool Result (tu_2)]: part a\npart b",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "fallback_thinking_inline",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "hmm"
+            },
+            {
+              "type": "text",
+              "text": "answer"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "<think>\nhmm\n</think>\nanswer"
+        }
+      ]
+    },
+    {
+      "label": "fallback_thinking_native_reasoning",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "hmm"
+            },
+            {
+              "type": "text",
+              "text": "answer"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": true
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "answer",
+          "reasoning_content": "hmm"
+        }
+      ]
+    },
+    {
+      "label": "fallback_unicode_tool_use",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "tu_u",
+              "name": "search",
+              "input": {
+                "q": "café",
+                "n": 3
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "[Calling tool: search({\"q\": \"caf\\u00e9\", \"n\": 3})]",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "image_preserved",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "what is this"
+            },
+            {
+              "type": "image",
+              "source": {
+                "type": "base64",
+                "media_type": "image/png",
+                "data": "AAAA"
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": true,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "data:image/png;base64,AAAA"
+              }
+            },
+            {
+              "type": "text",
+              "text": "what is this"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "image_url_preserved",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image",
+              "source": {
+                "type": "url",
+                "url": "https://example.com/x.png"
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": true,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://example.com/x.png"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "image_dropped_without_preserve",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "what is this"
+            },
+            {
+              "type": "image",
+              "source": {
+                "type": "base64",
+                "media_type": "image/png",
+                "data": "AAAA"
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "what is this"
+        }
+      ]
+    },
+    {
+      "label": "native_assistant_tool_use",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "calling"
+            },
+            {
+              "type": "tool_use",
+              "id": "tu_3",
+              "name": "f",
+              "input": {
+                "x": 1
+              }
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": true,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "calling",
+          "tool_calls": [
+            {
+              "id": "tu_3",
+              "function": {
+                "name": "f",
+                "arguments": {
+                  "x": 1
+                }
+              }
+            }
+          ],
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "label": "native_assistant_thinking_reasoning",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "reasoned"
+            },
+            {
+              "type": "text",
+              "text": "done"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": true,
+        "preserve_images": false,
+        "native_reasoning_content": true
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "done",
+          "reasoning_content": "reasoned"
+        }
+      ]
+    },
+    {
+      "label": "native_user_tool_result",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "before"
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu_3",
+              "content": "result text"
+            },
+            {
+              "type": "text",
+              "text": "after"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": true,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "before"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "tu_3",
+          "content": "result text"
+        },
+        {
+          "role": "user",
+          "content": "after"
+        }
+      ]
+    },
+    {
+      "label": "native_user_only_tool_result",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu_x",
+              "content": "only"
+            }
+          ]
+        }
+      ],
+      "opts": {
+        "native_tool_calling": true,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "tool",
+          "tool_call_id": "tu_x",
+          "content": "only"
+        }
+      ]
+    },
+    {
+      "label": "merge_consecutive_user",
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": "first"
+        },
+        {
+          "role": "user",
+          "content": "second"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "user",
+          "content": "first\n\nsecond"
+        }
+      ]
+    },
+    {
+      "label": "no_merge_across_tool_boundary",
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "tu_4",
+              "name": "f",
+              "input": {}
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "follow up"
+        }
+      ],
+      "opts": {
+        "native_tool_calling": false,
+        "preserve_images": false,
+        "native_reasoning_content": false
+      },
+      "result": [
+        {
+          "role": "assistant",
+          "content": "[Calling tool: f({})]",
+          "_preserve_role_boundary": true
+        },
+        {
+          "role": "assistant",
+          "content": "follow up"
+        }
+      ]
+    }
+  ]
+}
