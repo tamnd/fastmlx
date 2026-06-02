@@ -107,6 +107,59 @@ func TestMessagesEmptyMessagesRejected(t *testing.T) {
 	}
 }
 
+func TestMessagesCountTokens(t *testing.T) {
+	app, stop := newTestApp(t, "unused", nil)
+	defer stop()
+	srv := httptest.NewServer(app.Handler())
+	defer srv.Close()
+
+	count := func(body string) int {
+		res, err := http.Post(srv.URL+"/v1/messages/count_tokens", "application/json", strings.NewReader(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer res.Body.Close()
+		if res.StatusCode != http.StatusOK {
+			b, _ := io.ReadAll(res.Body)
+			t.Fatalf("status %d: %s", res.StatusCode, b)
+		}
+		var out struct {
+			InputTokens int `json:"input_tokens"`
+		}
+		if err := json.NewDecoder(res.Body).Decode(&out); err != nil {
+			t.Fatal(err)
+		}
+		return out.InputTokens
+	}
+
+	short := count(`{"model":"mock-model","messages":[{"role":"user","content":"hi"}]}`)
+	if short <= 0 {
+		t.Fatalf("input_tokens = %d, want > 0", short)
+	}
+	// A longer conversation must count more prompt tokens than a shorter one.
+	long := count(`{"model":"mock-model","messages":[{"role":"user","content":"hello there, this is a much longer prompt"}]}`)
+	if long <= short {
+		t.Errorf("long count %d not greater than short count %d", long, short)
+	}
+}
+
+func TestMessagesCountTokensEmptyRejected(t *testing.T) {
+	app, stop := newTestApp(t, "x", nil)
+	defer stop()
+	srv := httptest.NewServer(app.Handler())
+	defer srv.Close()
+
+	res, err := http.Post(srv.URL+"/v1/messages/count_tokens", "application/json",
+		strings.NewReader(`{"model":"mock-model","messages":[]}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusUnprocessableEntity {
+		t.Fatalf("status = %d, want 422", res.StatusCode)
+	}
+}
+
 func TestMessagesStreaming(t *testing.T) {
 	app, stop := newTestApp(t, "stream me", nil)
 	defer stop()

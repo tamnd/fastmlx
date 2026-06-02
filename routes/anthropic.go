@@ -73,6 +73,36 @@ func (rt *Router) Messages(w http.ResponseWriter, r *http.Request) {
 	rt.aggregateMessages(w, r, id, model, ch)
 }
 
+// CountTokens handles POST /v1/messages/count_tokens. It runs the same request
+// conversion and prompt build as Messages, then counts the prompt tokens with
+// the model's tokenizer and reports them in Anthropic's shape. max_tokens is not
+// required here (the reference passes a dummy value it never uses). Context
+// scaling (the reference's scale_anthropic_tokens, a Claude Code auto-compact
+// knob) is config-gated and off by default, so the raw count is returned until
+// the settings layer lands.
+func (rt *Router) CountTokens(w http.ResponseWriter, r *http.Request) {
+	var req messagesRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body: "+err.Error(), "invalid_request_error", "")
+		return
+	}
+	if len(req.Messages) == 0 {
+		writeError(w, http.StatusUnprocessableEntity, "messages must not be empty", "invalid_request_error", "messages")
+		return
+	}
+
+	internal, apiTools := api.AnthropicRequestToEngine(req.System, req.Messages, req.Tools, api.AnthropicConvertOptions{})
+	msgs := internalToEngineMessages(internal)
+	tools := toEngineTools(apiTools)
+
+	prompt, err := rt.eng.BuildPrompt(msgs, tools, engine.PromptOptions{AddGenerationPrompt: true})
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error(), "internal_error", "")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]int{"input_tokens": rt.eng.CountTokens(prompt)})
+}
+
 // aggregateMessages drains the engine output and writes one Anthropic
 // MessagesResponse. The body is the reference's pydantic model_dump_json, so it
 // is written verbatim rather than through the json encoder.
