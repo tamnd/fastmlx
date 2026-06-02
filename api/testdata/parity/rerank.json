@@ -1,0 +1,167 @@
+{
+  "cases": [
+    {
+      "label": "strings_all",
+      "input": {
+        "documents": [
+          "machine learning is a subset of AI",
+          "the weather today is sunny",
+          "deep learning uses neural networks"
+        ],
+        "scores": [
+          0.95,
+          0.12,
+          0.78
+        ],
+        "order": [
+          0,
+          2,
+          1
+        ],
+        "return_documents": true,
+        "total_tokens": 42,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":0,\"relevance_score\":0.95,\"document\":{\"text\":\"machine learning is a subset of AI\"}},{\"index\":2,\"relevance_score\":0.78,\"document\":{\"text\":\"deep learning uses neural networks\"}},{\"index\":1,\"relevance_score\":0.12,\"document\":{\"text\":\"the weather today is sunny\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":42}}"
+    },
+    {
+      "label": "strings_top_n",
+      "input": {
+        "documents": [
+          "doc a",
+          "doc b",
+          "doc c",
+          "doc d"
+        ],
+        "scores": [
+          0.5,
+          0.9,
+          0.1,
+          0.3
+        ],
+        "order": [
+          1,
+          0
+        ],
+        "return_documents": true,
+        "total_tokens": 17,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":1,\"relevance_score\":0.9,\"document\":{\"text\":\"doc b\"}},{\"index\":0,\"relevance_score\":0.5,\"document\":{\"text\":\"doc a\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":17}}"
+    },
+    {
+      "label": "no_documents",
+      "input": {
+        "documents": [
+          "alpha",
+          "beta"
+        ],
+        "scores": [
+          0.4,
+          0.6
+        ],
+        "order": [
+          1,
+          0
+        ],
+        "return_documents": false,
+        "total_tokens": 8,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":1,\"relevance_score\":0.6,\"document\":null},{\"index\":0,\"relevance_score\":0.4,\"document\":null}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":8}}"
+    },
+    {
+      "label": "dict_documents",
+      "input": {
+        "documents": [
+          {
+            "text": "a cat on a mat",
+            "image": "https://example.com/cat.png"
+          },
+          {
+            "text": "a dog"
+          }
+        ],
+        "scores": [
+          0.33,
+          0.91
+        ],
+        "order": [
+          1,
+          0
+        ],
+        "return_documents": true,
+        "total_tokens": 100,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":1,\"relevance_score\":0.91,\"document\":{\"text\":\"a dog\"}},{\"index\":0,\"relevance_score\":0.33,\"document\":{\"text\":\"a cat on a mat\",\"image\":\"https://example.com/cat.png\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":100}}"
+    },
+    {
+      "label": "single",
+      "input": {
+        "documents": [
+          "only one"
+        ],
+        "scores": [
+          1.0
+        ],
+        "order": [
+          0
+        ],
+        "return_documents": true,
+        "total_tokens": 5,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":0,\"relevance_score\":1.0,\"document\":{\"text\":\"only one\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":5}}"
+    },
+    {
+      "label": "unicode",
+      "input": {
+        "documents": [
+          "xin chào thế giới",
+          "hello"
+        ],
+        "scores": [
+          0.2,
+          0.7
+        ],
+        "order": [
+          1,
+          0
+        ],
+        "return_documents": true,
+        "total_tokens": 11,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":1,\"relevance_score\":0.7,\"document\":{\"text\":\"hello\"}},{\"index\":0,\"relevance_score\":0.2,\"document\":{\"text\":\"xin chào thế giới\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":11}}"
+    },
+    {
+      "label": "integer_score",
+      "input": {
+        "documents": [
+          "x",
+          "y"
+        ],
+        "scores": [
+          1.0,
+          0.0
+        ],
+        "order": [
+          0,
+          1
+        ],
+        "return_documents": true,
+        "total_tokens": 3,
+        "model": "bge-reranker-v2-m3",
+        "id": "rerank-PARITY00"
+      },
+      "raw": "{\"id\":\"rerank-PARITY00\",\"results\":[{\"index\":0,\"relevance_score\":1.0,\"document\":{\"text\":\"x\"}},{\"index\":1,\"relevance_score\":0.0,\"document\":{\"text\":\"y\"}}],\"model\":\"bge-reranker-v2-m3\",\"usage\":{\"total_tokens\":3}}"
+    }
+  ]
+}
