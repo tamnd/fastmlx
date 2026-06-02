@@ -1,0 +1,122 @@
+{
+  "enum": {
+    "KVCACHE": "KVCache",
+    "ROTATING_KVCACHE": "RotatingKVCache",
+    "BATCH_KVCACHE": "BatchKVCache",
+    "BATCH_ROTATING_KVCACHE": "BatchRotatingKVCache",
+    "ARRAYS_CACHE": "ArraysCache",
+    "QUANTIZED_KVCACHE": "QuantizedKVCache",
+    "CACHE_LIST": "CacheList",
+    "POOLING_CACHE": "PoolingCache",
+    "BATCH_POOLING_CACHE": "BatchPoolingCache"
+  },
+  "class_name_map": {
+    "KVCache": "KVCache",
+    "RotatingKVCache": "RotatingKVCache",
+    "PrefillReadyRotatingKVCache": "RotatingKVCache",
+    "BatchKVCache": "BatchKVCache",
+    "BatchRotatingKVCache": "BatchRotatingKVCache",
+    "ArraysCache": "ArraysCache",
+    "QuantizedKVCache": "QuantizedKVCache",
+    "CacheList": "CacheList",
+    "TurboQuantKVCache": "KVCache",
+    "BatchTurboQuantKVCache": "KVCache",
+    "PoolingCache": "PoolingCache",
+    "BatchPoolingCache": "BatchPoolingCache"
+  },
+  "registered_slicing": {
+    "KVCache": true,
+    "RotatingKVCache": false,
+    "ArraysCache": false,
+    "CacheList": false
+  },
+  "default_slicing": true,
+  "resolve": [
+    {
+      "name": "KVCache",
+      "cache_type": "KVCache",
+      "sliceable": true
+    },
+    {
+      "name": "RotatingKVCache",
+      "cache_type": "RotatingKVCache",
+      "sliceable": false
+    },
+    {
+      "name": "PrefillReadyRotatingKVCache",
+      "cache_type": "RotatingKVCache",
+      "sliceable": false
+    },
+    {
+      "name": "BatchKVCache",
+      "cache_type": "BatchKVCache",
+      "sliceable": true
+    },
+    {
+      "name": "BatchRotatingKVCache",
+      "cache_type": "BatchRotatingKVCache",
+      "sliceable": true
+    },
+    {
+      "name": "ArraysCache",
+      "cache_type": "ArraysCache",
+      "sliceable": false
+    },
+    {
+      "name": "QuantizedKVCache",
+      "cache_type": "QuantizedKVCache",
+      "sliceable": true
+    },
+    {
+      "name": "CacheList",
+      "cache_type": "CacheList",
+      "sliceable": false
+    },
+    {
+      "name": "TurboQuantKVCache",
+      "cache_type": "KVCache",
+      "sliceable": true
+    },
+    {
+      "name": "BatchTurboQuantKVCache",
+      "cache_type": "KVCache",
+      "sliceable": true
+    },
+    {
+      "name": "PoolingCache",
+      "cache_type": "PoolingCache",
+      "sliceable": true
+    },
+    {
+      "name": "BatchPoolingCache",
+      "cache_type": "BatchPoolingCache",
+      "sliceable": true
+    },
+    {
+      "name": "SizedArraysCache",
+      "cache_type": "ArraysCache",
+      "sliceable": false
+    },
+    {
+      "name": "TotallyUnknownCache",
+      "cache_type": null,
+      "sliceable": true
+    },
+    {
+      "name": "",
+      "cache_type": null,
+      "sliceable": true
+    }
+  ],
+  "reverse": {
+    "KVCache": "KVCache",
+    "RotatingKVCache": "RotatingKVCache",
+    "BatchKVCache": "BatchKVCache",
+    "BatchRotatingKVCache": "BatchRotatingKVCache",
+    "ArraysCache": "ArraysCache",
+    "QuantizedKVCache": "QuantizedKVCache",
+    "CacheList": "CacheList",
+    "PoolingCache": "PoolingCache",
+    "BatchPoolingCache": "BatchPoolingCache"
+  }
+}
