@@ -1,0 +1,186 @@
+{
+  "stats": {
+    "prefix": {
+      "hits": 7,
+      "misses": 3,
+      "evictions": 2,
+      "tokens_saved": 128,
+      "partial_block_skips": 4,
+      "partial_tokens_skipped": 40,
+      "block_size": 64,
+      "last_partial_tokens_skipped": 10,
+      "last_tokens_to_next_block": 54,
+      "tokens_matched_total": 200,
+      "tokens_requested_total": 260,
+      "_total_queries": 0,
+      "total_queries": 10,
+      "hit_rate": 0.7
+    },
+    "prefix_set_total": {
+      "hits": 1,
+      "misses": 1,
+      "evictions": 0,
+      "tokens_saved": 0,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 0,
+      "block_size": 0,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "tokens_matched_total": 0,
+      "tokens_requested_total": 0,
+      "_total_queries": 50,
+      "total_queries": 50,
+      "hit_rate": 0.02
+    },
+    "paged": {
+      "hits": 10,
+      "misses": 0,
+      "evictions": 1,
+      "total_blocks": 256,
+      "allocated_blocks": 64,
+      "free_blocks": 192,
+      "shared_blocks": 8,
+      "total_tokens_cached": 4096,
+      "cow_copies": 3,
+      "total_queries": 10,
+      "hit_rate": 1.0,
+      "utilization": 0.25
+    },
+    "paged_empty": {
+      "hits": 0,
+      "misses": 0,
+      "evictions": 0,
+      "total_blocks": 0,
+      "allocated_blocks": 0,
+      "free_blocks": 0,
+      "shared_blocks": 0,
+      "total_tokens_cached": 0,
+      "cow_copies": 0,
+      "total_queries": 0,
+      "hit_rate": 0.0,
+      "utilization": 0.0
+    },
+    "vlm": {
+      "hits": 5,
+      "misses": 5,
+      "evictions": 0,
+      "tokens_saved": 512,
+      "image_cache_hits": 3,
+      "total_queries": 10,
+      "hit_rate": 0.5
+    },
+    "ssd": {
+      "hits": 20,
+      "misses": 4,
+      "evictions": 2,
+      "saves": 18,
+      "loads": 20,
+      "errors": 2,
+      "ssd_write_drops": 1,
+      "total_size_bytes": 1048576,
+      "max_size_bytes": 2097152,
+      "configured_max_size_bytes": 2097152,
+      "num_files": 12,
+      "hot_cache_entries": 6,
+      "hot_cache_size_bytes": 65536,
+      "hot_cache_max_bytes": 131072,
+      "hot_cache_hits": 9,
+      "hot_cache_evictions": 3,
+      "hot_cache_promotions": 2,
+      "total_queries": 24,
+      "hit_rate": 0.8333333333333334,
+      "save_rate": 0.9
+    },
+    "ssd_empty": {
+      "hits": 0,
+      "misses": 0,
+      "evictions": 0,
+      "saves": 0,
+      "loads": 0,
+      "errors": 0,
+      "ssd_write_drops": 0,
+      "total_size_bytes": 0,
+      "max_size_bytes": 0,
+      "configured_max_size_bytes": 0,
+      "num_files": 0,
+      "hot_cache_entries": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_hits": 0,
+      "hot_cache_evictions": 0,
+      "hot_cache_promotions": 0,
+      "total_queries": 0,
+      "hit_rate": 0.0,
+      "save_rate": 0.0
+    }
+  },
+  "rates": {
+    "empty": {
+      "windows": {},
+      "cumulative": {}
+    },
+    "two_120s": {
+      "windows": {
+        "1m": {},
+        "5m": {
+          "prefix_hit_rate": 0.8,
+          "prefix_hits": 80,
+          "prefix_misses": 20,
+          "prefix_match_efficiency": 0.7,
+          "evictions": 6,
+          "eviction_rate_per_min": 3.0,
+          "ssd_hot_hits": 30,
+          "ssd_disk_loads": 10,
+          "ssd_hot_rate": 0.75
+        },
+        "15m": {
+          "prefix_hit_rate": 0.8,
+          "prefix_hits": 80,
+          "prefix_misses": 20,
+          "prefix_match_efficiency": 0.7,
+          "evictions": 6,
+          "eviction_rate_per_min": 3.0,
+          "ssd_hot_hits": 30,
+          "ssd_disk_loads": 10,
+          "ssd_hot_rate": 0.75
+        }
+      },
+      "cumulative": {
+        "prefix_hits": 80,
+        "prefix_misses": 20,
+        "prefix_hit_rate": 0.8,
+        "prefix_tokens_saved": 650,
+        "prefix_match_efficiency": 0.7,
+        "evictions": 6,
+        "ssd_hot_hits": 30,
+        "ssd_disk_loads": 10,
+        "ssd_saves": 40,
+        "hot_cache_evictions": 5,
+        "hot_cache_promotions": 7,
+        "ssd_hot_rate": 0.75
+      }
+    },
+    "suppressed": {
+      "took": false
+    },
+    "sub_second": {
+      "windows": {
+        "1m": {}
+      },
+      "cumulative": {
+        "prefix_hits": 5,
+        "prefix_misses": 1,
+        "prefix_hit_rate": 0.8333,
+        "prefix_tokens_saved": 0,
+        "prefix_match_efficiency": 0.0,
+        "evictions": 0,
+        "ssd_hot_hits": 0,
+        "ssd_disk_loads": 0,
+        "ssd_saves": 0,
+        "hot_cache_evictions": 0,
+        "hot_cache_promotions": 0,
+        "ssd_hot_rate": 0.0
+      }
+    }
+  }
+}
