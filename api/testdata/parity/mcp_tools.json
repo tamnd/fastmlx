@@ -1,0 +1,497 @@
+{
+  "mcp_tool_cases": [
+    {
+      "label": "single_with_schema",
+      "tools": [
+        {
+          "server_name": "fs",
+          "name": "read_file",
+          "description": "Read a file",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read_file",
+            "description": "Read a file",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "empty_schema_default",
+      "tools": [
+        {
+          "server_name": "fs",
+          "name": "list",
+          "description": "List entries",
+          "input_schema": {}
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__list",
+            "description": "List entries",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "multiple",
+      "tools": [
+        {
+          "server_name": "fs",
+          "name": "read",
+          "description": "Read",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "server_name": "git",
+          "name": "status",
+          "description": "Status",
+          "input_schema": {}
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "Read",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "git__status",
+            "description": "Status",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "unicode_description",
+      "tools": [
+        {
+          "server_name": "srch",
+          "name": "find",
+          "description": "Recherche de café",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "q": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srch__find",
+            "description": "Recherche de café",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "empty_list",
+      "tools": [],
+      "result": []
+    }
+  ],
+  "merge_cases": [
+    {
+      "label": "mcp_only",
+      "mcp_tools": [
+        {
+          "server_name": "fs",
+          "name": "read",
+          "description": "Read",
+          "input_schema": {}
+        }
+      ],
+      "user_tools": null,
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "Read",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "user_only",
+      "mcp_tools": [],
+      "user_tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "calc",
+            "parameters": {}
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "calc",
+            "parameters": {}
+          }
+        }
+      ]
+    },
+    {
+      "label": "merged_distinct",
+      "mcp_tools": [
+        {
+          "server_name": "fs",
+          "name": "read",
+          "description": "Read",
+          "input_schema": {}
+        }
+      ],
+      "user_tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "calc",
+            "parameters": {}
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "Read",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "calc",
+            "parameters": {}
+          }
+        }
+      ]
+    },
+    {
+      "label": "user_overrides_mcp",
+      "mcp_tools": [
+        {
+          "server_name": "fs",
+          "name": "read",
+          "description": "MCP version",
+          "input_schema": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      ],
+      "user_tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "user version",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "user version",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "user_tool_missing_name_skipped",
+      "mcp_tools": [
+        {
+          "server_name": "fs",
+          "name": "read",
+          "description": "Read",
+          "input_schema": {}
+        }
+      ],
+      "user_tools": [
+        {
+          "type": "function",
+          "function": {
+            "parameters": {}
+          }
+        }
+      ],
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "fs__read",
+            "description": "Read",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "call_cases": [
+    {
+      "label": "namespaced_json_args",
+      "tool_call": {
+        "function": {
+          "name": "fs__read",
+          "arguments": "{\"path\": \"/tmp/x\"}"
+        }
+      },
+      "result": {
+        "server": "fs",
+        "tool": "read",
+        "arguments": {
+          "path": "/tmp/x"
+        }
+      }
+    },
+    {
+      "label": "no_namespace",
+      "tool_call": {
+        "function": {
+          "name": "calc",
+          "arguments": "{\"a\": 1}"
+        }
+      },
+      "result": {
+        "server": "",
+        "tool": "calc",
+        "arguments": {
+          "a": 1
+        }
+      }
+    },
+    {
+      "label": "invalid_json_args",
+      "tool_call": {
+        "function": {
+          "name": "fs__read",
+          "arguments": "not json"
+        }
+      },
+      "result": {
+        "server": "fs",
+        "tool": "read",
+        "arguments": {}
+      }
+    },
+    {
+      "label": "missing_arguments_default",
+      "tool_call": {
+        "function": {
+          "name": "fs__read"
+        }
+      },
+      "result": {
+        "server": "fs",
+        "tool": "read",
+        "arguments": {}
+      }
+    },
+    {
+      "label": "dict_arguments",
+      "tool_call": {
+        "function": {
+          "name": "fs__read",
+          "arguments": {
+            "path": "/tmp/y"
+          }
+        }
+      },
+      "result": {
+        "server": "fs",
+        "tool": "read",
+        "arguments": {
+          "path": "/tmp/y"
+        }
+      }
+    },
+    {
+      "label": "double_underscore_in_tool",
+      "tool_call": {
+        "function": {
+          "name": "srv__some__tool",
+          "arguments": "{}"
+        }
+      },
+      "result": {
+        "server": "srv",
+        "tool": "some__tool",
+        "arguments": {}
+      }
+    },
+    {
+      "label": "empty_function",
+      "tool_call": {},
+      "result": {
+        "server": "",
+        "tool": "",
+        "arguments": {}
+      }
+    }
+  ],
+  "result_cases": [
+    {
+      "label": "string_content",
+      "result": {
+        "tool_name": "read",
+        "content": "file body",
+        "is_error": false,
+        "error_message": null
+      },
+      "call_id": "call_1",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "call_1",
+        "content": "file body"
+      }
+    },
+    {
+      "label": "dict_content",
+      "result": {
+        "tool_name": "read",
+        "content": {
+          "rows": [
+            1,
+            2
+          ],
+          "ok": true
+        },
+        "is_error": false,
+        "error_message": null
+      },
+      "call_id": "call_2",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "call_2",
+        "content": "{\"rows\": [1, 2], \"ok\": true}"
+      }
+    },
+    {
+      "label": "error",
+      "result": {
+        "tool_name": "read",
+        "content": null,
+        "is_error": true,
+        "error_message": "not found"
+      },
+      "call_id": "call_3",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "call_3",
+        "content": "Error: not found"
+      }
+    },
+    {
+      "label": "unicode_dict",
+      "result": {
+        "tool_name": "find",
+        "content": {
+          "q": "café"
+        },
+        "is_error": false,
+        "error_message": null
+      },
+      "call_id": "call_4",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "call_4",
+        "content": "{\"q\": \"caf\\u00e9\"}"
+      }
+    },
+    {
+      "label": "list_content",
+      "result": {
+        "tool_name": "list",
+        "content": [
+          "a",
+          "b",
+          "c"
+        ],
+        "is_error": false,
+        "error_message": null
+      },
+      "call_id": "call_5",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "call_5",
+        "content": "[\"a\", \"b\", \"c\"]"
+      }
+    }
+  ]
+}
