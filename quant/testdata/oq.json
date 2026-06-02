@@ -1,0 +1,780 @@
+{
+  "predicate": [
+    {
+      "path": "model.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.k_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.v_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 6,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.o_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.16.self_attn.o_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.16.self_attn.v_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.16.mlp.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.16.mlp.gate_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.16.mlp.up_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "lm_head.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 6,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.embed_tokens.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mlp.experts.0.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mlp.experts.0.gate_proj.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mlp.gate.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.mlp.shared_expert.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 8,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.mlp.shared_expert_gate.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 8,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.5.mlp.experts.3.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 3.5,
+      "result": {
+        "bits": 4,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.5.mlp.experts.3.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mlp.gate_proj.weight",
+      "config": {
+        "num_hidden_layers": 61,
+        "num_experts": 512,
+        "hidden_size": 7168
+      },
+      "level": 4,
+      "result": {
+        "bits": 4,
+        "group_size": 128,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.mlp.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 61,
+        "num_experts": 512,
+        "hidden_size": 7168
+      },
+      "level": 4,
+      "result": {
+        "bits": 4,
+        "group_size": 128,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "visual.blocks.0.attn.qkv.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "audio_tower.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.mamba.A_log",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.mixer.conv1d.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.linear_attn.conv1d.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 8,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.linear_attn.out_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.dt_bias",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.self_attn.q_proj.D",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.self_attn.kv_b_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 6,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.cross_attn.o_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "result": {
+        "bits": 6,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.2.mlp.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_boost_map": {
+          "model.layers.2.mlp.down_proj": {
+            "bits": 7,
+            "group_size": 32,
+            "mode": "affine"
+          }
+        }
+      },
+      "level": 4,
+      "result": {
+        "bits": 7,
+        "group_size": 32,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_non_quantizable": [
+          "model.layers.0.self_attn.q_proj"
+        ]
+      },
+      "level": 4,
+      "result": false
+    },
+    {
+      "path": "model.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_sensitivity_map": {
+          "0": 9.0,
+          "1": 1.0,
+          "5": 8.0,
+          "16": 0.5,
+          "31": 7.0
+        }
+      },
+      "level": 4,
+      "result": {
+        "bits": 5,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.16.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_sensitivity_map": {
+          "0": 9.0,
+          "1": 1.0,
+          "5": 8.0,
+          "16": 0.5,
+          "31": 7.0
+        }
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.5.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_sensitivity_map": {
+          "0": 9.0,
+          "1": 1.0,
+          "5": 8.0,
+          "16": 0.5,
+          "31": 7.0
+        }
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mlp.down_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_use_budget_plan": true
+      },
+      "level": 4,
+      "result": true
+    },
+    {
+      "path": "model.layers.0.mixer.ssm_out_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096,
+        "_oq_use_budget_plan": true
+      },
+      "level": 4,
+      "result": {
+        "bits": 8,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 8,
+      "result": {
+        "bits": 8,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    },
+    {
+      "path": "model.layers.0.self_attn.v_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 2,
+      "result": {
+        "bits": 6,
+        "group_size": 64,
+        "mode": "affine"
+      }
+    }
+  ],
+  "layer_index": {
+    "model.layers.0.self_attn.q_proj": 0,
+    "model.layers.123.mlp": 123,
+    "lm_head": -1,
+    "layers.7": -1,
+    "model.layers.5.x": 5
+  },
+  "normalize_path": {
+    "a.b.weight": "a.b",
+    "a.b.scales": "a.b",
+    "a.b.biases": "a.b",
+    "a.b": "a.b",
+    "a.weighted": "a.weighted"
+  },
+  "base_bits": {
+    "2": 2,
+    "3": 3,
+    "3.5": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "8": 8,
+    "7": 7
+  },
+  "bpw_targets": {
+    "2": [
+      2.8,
+      3.0
+    ],
+    "3": [
+      3.5,
+      3.7
+    ],
+    "3.5": [
+      3.8,
+      4.0
+    ],
+    "4": [
+      4.6,
+      4.7
+    ],
+    "5": [
+      5.5,
+      5.7
+    ],
+    "6": [
+      6.5,
+      6.7
+    ],
+    "8": null
+  },
+  "validate": {
+    "plain": true,
+    "already_quant": false,
+    "qc_fp8": true,
+    "qc_other": false
+  },
+  "sensitivity_tier": [
+    {
+      "score": 10,
+      "maxs": 10,
+      "tier": 4
+    },
+    {
+      "score": 6,
+      "maxs": 10,
+      "tier": 4
+    },
+    {
+      "score": 3,
+      "maxs": 10,
+      "tier": 2
+    },
+    {
+      "score": 1,
+      "maxs": 10,
+      "tier": 1
+    },
+    {
+      "score": 0,
+      "maxs": 10,
+      "tier": 1
+    },
+    {
+      "score": 5,
+      "maxs": 0,
+      "tier": 1
+    }
+  ],
+  "tensor_bytes": [
+    {
+      "shape": [
+        4096,
+        4096
+      ],
+      "bits": 4,
+      "gs": 64,
+      "mode": "affine",
+      "bytes": 9437184
+    },
+    {
+      "shape": [
+        4096,
+        4096
+      ],
+      "bits": 8,
+      "gs": 64,
+      "mode": "affine",
+      "bytes": 17825792
+    },
+    {
+      "shape": [
+        4096,
+        4095
+      ],
+      "bits": 4,
+      "gs": 64,
+      "mode": "affine",
+      "bytes": 33546240
+    },
+    {
+      "shape": [
+        4096
+      ],
+      "bits": 4,
+      "gs": 64,
+      "mode": "affine",
+      "bytes": 8192
+    },
+    {
+      "shape": [
+        1024,
+        4096
+      ],
+      "bits": 4,
+      "gs": 128,
+      "mode": "mxfp4",
+      "bytes": 2129920
+    },
+    {
+      "shape": [
+        1024,
+        4096
+      ],
+      "bits": 4,
+      "gs": 128,
+      "mode": "mxfp8",
+      "bytes": 2162688
+    }
+  ],
+  "effective_bpw": {
+    "plain": 4.5,
+    "override": 4.557245080500895
+  },
+  "should_quantize": [
+    {
+      "name": "model.layers.0.self_attn.q_proj.weight",
+      "shape": [
+        4096,
+        4096
+      ],
+      "q": true
+    },
+    {
+      "name": "model.norm.weight",
+      "shape": [
+        4096
+      ],
+      "q": false
+    },
+    {
+      "name": "model.layers.0.input_layernorm.weight",
+      "shape": [
+        4096,
+        4096
+      ],
+      "q": false
+    },
+    {
+      "name": "model.layers.0.self_attn.q_proj.bias",
+      "shape": [
+        4096,
+        4096
+      ],
+      "q": false
+    },
+    {
+      "name": "model.layers.0.mlp.fc.weight",
+      "shape": [
+        4096
+      ],
+      "q": false
+    }
+  ],
+  "should_skip": [
+    {
+      "name": "mtp.fc.weight",
+      "preserve": false,
+      "skip": true
+    },
+    {
+      "name": "mtp.fc.weight",
+      "preserve": true,
+      "skip": false
+    },
+    {
+      "name": "model.layers.0.mtp.e_proj.weight",
+      "preserve": false,
+      "skip": true
+    },
+    {
+      "name": "model.layers.0.self_attn.q_proj.weight",
+      "preserve": false,
+      "skip": false
+    }
+  ],
+  "mtp_protected": {
+    "mtp.fc.weight": true,
+    "model.mtp.fc.weight": true,
+    "mtp.block.e_proj.weight": true,
+    "mtp.block.h_proj.weight": true,
+    "model.mtp.hc_head.weight": true,
+    "mtp.x.hc_head_fn": true,
+    "mtp.attn.q_proj.weight": false,
+    "model.layers.0.self_attn.q_proj.weight": false
+  },
+  "predicate_bits": [
+    {
+      "name": "model.layers.0.self_attn.q_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "gs": 64,
+      "result": [
+        5,
+        64,
+        "affine"
+      ]
+    },
+    {
+      "name": "lm_head.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "gs": 64,
+      "result": [
+        6,
+        64,
+        "affine"
+      ]
+    },
+    {
+      "name": "model.layers.0.mlp.gate.weight",
+      "config": {
+        "num_hidden_layers": 48,
+        "num_local_experts": 128,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "gs": 64,
+      "result": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "mtp.fc.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "gs": 64,
+      "result": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "model.layers.0.self_attn.v_proj.weight",
+      "config": {
+        "num_hidden_layers": 32,
+        "hidden_size": 4096
+      },
+      "level": 4,
+      "gs": 64,
+      "result": [
+        6,
+        64,
+        "affine"
+      ]
+    }
+  ]
+}
