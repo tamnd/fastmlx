@@ -288,20 +288,91 @@ func TestResponsesNonStreaming(t *testing.T) {
 	}
 }
 
-func TestResponsesStreamingNotImplemented(t *testing.T) {
-	app, stop := newTestApp(t, "x", nil)
+func TestResponsesStreaming(t *testing.T) {
+	app, stop := newTestApp(t, "streamed answer", nil)
 	defer stop()
 	srv := httptest.NewServer(app.Handler())
 	defer srv.Close()
 
-	body := `{"model":"mock-model","input":"hi","stream":true}`
+	body := `{"model":"mock-model","input":"hi","stream":true,"temperature":0.3}`
 	res, err := http.Post(srv.URL+"/v1/responses", "application/json", strings.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer res.Body.Close()
-	if res.StatusCode != http.StatusNotImplemented {
-		t.Fatalf("status = %d, want 501", res.StatusCode)
+	if ct := res.Header.Get("Content-Type"); ct != "text/event-stream" {
+		t.Fatalf("content-type = %q", ct)
+	}
+
+	var events []string
+	var text strings.Builder
+	var completedText string
+	var lastSeq int
+	sc := bufio.NewScanner(res.Body)
+	for sc.Scan() {
+		line := sc.Text()
+		if ev, ok := strings.CutPrefix(line, "event: "); ok {
+			events = append(events, ev)
+			continue
+		}
+		data, ok := strings.CutPrefix(line, "data: ")
+		if !ok {
+			continue
+		}
+		var payload struct {
+			Type           string `json:"type"`
+			Delta          string `json:"delta"`
+			SequenceNumber int    `json:"sequence_number"`
+			Response       struct {
+				Output []struct {
+					Content []struct {
+						Text string `json:"text"`
+					} `json:"content"`
+				} `json:"output"`
+			} `json:"response"`
+		}
+		if err := json.Unmarshal([]byte(data), &payload); err != nil {
+			t.Fatalf("bad event payload %q: %v", data, err)
+		}
+		// sequence_number must be strictly increasing across the whole stream.
+		if payload.SequenceNumber <= lastSeq && payload.Type != "" {
+			t.Errorf("sequence_number not increasing: %d after %d (%s)", payload.SequenceNumber, lastSeq, payload.Type)
+		}
+		lastSeq = payload.SequenceNumber
+		if payload.Type == "response.output_text.delta" {
+			text.WriteString(payload.Delta)
+		}
+		if payload.Type == "response.completed" && len(payload.Response.Output) > 0 &&
+			len(payload.Response.Output[0].Content) > 0 {
+			completedText = payload.Response.Output[0].Content[0].Text
+		}
+	}
+	if err := sc.Err(); err != nil {
+		t.Fatal(err)
+	}
+
+	want := []string{
+		"response.created", "response.in_progress",
+		"response.output_item.added", "response.content_part.added",
+	}
+	for i, ev := range want {
+		if i >= len(events) || events[i] != ev {
+			t.Fatalf("event[%d] = %q, want %q (events: %v)", i, get(events, i), ev, events)
+		}
+	}
+	if last := events[len(events)-1]; last != "response.completed" {
+		t.Errorf("last event = %q, want response.completed", last)
+	}
+	for _, want := range []string{"response.output_text.done", "response.content_part.done", "response.output_item.done"} {
+		if !slices.Contains(events, want) {
+			t.Errorf("missing event %q in %v", want, events)
+		}
+	}
+	if text.String() != "streamed answer" {
+		t.Errorf("streamed text = %q, want %q", text.String(), "streamed answer")
+	}
+	if completedText != "streamed answer" {
+		t.Errorf("completed text = %q, want %q", completedText, "streamed answer")
 	}
 }
 

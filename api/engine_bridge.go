@@ -146,16 +146,23 @@ func rawToJvalOrUnset(raw json.RawMessage) jval {
 	return jval{}
 }
 
+// parseRawJvalList parses a raw JSON list into jval values, skipping any that
+// fail to parse.
+func parseRawJvalList(raws []json.RawMessage) []jval {
+	out := make([]jval, 0, len(raws))
+	for _, raw := range raws {
+		if v, ok := parseOrdered(string(raw)); ok {
+			out = append(out, v)
+		}
+	}
+	return out
+}
+
 // BuildResponsesResponse assembles a non-stream /v1/responses body from the
 // generation result and the echoed request fields, minting fresh ids. The wire
 // form matches the reference's pydantic model_dump_json.
 func BuildResponsesResponse(createdAt int, res ResponsesResult) string {
-	tools := make([]jval, 0, len(res.Tools))
-	for _, raw := range res.Tools {
-		if v, ok := parseOrdered(string(raw)); ok {
-			tools = append(tools, v)
-		}
-	}
+	tools := parseRawJvalList(res.Tools)
 	in := ResponsesResponseInput{
 		Model:              res.Model,
 		Text:               res.Text,
@@ -170,4 +177,99 @@ func BuildResponsesResponse(createdAt int, res ResponsesResult) string {
 		PreviousResponseID: res.PreviousResponseID,
 	}
 	return ConvertInternalToResponsesResponse(createdAt, in)
+}
+
+// ResponsesStreamInit carries the ids and echoed request fields a streamed
+// /v1/responses needs. The sampling and tool_choice echoes are raw request JSON
+// so they round-trip without reformatting; Tools is the raw tool list.
+type ResponsesStreamInit struct {
+	ResponseID         string
+	MessageID          string
+	Model              string
+	CreatedAt          int
+	Temperature        json.RawMessage
+	TopP               json.RawMessage
+	MaxOutputTokens    json.RawMessage
+	ToolChoice         json.RawMessage
+	Tools              []json.RawMessage
+	PreviousResponseID string
+}
+
+// ResponsesStreamWriter produces the Responses SSE event sequence for a
+// text-only generation (the path the mock backend drives): no native reasoning
+// and no tool calls, so the single message item opens immediately at output
+// index 0. It tracks the running sequence number across calls. Reasoning and
+// function-call events exist in the event layer for when a backend emits them.
+type ResponsesStreamWriter struct {
+	init  streamResponseInit
+	msgID string
+	seq   int
+}
+
+// NewResponsesStreamWriter builds a writer over the response/message ids and the
+// echoed request fields.
+func NewResponsesStreamWriter(in ResponsesStreamInit) *ResponsesStreamWriter {
+	return &ResponsesStreamWriter{
+		init: streamResponseInit{
+			ID:                 in.ResponseID,
+			Model:              in.Model,
+			CreatedAt:          in.CreatedAt,
+			Status:             "in_progress",
+			Temperature:        rawToJvalOrUnset(in.Temperature),
+			TopP:               rawToJvalOrUnset(in.TopP),
+			MaxOutputTokens:    rawToJvalOrUnset(in.MaxOutputTokens),
+			ToolChoice:         rawToJvalOrUnset(in.ToolChoice),
+			Tools:              parseRawJvalList(in.Tools),
+			PreviousResponseID: in.PreviousResponseID,
+		},
+		msgID: in.MessageID,
+	}
+}
+
+// Start returns the opening events: response.created, response.in_progress, the
+// message output_item.added, and its content_part.added.
+func (w *ResponsesStreamWriter) Start() []string {
+	initial := buildStreamInitial(w.init)
+	out := make([]string, 0, 4)
+	w.seq++
+	out = append(out, evCreated(w.seq, initial))
+	w.seq++
+	out = append(out, evInProgress(w.seq, initial))
+	w.seq++
+	out = append(out, evOutputItemAdded(w.seq, 0, messageItemInProgress(w.msgID)))
+	w.seq++
+	out = append(out, evContentPartAdded(w.seq, w.msgID, 0, 0, outputTextPart("")))
+	return out
+}
+
+// TextDelta returns one output_text.delta event for a chunk of generated text.
+func (w *ResponsesStreamWriter) TextDelta(delta string) string {
+	w.seq++
+	return evOutputTextDelta(w.seq, w.msgID, 0, 0, delta)
+}
+
+// Finish returns the closing events: output_text.done, content_part.done, the
+// message output_item.done, and response.completed with final usage.
+func (w *ResponsesStreamWriter) Finish(finalText string, promptTokens, completionTokens, cachedTokens int) []string {
+	out := make([]string, 0, 4)
+	w.seq++
+	out = append(out, evOutputTextDone(w.seq, w.msgID, 0, 0, finalText))
+	w.seq++
+	out = append(out, evContentPartDone(w.seq, w.msgID, 0, 0, outputTextPart(finalText)))
+	w.seq++
+	out = append(out, evOutputItemDone(w.seq, 0, messageItemCompleted(w.msgID, finalText)))
+	usage := buildStreamUsage(promptTokens, completionTokens, cachedTokens, 0)
+	final := buildStreamFinal(w.init, []jval{messageItemCompleted(w.msgID, finalText)}, usage)
+	w.seq++
+	out = append(out, evCompleted(w.seq, final))
+	return out
+}
+
+// Failed returns a response.failed event carrying the in-progress object with
+// its status flipped to "failed".
+func (w *ResponsesStreamWriter) Failed() string {
+	f := w.init
+	f.Status = "failed"
+	w.seq++
+	return evFailed(w.seq, buildStreamInitial(f))
 }

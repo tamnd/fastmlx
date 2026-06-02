@@ -5,6 +5,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/tamnd/fastmlx/api"
@@ -70,11 +71,6 @@ func (rt *Router) Responses(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, "input must not be empty", "invalid_request_error", "input")
 		return
 	}
-	if req.Stream {
-		writeError(w, http.StatusNotImplemented,
-			"streaming for /v1/responses lands in a later milestone", "not_implemented_error", "stream")
-		return
-	}
 
 	internal, apiTools := api.ResponsesRequestToEngine(req.Input, req.Instructions, req.Tools)
 	msgs := internalToEngineMessages(internal)
@@ -95,6 +91,11 @@ func (rt *Router) Responses(w http.ResponseWriter, r *http.Request) {
 	ch, err := rt.eng.Submit(ereq)
 	if err != nil {
 		submitError(w, err)
+		return
+	}
+
+	if req.Stream {
+		rt.streamResponses(w, r, id, req, ch)
 		return
 	}
 
@@ -137,4 +138,73 @@ func (rt *Router) Responses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(body))
+}
+
+// streamResponses streams the Responses SSE event sequence for a text-only
+// generation: response.created and response.in_progress, the message item opened
+// with output_item.added and content_part.added, output_text.delta per chunk,
+// then output_text.done, content_part.done, output_item.done, and
+// response.completed with final usage. Reasoning and function-call events land
+// when a backend emits them.
+func (rt *Router) streamResponses(w http.ResponseWriter, r *http.Request, id string, req responsesRequest, ch <-chan engine.RequestOutput) {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		writeError(w, http.StatusInternalServerError, "streaming unsupported", "internal_error", "")
+		return
+	}
+	h := w.Header()
+	h.Set("Content-Type", "text/event-stream")
+	h.Set("Cache-Control", "no-cache")
+	h.Set("Connection", "keep-alive")
+	w.WriteHeader(http.StatusOK)
+
+	sw := api.NewResponsesStreamWriter(api.ResponsesStreamInit{
+		ResponseID:         newID("resp_"),
+		MessageID:          newID("msg_"),
+		Model:              rt.eng.ModelName(),
+		CreatedAt:          int(time.Now().Unix()),
+		Temperature:        req.Temperature,
+		TopP:               req.TopP,
+		MaxOutputTokens:    req.MaxOutputTokens,
+		ToolChoice:         req.ToolChoice,
+		Tools:              req.Tools,
+		PreviousResponseID: req.PreviousResponseID,
+	})
+	for _, ev := range sw.Start() {
+		writeSSE(w, flusher, ev)
+	}
+
+	var (
+		text                  strings.Builder
+		promptTok, completion int
+		cached                int
+	)
+	for {
+		select {
+		case <-r.Context().Done():
+			rt.eng.Abort(id)
+			return
+		case o, open := <-ch:
+			if !open {
+				goto done
+			}
+			if o.Err != "" {
+				writeSSE(w, flusher, sw.Failed())
+				return
+			}
+			if o.NewText != "" {
+				text.WriteString(o.NewText)
+				writeSSE(w, flusher, sw.TextDelta(o.NewText))
+			}
+			if o.Finished {
+				promptTok = o.PromptTokens
+				completion = o.CompletionTokens
+				cached = o.CachedTokens
+			}
+		}
+	}
+done:
+	for _, ev := range sw.Finish(text.String(), promptTok, completion, cached) {
+		writeSSE(w, flusher, ev)
+	}
 }

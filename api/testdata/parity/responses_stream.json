@@ -1,0 +1,96 @@
+{
+  "cases": [
+    {
+      "label": "created_minimal",
+      "raw": "event: response.created\ndata: {\"type\": \"response.created\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"in_progress\", \"output\": [], \"tool_choice\": \"auto\", \"tools\": [], \"metadata\": {}}, \"sequence_number\": 1}\n\n"
+    },
+    {
+      "label": "created_with_sampling",
+      "raw": "event: response.created\ndata: {\"type\": \"response.created\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"in_progress\", \"output\": [], \"tool_choice\": \"auto\", \"tools\": [], \"temperature\": 0.7, \"top_p\": 0.9, \"max_output_tokens\": 256, \"previous_response_id\": \"resp_PREV\", \"metadata\": {}}, \"sequence_number\": 1}\n\n"
+    },
+    {
+      "label": "in_progress",
+      "raw": "event: response.in_progress\ndata: {\"type\": \"response.in_progress\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"in_progress\", \"output\": [], \"tool_choice\": \"auto\", \"tools\": [], \"metadata\": {}}, \"sequence_number\": 2}\n\n"
+    },
+    {
+      "label": "output_item_added_reasoning",
+      "raw": "event: response.output_item.added\ndata: {\"type\": \"response.output_item.added\", \"output_index\": 0, \"item\": {\"type\": \"reasoning\", \"id\": \"rs_PARITY\", \"status\": \"in_progress\", \"summary\": []}, \"sequence_number\": 3}\n\n"
+    },
+    {
+      "label": "reasoning_summary_part_added",
+      "raw": "event: response.reasoning_summary_part.added\ndata: {\"type\": \"response.reasoning_summary_part.added\", \"item_id\": \"rs_PARITY\", \"output_index\": 0, \"summary_index\": 0, \"part\": {\"type\": \"summary_text\", \"text\": \"\"}, \"sequence_number\": 4}\n\n"
+    },
+    {
+      "label": "reasoning_summary_text_delta",
+      "raw": "event: response.reasoning_summary_text.delta\ndata: {\"type\": \"response.reasoning_summary_text.delta\", \"item_id\": \"rs_PARITY\", \"output_index\": 0, \"summary_index\": 0, \"delta\": \"thinking\", \"sequence_number\": 5}\n\n"
+    },
+    {
+      "label": "reasoning_summary_text_done",
+      "raw": "event: response.reasoning_summary_text.done\ndata: {\"type\": \"response.reasoning_summary_text.done\", \"item_id\": \"rs_PARITY\", \"output_index\": 0, \"summary_index\": 0, \"text\": \"thinking done\", \"sequence_number\": 6}\n\n"
+    },
+    {
+      "label": "reasoning_summary_part_done",
+      "raw": "event: response.reasoning_summary_part.done\ndata: {\"type\": \"response.reasoning_summary_part.done\", \"item_id\": \"rs_PARITY\", \"output_index\": 0, \"summary_index\": 0, \"part\": {\"type\": \"summary_text\", \"text\": \"thinking done\"}, \"sequence_number\": 7}\n\n"
+    },
+    {
+      "label": "output_item_done_reasoning",
+      "raw": "event: response.output_item.done\ndata: {\"type\": \"response.output_item.done\", \"output_index\": 0, \"item\": {\"type\": \"reasoning\", \"id\": \"rs_PARITY\", \"status\": \"completed\", \"summary\": [{\"type\": \"summary_text\", \"text\": \"thinking done\"}]}, \"sequence_number\": 8}\n\n"
+    },
+    {
+      "label": "output_item_added_message",
+      "raw": "event: response.output_item.added\ndata: {\"type\": \"response.output_item.added\", \"output_index\": 0, \"item\": {\"type\": \"message\", \"id\": \"msg_PARITY\", \"status\": \"in_progress\", \"role\": \"assistant\", \"content\": []}, \"sequence_number\": 3}\n\n"
+    },
+    {
+      "label": "content_part_added",
+      "raw": "event: response.content_part.added\ndata: {\"type\": \"response.content_part.added\", \"item_id\": \"msg_PARITY\", \"output_index\": 0, \"content_index\": 0, \"part\": {\"type\": \"output_text\", \"text\": \"\", \"annotations\": []}, \"sequence_number\": 4}\n\n"
+    },
+    {
+      "label": "output_text_delta",
+      "raw": "event: response.output_text.delta\ndata: {\"type\": \"response.output_text.delta\", \"item_id\": \"msg_PARITY\", \"output_index\": 0, \"content_index\": 0, \"delta\": \"Hello\", \"sequence_number\": 5}\n\n"
+    },
+    {
+      "label": "output_text_delta_unicode",
+      "raw": "event: response.output_text.delta\ndata: {\"type\": \"response.output_text.delta\", \"item_id\": \"msg_PARITY\", \"output_index\": 0, \"content_index\": 0, \"delta\": \"caf\\u00e9 \\u4f60\\u597d\", \"sequence_number\": 5}\n\n"
+    },
+    {
+      "label": "output_text_done",
+      "raw": "event: response.output_text.done\ndata: {\"type\": \"response.output_text.done\", \"item_id\": \"msg_PARITY\", \"output_index\": 0, \"content_index\": 0, \"text\": \"Hello world\", \"sequence_number\": 6}\n\n"
+    },
+    {
+      "label": "content_part_done",
+      "raw": "event: response.content_part.done\ndata: {\"type\": \"response.content_part.done\", \"item_id\": \"msg_PARITY\", \"output_index\": 0, \"content_index\": 0, \"part\": {\"type\": \"output_text\", \"text\": \"Hello world\", \"annotations\": []}, \"sequence_number\": 7}\n\n"
+    },
+    {
+      "label": "output_item_done_message",
+      "raw": "event: response.output_item.done\ndata: {\"type\": \"response.output_item.done\", \"output_index\": 0, \"item\": {\"type\": \"message\", \"id\": \"msg_PARITY\", \"status\": \"completed\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"Hello world\", \"annotations\": []}]}, \"sequence_number\": 8}\n\n"
+    },
+    {
+      "label": "output_item_added_function_call",
+      "raw": "event: response.output_item.added\ndata: {\"type\": \"response.output_item.added\", \"output_index\": 1, \"item\": {\"type\": \"function_call\", \"id\": \"fc_PARITY0\", \"call_id\": \"call_abc\", \"name\": \"get_weather\", \"arguments\": \"\", \"status\": \"in_progress\"}, \"sequence_number\": 9}\n\n"
+    },
+    {
+      "label": "function_call_arguments_delta",
+      "raw": "event: response.function_call_arguments.delta\ndata: {\"type\": \"response.function_call_arguments.delta\", \"item_id\": \"fc_PARITY0\", \"output_index\": 1, \"delta\": \"{\\\"city\\\": \\\"Paris\\\"}\", \"sequence_number\": 10}\n\n"
+    },
+    {
+      "label": "function_call_arguments_done",
+      "raw": "event: response.function_call_arguments.done\ndata: {\"type\": \"response.function_call_arguments.done\", \"item_id\": \"fc_PARITY0\", \"output_index\": 1, \"arguments\": \"{\\\"city\\\": \\\"Paris\\\"}\", \"sequence_number\": 11}\n\n"
+    },
+    {
+      "label": "output_item_done_function_call",
+      "raw": "event: response.output_item.done\ndata: {\"type\": \"response.output_item.done\", \"output_index\": 1, \"item\": {\"type\": \"function_call\", \"id\": \"fc_PARITY0\", \"call_id\": \"call_abc\", \"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\": \\\"Paris\\\"}\", \"status\": \"completed\"}, \"sequence_number\": 12}\n\n"
+    },
+    {
+      "label": "completed_message_only",
+      "raw": "event: response.completed\ndata: {\"type\": \"response.completed\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"completed\", \"output\": [{\"type\": \"message\", \"id\": \"msg_PARITY\", \"status\": \"completed\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"Hello world\", \"annotations\": []}]}], \"usage\": {\"input_tokens\": 11, \"output_tokens\": 2, \"total_tokens\": 13, \"input_tokens_details\": {\"cached_tokens\": 0}, \"output_tokens_details\": {\"reasoning_tokens\": 0}}, \"tool_choice\": \"auto\", \"tools\": [], \"temperature\": null, \"top_p\": null, \"max_output_tokens\": null}, \"sequence_number\": 9}\n\n"
+    },
+    {
+      "label": "completed_no_usage",
+      "raw": "event: response.completed\ndata: {\"type\": \"response.completed\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"completed\", \"output\": [{\"type\": \"message\", \"id\": \"msg_PARITY\", \"status\": \"completed\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"Hello world\", \"annotations\": []}]}], \"usage\": null, \"tool_choice\": \"auto\", \"tools\": [], \"temperature\": 0.5, \"top_p\": 0.8, \"max_output_tokens\": 128, \"previous_response_id\": \"resp_PREV\"}, \"sequence_number\": 9}\n\n"
+    },
+    {
+      "label": "failed",
+      "raw": "event: response.failed\ndata: {\"type\": \"response.failed\", \"response\": {\"id\": \"resp_PARITY\", \"object\": \"response\", \"created_at\": 0, \"model\": \"mock-model\", \"status\": \"failed\", \"output\": [], \"tool_choice\": \"auto\", \"tools\": [], \"metadata\": {}}, \"sequence_number\": 4}\n\n"
+    }
+  ]
+}
