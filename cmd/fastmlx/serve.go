@@ -3,10 +3,19 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"net"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"strconv"
+	"syscall"
+
+	"github.com/tamnd/fastmlx/enginecore"
+	"github.com/tamnd/fastmlx/scheduler"
+	"github.com/tamnd/fastmlx/server"
 )
 
 // serveOptions is the `serve` command flag set.
@@ -68,10 +77,10 @@ func runServe(args []string) error {
 		o.modelDir = filepath.Join(o.basePath, "models")
 	}
 
-	// v0.1: configuration is parsed and validated; the server lifespan (engine
-	// pool, scheduler, routes) is wired in v0.2. Surface the resolved plan so the
-	// CLI is exercisable today.
-	fmt.Printf("fastmlx serve (v%s)\n", version)
+	// v0.2: the serving layer runs behind the mock decode backend so the
+	// OpenAI-compatible HTTP path is exercisable end-to-end. The compute backend
+	// (real tokens) lands in v0.4 (spec 1990, 02_compute_backend_mlxc.md).
+	fmt.Printf("fastmlx serve (v%s) - mock decode backend\n", version)
 	fmt.Printf("  listen      %s:%d\n", o.host, o.port)
 	fmt.Printf("  base-path   %s\n", o.basePath)
 	fmt.Printf("  model-dir   %s\n", o.modelDir)
@@ -82,7 +91,31 @@ func runServe(args []string) error {
 	} else {
 		fmt.Printf("  ssd-cache   %s (max %s, hot %s)\n", o.pagedSSDCacheDir, o.pagedSSDCacheMaxSize, o.hotCacheMaxSize)
 	}
-	return fmt.Errorf("serving layer lands in v0.2 (spec 1990, milestone 12); config OK")
+
+	schedCfg := scheduler.DefaultConfig()
+	schedCfg.MaxNumSeqs = o.maxConcurrentRequests
+	schedCfg.EmbeddingBatchSize = o.embeddingBatchSize
+
+	eng := enginecore.NewBatchedEngine(enginecore.Options{
+		ModelName:     "mock-model",
+		Scheduler:     schedCfg,
+		MaxConcurrent: o.maxConcurrentRequests,
+	})
+
+	var apiKeys []string
+	if o.apiKey != "" {
+		apiKeys = []string{o.apiKey}
+	}
+	app := server.NewApp(server.Config{
+		Addr:        net.JoinHostPort(o.host, strconv.Itoa(o.port)),
+		Engine:      eng,
+		APIKeys:     apiKeys,
+		CORSOrigins: []string{"*"},
+	})
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+	return app.Run(ctx)
 }
 
 func runLaunch(args []string) error {
