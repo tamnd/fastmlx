@@ -1,0 +1,153 @@
+{
+  "responses": [
+    {
+      "label": "text_only",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-test\",\"content\":[{\"type\":\"text\",\"text\":\"Hello, world\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "empty_text",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":5,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "whitespace_text_becomes_empty_block",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":5,\"output_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "length_finish",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"truncated\",\"cache_control\":null}],\"stop_reason\":\"max_tokens\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":8,\"output_tokens\":100,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "thinking_then_text",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"let me add 2 and 2\",\"signature\":\"fastmlx-reasoning\"},{\"type\":\"text\",\"text\":\"The answer is 4\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":20,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "thinking_only",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"reasoning with no visible answer\",\"signature\":\"fastmlx-reasoning\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":20,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "unicode_text",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"café 日本語 ☃\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":5,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "single_tool_call",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_1\",\"name\":\"get_weather\",\"input\":{\"city\":\"Paris\"}}],\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":15,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "text_and_tool_call",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"Let me check.\",\"cache_control\":null},{\"type\":\"tool_use\",\"id\":\"toolu_2\",\"name\":\"search\",\"input\":{\"q\":\"café\",\"limit\":5}}],\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":15,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "multi_tool_calls",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_a\",\"name\":\"f\",\"input\":{\"x\":1}},{\"type\":\"tool_use\",\"id\":\"toolu_b\",\"name\":\"g\",\"input\":{\"y\":[1,2,3],\"z\":{\"k\":true}}}],\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":15,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "thinking_text_and_tool",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"I should call the tool\",\"signature\":\"fastmlx-reasoning\"},{\"type\":\"text\",\"text\":\"Calling tool\",\"cache_control\":null},{\"type\":\"tool_use\",\"id\":\"toolu_d\",\"name\":\"act\",\"input\":{\"do\":\"it\"}}],\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":15,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    },
+    {
+      "label": "cache_control_split",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"cached\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":0,\"output_tokens\":10,\"cache_creation_input_tokens\":70,\"cache_read_input_tokens\":30}}"
+    },
+    {
+      "label": "cache_control_over_clamp",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"cached\",\"cache_control\":null}],\"stop_reason\":\"max_tokens\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":0,\"output_tokens\":7,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":50}}"
+    },
+    {
+      "label": "cache_hit_without_optin_ignored",
+      "raw": "{\"id\":\"msg_PARITY\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\",\"content\":[{\"type\":\"text\",\"text\":\"x\",\"cache_control\":null}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":40,\"output_tokens\":2,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0}}"
+    }
+  ],
+  "tools": [
+    {
+      "label": "none",
+      "result": null
+    },
+    {
+      "label": "empty",
+      "result": null
+    },
+    {
+      "label": "single_user_tool",
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get weather",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "no_description",
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "ping",
+            "description": null,
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "null_input_schema_becomes_empty",
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "noargs",
+            "description": "d",
+            "parameters": {}
+          }
+        }
+      ]
+    },
+    {
+      "label": "drops_server_side",
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "real",
+            "description": "kept",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "all_server_side_returns_none",
+      "result": null
+    },
+    {
+      "label": "dict_input",
+      "result": [
+        {
+          "type": "function",
+          "function": {
+            "name": "from_dict",
+            "description": "dd",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
