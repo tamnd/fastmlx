@@ -1,0 +1,4241 @@
+[
+  {
+    "input": "<think>reasoning</think>answer",
+    "extract": {
+      "thinking": "reasoning",
+      "content": "answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>reasoning</think>answer",
+            "thinking": "reasoning",
+            "content": "answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>rea",
+            "thinking": "rea",
+            "content": ""
+          },
+          {
+            "delta": "soning</th",
+            "thinking": "soning",
+            "content": ""
+          },
+          {
+            "delta": "ink>answer",
+            "thinking": "",
+            "content": "answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "just answer",
+    "extract": {
+      "thinking": "",
+      "content": "just answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "just answer",
+            "thinking": "",
+            "content": "just answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "j",
+            "thinking": "",
+            "content": "j"
+          },
+          {
+            "delta": "u",
+            "thinking": "",
+            "content": "u"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "jus",
+            "thinking": "",
+            "content": "jus"
+          },
+          {
+            "delta": "t a",
+            "thinking": "",
+            "content": "t a"
+          },
+          {
+            "delta": "nsw",
+            "thinking": "",
+            "content": "nsw"
+          },
+          {
+            "delta": "er",
+            "thinking": "",
+            "content": "er"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "reasoning</think>answer",
+    "extract": {
+      "thinking": "reasoning",
+      "content": "answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "reasoning</think>answer",
+            "thinking": "",
+            "content": "reasoninganswer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "g",
+            "thinking": "",
+            "content": "g"
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "reasoni",
+            "thinking": "",
+            "content": "reasoni"
+          },
+          {
+            "delta": "ng</thi",
+            "thinking": "",
+            "content": "ng"
+          },
+          {
+            "delta": "nk>answ",
+            "thinking": "",
+            "content": "answ"
+          },
+          {
+            "delta": "er",
+            "thinking": "",
+            "content": "er"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think></think>answer",
+    "extract": {
+      "thinking": "",
+      "content": "answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think></think>answer",
+            "thinking": "",
+            "content": "answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "</think",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">answer",
+            "thinking": "",
+            "content": "answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>reasoning</think>",
+    "extract": {
+      "thinking": "reasoning",
+      "content": ""
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>reasoning</think>",
+            "thinking": "reasoning",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "easoning",
+            "thinking": "easoning",
+            "content": ""
+          },
+          {
+            "delta": "</think>",
+            "thinking": "",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>everything but no close tag ever arrives",
+    "extract": {
+      "thinking": "",
+      "content": "everything but no close tag ever arrives"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>everything but no close tag ever arrives",
+            "thinking": "everything but no close tag ever arrives",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": "everything but no close tag ever arrives"
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "v",
+            "thinking": "v",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "y",
+            "thinking": "y",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "h",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "b",
+            "thinking": "b",
+            "content": ""
+          },
+          {
+            "delta": "u",
+            "thinking": "u",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "c",
+            "thinking": "c",
+            "content": ""
+          },
+          {
+            "delta": "l",
+            "thinking": "l",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "v",
+            "thinking": "v",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "v",
+            "thinking": "v",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": "everything but no close tag ever arrives"
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>everythi",
+            "thinking": "everythi",
+            "content": ""
+          },
+          {
+            "delta": "ng but no close",
+            "thinking": "ng but no close",
+            "content": ""
+          },
+          {
+            "delta": " tag ever arriv",
+            "thinking": " tag ever arriv",
+            "content": ""
+          },
+          {
+            "delta": "es",
+            "thinking": "es",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": "everything but no close tag ever arrives"
+        }
+      }
+    }
+  },
+  {
+    "input": "",
+    "extract": {
+      "thinking": "",
+      "content": ""
+    },
+    "streaming": {
+      "whole": {
+        "steps": [],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>a</think>middle<think>b</think>end",
+    "extract": {
+      "thinking": "a\nb",
+      "content": "middleend"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>a</think>middle<think>b</think>end",
+            "thinking": "ab",
+            "content": "middleend"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "m",
+            "thinking": "",
+            "content": "m"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "b",
+            "thinking": "b",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>a</thi",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "nk>middle<thi",
+            "thinking": "",
+            "content": "middle"
+          },
+          {
+            "delta": "nk>b</think>e",
+            "thinking": "b",
+            "content": "e"
+          },
+          {
+            "delta": "nd",
+            "thinking": "",
+            "content": "nd"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "a < b </think> c",
+    "extract": {
+      "thinking": "a < b",
+      "content": "c"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "a < b </think> c",
+            "thinking": "",
+            "content": "a < b  c"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": "< "
+          },
+          {
+            "delta": "b",
+            "thinking": "",
+            "content": "b"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "a < b",
+            "thinking": "",
+            "content": "a < b"
+          },
+          {
+            "delta": " </th",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "ink> ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>multi\nline\nreasoning</think>final answer",
+    "extract": {
+      "thinking": "multi\nline\nreasoning",
+      "content": "final answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>multi\nline\nreasoning</think>final answer",
+            "thinking": "multi\nline\nreasoning",
+            "content": "final answer"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "m",
+            "thinking": "m",
+            "content": ""
+          },
+          {
+            "delta": "u",
+            "thinking": "u",
+            "content": ""
+          },
+          {
+            "delta": "l",
+            "thinking": "l",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "\n",
+            "thinking": "\n",
+            "content": ""
+          },
+          {
+            "delta": "l",
+            "thinking": "l",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "\n",
+            "thinking": "\n",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "f",
+            "thinking": "",
+            "content": "f"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>multi\nli",
+            "thinking": "multi\nli",
+            "content": ""
+          },
+          {
+            "delta": "ne\nreasoning</t",
+            "thinking": "ne\nreasoning",
+            "content": ""
+          },
+          {
+            "delta": "hink>final answ",
+            "thinking": "",
+            "content": "final answ"
+          },
+          {
+            "delta": "er",
+            "thinking": "",
+            "content": "er"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>推理</think>答案",
+    "extract": {
+      "thinking": "推理",
+      "content": "答案"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>推理</think>答案",
+            "thinking": "推理",
+            "content": "答案"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "推",
+            "thinking": "推",
+            "content": ""
+          },
+          {
+            "delta": "理",
+            "thinking": "理",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "答",
+            "thinking": "",
+            "content": "答"
+          },
+          {
+            "delta": "案",
+            "thinking": "",
+            "content": "案"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">推理</t",
+            "thinking": "推理",
+            "content": ""
+          },
+          {
+            "delta": "hink>答",
+            "thinking": "",
+            "content": "答"
+          },
+          {
+            "delta": "案",
+            "thinking": "",
+            "content": "案"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "before<think>r</think>after",
+    "extract": {
+      "thinking": "r",
+      "content": "beforeafter"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "before<think>r</think>after",
+            "thinking": "r",
+            "content": "beforeafter"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "b",
+            "thinking": "",
+            "content": "b"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "f",
+            "thinking": "",
+            "content": "f"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "f",
+            "thinking": "",
+            "content": "f"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "before<th",
+            "thinking": "",
+            "content": "before"
+          },
+          {
+            "delta": "ink>r</th",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "ink>after",
+            "thinking": "",
+            "content": "after"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>see <think> again</think>after",
+    "extract": {
+      "thinking": "see <think> again",
+      "content": "after"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>see <think> again</think>after",
+            "thinking": "see  again",
+            "content": "after"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "f",
+            "thinking": "",
+            "content": "f"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>see <",
+            "thinking": "see ",
+            "content": ""
+          },
+          {
+            "delta": "think> again",
+            "thinking": " again",
+            "content": ""
+          },
+          {
+            "delta": "</think>afte",
+            "thinking": "",
+            "content": "afte"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "no tags but has a < stray bracket",
+    "extract": {
+      "thinking": "",
+      "content": "no tags but has a < stray bracket"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "no tags but has a < stray bracket",
+            "thinking": "",
+            "content": "no tags but has a < stray bracket"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "g",
+            "thinking": "",
+            "content": "g"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "b",
+            "thinking": "",
+            "content": "b"
+          },
+          {
+            "delta": "u",
+            "thinking": "",
+            "content": "u"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": "h"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": "< "
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "y",
+            "thinking": "",
+            "content": "y"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "b",
+            "thinking": "",
+            "content": "b"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": "k"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "no tags but",
+            "thinking": "",
+            "content": "no tags but"
+          },
+          {
+            "delta": " has a < st",
+            "thinking": "",
+            "content": " has a < st"
+          },
+          {
+            "delta": "ray bracket",
+            "thinking": "",
+            "content": "ray bracket"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "   leading and trailing space   ",
+    "extract": {
+      "thinking": "",
+      "content": "   leading and trailing space   "
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "   leading and trailing space   ",
+            "thinking": "",
+            "content": "   leading and trailing space   "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "g",
+            "thinking": "",
+            "content": "g"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "g",
+            "thinking": "",
+            "content": "g"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "p",
+            "thinking": "",
+            "content": "p"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "   leading",
+            "thinking": "",
+            "content": "   leading"
+          },
+          {
+            "delta": " and trail",
+            "thinking": "",
+            "content": " and trail"
+          },
+          {
+            "delta": "ing space ",
+            "thinking": "",
+            "content": "ing space "
+          },
+          {
+            "delta": "  ",
+            "thinking": "",
+            "content": "  "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>   spaced reasoning   </think>   spaced answer   ",
+    "extract": {
+      "thinking": "spaced reasoning",
+      "content": "spaced answer"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>   spaced reasoning   </think>   spaced answer   ",
+            "thinking": "   spaced reasoning   ",
+            "content": "   spaced answer   "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "p",
+            "thinking": "p",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "c",
+            "thinking": "c",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "d",
+            "thinking": "d",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "e",
+            "thinking": "e",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "o",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": " ",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "p",
+            "thinking": "",
+            "content": "p"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "w",
+            "thinking": "",
+            "content": "w"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>   spaced r",
+            "thinking": "   spaced r",
+            "content": ""
+          },
+          {
+            "delta": "easoning   </think",
+            "thinking": "easoning   ",
+            "content": ""
+          },
+          {
+            "delta": ">   spaced answer ",
+            "thinking": "",
+            "content": "   spaced answer "
+          },
+          {
+            "delta": "  ",
+            "thinking": "",
+            "content": "  "
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "partial <thi tag never finishes",
+    "extract": {
+      "thinking": "",
+      "content": "partial <thi tag never finishes"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "partial <thi tag never finishes",
+            "thinking": "",
+            "content": "partial <thi tag never finishes"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "p",
+            "thinking": "",
+            "content": "p"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": "<thi "
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": "g",
+            "thinking": "",
+            "content": "g"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "v",
+            "thinking": "",
+            "content": "v"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "r",
+            "thinking": "",
+            "content": "r"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "f",
+            "thinking": "",
+            "content": "f"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": "i"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": "h"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "partial <t",
+            "thinking": "",
+            "content": "partial "
+          },
+          {
+            "delta": "hi tag nev",
+            "thinking": "",
+            "content": "<thi tag nev"
+          },
+          {
+            "delta": "er finishe",
+            "thinking": "",
+            "content": "er finishe"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "</think>only a close then content",
+    "extract": {
+      "thinking": "",
+      "content": "only a close then content"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "</think>only a close then content",
+            "thinking": "",
+            "content": "only a close then content"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": "y",
+            "thinking": "",
+            "content": "y"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "a",
+            "thinking": "",
+            "content": "a"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          },
+          {
+            "delta": "l",
+            "thinking": "",
+            "content": "l"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "s",
+            "thinking": "",
+            "content": "s"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": "h"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": " ",
+            "thinking": "",
+            "content": " "
+          },
+          {
+            "delta": "c",
+            "thinking": "",
+            "content": "c"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": "t"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "</think>onl",
+            "thinking": "",
+            "content": "onl"
+          },
+          {
+            "delta": "y a close t",
+            "thinking": "",
+            "content": "y a close t"
+          },
+          {
+            "delta": "hen content",
+            "thinking": "",
+            "content": "hen content"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>first</think>",
+    "extract": {
+      "thinking": "first",
+      "content": ""
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>first</think>",
+            "thinking": "first",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "f",
+            "thinking": "f",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "r",
+            "thinking": "r",
+            "content": ""
+          },
+          {
+            "delta": "s",
+            "thinking": "s",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">first",
+            "thinking": "first",
+            "content": ""
+          },
+          {
+            "delta": "</thin",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k>",
+            "thinking": "",
+            "content": ""
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "<think>think</think><think>again</think>done",
+    "extract": {
+      "thinking": "think\nagain",
+      "content": "done"
+    },
+    "streaming": {
+      "whole": {
+        "steps": [
+          {
+            "delta": "<think>think</think><think>again</think>done",
+            "thinking": "thinkagain",
+            "content": "done"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "char": {
+        "steps": [
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "t",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "h",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "k",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "g",
+            "thinking": "g",
+            "content": ""
+          },
+          {
+            "delta": "a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "i",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "n",
+            "content": ""
+          },
+          {
+            "delta": "<",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "/",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "t",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "h",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "i",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "k",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": ">",
+            "thinking": "",
+            "content": ""
+          },
+          {
+            "delta": "d",
+            "thinking": "",
+            "content": "d"
+          },
+          {
+            "delta": "o",
+            "thinking": "",
+            "content": "o"
+          },
+          {
+            "delta": "n",
+            "thinking": "",
+            "content": "n"
+          },
+          {
+            "delta": "e",
+            "thinking": "",
+            "content": "e"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      },
+      "thirds": {
+        "steps": [
+          {
+            "delta": "<think>think</",
+            "thinking": "think",
+            "content": ""
+          },
+          {
+            "delta": "think><think>a",
+            "thinking": "a",
+            "content": ""
+          },
+          {
+            "delta": "gain</think>do",
+            "thinking": "gain",
+            "content": "do"
+          },
+          {
+            "delta": "ne",
+            "thinking": "",
+            "content": "ne"
+          }
+        ],
+        "finish": {
+          "thinking": "",
+          "content": ""
+        }
+      }
+    }
+  },
+  {
+    "input": "reasoning then</think> the answer",
+    "start_in_thinking": true,
+    "streaming_start_in_thinking": {
+      "steps": [
+        {
+          "delta": "r",
+          "thinking": "r",
+          "content": ""
+        },
+        {
+          "delta": "e",
+          "thinking": "e",
+          "content": ""
+        },
+        {
+          "delta": "a",
+          "thinking": "a",
+          "content": ""
+        },
+        {
+          "delta": "s",
+          "thinking": "s",
+          "content": ""
+        },
+        {
+          "delta": "o",
+          "thinking": "o",
+          "content": ""
+        },
+        {
+          "delta": "n",
+          "thinking": "n",
+          "content": ""
+        },
+        {
+          "delta": "i",
+          "thinking": "i",
+          "content": ""
+        },
+        {
+          "delta": "n",
+          "thinking": "n",
+          "content": ""
+        },
+        {
+          "delta": "g",
+          "thinking": "g",
+          "content": ""
+        },
+        {
+          "delta": " ",
+          "thinking": " ",
+          "content": ""
+        },
+        {
+          "delta": "t",
+          "thinking": "t",
+          "content": ""
+        },
+        {
+          "delta": "h",
+          "thinking": "h",
+          "content": ""
+        },
+        {
+          "delta": "e",
+          "thinking": "e",
+          "content": ""
+        },
+        {
+          "delta": "n",
+          "thinking": "n",
+          "content": ""
+        },
+        {
+          "delta": "<",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "/",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "t",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "h",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "i",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "n",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": "k",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": ">",
+          "thinking": "",
+          "content": ""
+        },
+        {
+          "delta": " ",
+          "thinking": "",
+          "content": " "
+        },
+        {
+          "delta": "t",
+          "thinking": "",
+          "content": "t"
+        },
+        {
+          "delta": "h",
+          "thinking": "",
+          "content": "h"
+        },
+        {
+          "delta": "e",
+          "thinking": "",
+          "content": "e"
+        },
+        {
+          "delta": " ",
+          "thinking": "",
+          "content": " "
+        },
+        {
+          "delta": "a",
+          "thinking": "",
+          "content": "a"
+        },
+        {
+          "delta": "n",
+          "thinking": "",
+          "content": "n"
+        },
+        {
+          "delta": "s",
+          "thinking": "",
+          "content": "s"
+        },
+        {
+          "delta": "w",
+          "thinking": "",
+          "content": "w"
+        },
+        {
+          "delta": "e",
+          "thinking": "",
+          "content": "e"
+        },
+        {
+          "delta": "r",
+          "thinking": "",
+          "content": "r"
+        }
+      ],
+      "finish": {
+        "thinking": "",
+        "content": ""
+      }
+    }
+  }
+]
