@@ -11,3 +11,4 @@
 # Go
 /vendor/
 .DS_Store
+coverage.out

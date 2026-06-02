@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
-.PHONY: build test vet fmt lint all mlx clean
+.PHONY: all build test race cover lint vet fmt fmtcheck vuln bench mlx clean
 
-all: fmt vet test build
+all: fmt vet lint test build
 
 build:
 	go build ./...
@@ -10,11 +10,33 @@ build:
 test:
 	go test ./...
 
+# race mirrors the CI gate: data-race detector + atomic coverage.
+race:
+	go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+cover: race
+	go tool cover -func=coverage.out | tail -1
+
 vet:
 	go vet ./...
 
+# lint runs golangci-lint with the repo config (.golangci.yml).
+lint:
+	golangci-lint run ./...
+
 fmt:
 	gofmt -w .
+
+fmtcheck:
+	@unformatted=$$(gofmt -l .); \
+	if [ -n "$$unformatted" ]; then echo "not gofmt-clean:"; echo "$$unformatted"; exit 1; fi
+
+vuln:
+	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+# bench runs every benchmark once (smoke); raise -benchtime for real numbers.
+bench:
+	go test -run '^$$' -bench . -benchtime 1x ./...
 
 # mlx builds the MLX + mlx-c dylibs the compute backend (v0.4+) links against.
 # Populated when the third_party submodules land.
@@ -23,4 +45,4 @@ mlx:
 
 clean:
 	go clean ./...
-	rm -f fastmlx
+	rm -f fastmlx coverage.out
