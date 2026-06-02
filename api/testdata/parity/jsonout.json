@@ -1,0 +1,120 @@
+{
+  "extract": [
+    {
+      "input": "{\"a\": 1, \"b\": [2, 3]}",
+      "result": "{\"a\": 1, \"b\": [2, 3]}"
+    },
+    {
+      "input": "  {\"x\": \"y\"}  ",
+      "result": "{\"x\": \"y\"}"
+    },
+    {
+      "input": "here is the result:\n```json\n{\"k\": \"v\", \"n\": 5}\n```\nthanks",
+      "result": "{\"k\": \"v\", \"n\": 5}"
+    },
+    {
+      "input": "```\n{\"plain\": true}\n```",
+      "result": "{\"plain\": true}"
+    },
+    {
+      "input": "prefix {\"obj\": {\"nested\": [1, 2]}} suffix",
+      "result": "{\"obj\": {\"nested\": [1, 2]}}"
+    },
+    {
+      "input": "a list [1, 2, 3] in text",
+      "result": "[1, 2, 3]"
+    },
+    {
+      "input": "no json at all here",
+      "result": null
+    },
+    {
+      "input": "first {\"a\": 1} then {\"b\": 2}",
+      "result": null
+    },
+    {
+      "input": "unbalanced {\"a\": 1",
+      "result": null
+    },
+    {
+      "input": "[{\"id\": 1}, {\"id\": 2}]",
+      "result": "[{\"id\": 1}, {\"id\": 2}]"
+    },
+    {
+      "input": "{\"unicode\": \"café 日本語\"}",
+      "result": "{\"unicode\": \"café 日本語\"}"
+    },
+    {
+      "input": "text before ```json\n{\"first\": 1}\n``` and ```json\n{\"second\": 2}\n```",
+      "result": "{\"first\": 1}"
+    }
+  ],
+  "prompt": [
+    {
+      "format": null,
+      "result": null
+    },
+    {
+      "format": {
+        "type": "text"
+      },
+      "result": null
+    },
+    {
+      "format": {
+        "type": "json_object"
+      },
+      "result": "You must respond with valid JSON only. Do not include any explanation or text outside the JSON object."
+    },
+    {
+      "format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "weather",
+          "description": "the weather report",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              },
+              "temp": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        }
+      },
+      "result": "You must respond with valid JSON matching the 'weather' schema. the weather report\n\nJSON Schema:\n```json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"city\": {\n      \"type\": \"string\"\n    },\n    \"temp\": {\n      \"type\": \"number\"\n    }\n  },\n  \"required\": [\n    \"city\"\n  ]\n}\n```\n\nRespond with only the JSON object, no additional text or explanation."
+    },
+    {
+      "format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "person",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "result": "You must respond with valid JSON matching the 'person' schema.\n\nJSON Schema:\n```json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    }\n  }\n}\n```\n\nRespond with only the JSON object, no additional text or explanation."
+    },
+    {
+      "format": {
+        "type": "json_schema",
+        "json_schema": {
+          "schema": {}
+        }
+      },
+      "result": "You must respond with valid JSON matching the 'response' schema.\n\nJSON Schema:\n```json\n{}\n```\n\nRespond with only the JSON object, no additional text or explanation."
+    }
+  ]
+}
