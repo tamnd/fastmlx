@@ -1,0 +1,244 @@
+{
+  "xml": [
+    {
+      "input": "before <tool_call>{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Paris\"}}</tool_call> after",
+      "cleaned": "before  after",
+      "calls": [
+        {
+          "name": "get_weather",
+          "arguments": "{\"city\": \"Paris\"}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>{\"name\": \"noargs\", \"arguments\": {}}</tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "noargs",
+          "arguments": "{}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call><function=lookup><parameter=q>weather</parameter><parameter=limit>5</parameter></function></tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "lookup",
+          "arguments": "{\"q\": \"weather\", \"limit\": 5}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>search<arg_key>query</arg_key><arg_value>cats</arg_value><arg_key>n</arg_key><arg_value>3</arg_value></tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "search",
+          "arguments": "{\"query\": \"cats\", \"n\": 3}"
+        }
+      ]
+    },
+    {
+      "input": "plain text with no tool call at all",
+      "cleaned": "plain text with no tool call at all",
+      "calls": null
+    },
+    {
+      "input": "<tool_call>{\"name\": \"a\", \"arguments\": {\"x\": 1}}</tool_call><tool_call>{\"name\": \"b\", \"arguments\": {\"y\": [1,2]}}</tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "a",
+          "arguments": "{\"x\": 1}"
+        },
+        {
+          "name": "b",
+          "arguments": "{\"y\": [1, 2]}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>{\"name\": \"withlist\", \"arguments\": {\"items\": [\"a\", \"b\"], \"n\": 2}}</tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "withlist",
+          "arguments": "{\"items\": [\"a\", \"b\"], \"n\": 2}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call><function=fn><parameter=obj>{\"k\": \"v\"}</parameter></function></tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "fn",
+          "arguments": "{\"obj\": {\"k\": \"v\"}}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>multi\nline<arg_key>k</arg_key><arg_value>line1\nline2</arg_value></tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "multi\nline",
+          "arguments": "{\"k\": \"line1\\nline2\"}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>{\"name\": \"only_name\"}</tool_call>",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "only_name",
+          "arguments": "{}"
+        }
+      ]
+    },
+    {
+      "input": "<tool_call>not json and no recognizable format</tool_call>",
+      "cleaned": "<tool_call>not json and no recognizable format</tool_call>",
+      "calls": null
+    }
+  ],
+  "namespaced": [
+    {
+      "input": "text<minimax:tool_call><invoke name=\"search\"><parameter name=\"q\">cats</parameter></invoke></minimax:tool_call>tail",
+      "namespace": "minimax",
+      "cleaned": "texttail",
+      "calls": [
+        {
+          "name": "search",
+          "arguments": "{\"q\": \"cats\"}"
+        }
+      ]
+    },
+    {
+      "input": "<minimax:tool_call><invoke name=\"a\"><parameter name=\"x\">1</parameter></invoke><invoke name=\"b\"><parameter name=\"y\">two</parameter></invoke></minimax:tool_call>",
+      "namespace": "minimax",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "a",
+          "arguments": "{\"x\": 1}"
+        },
+        {
+          "name": "b",
+          "arguments": "{\"y\": \"two\"}"
+        }
+      ]
+    },
+    {
+      "input": "<minimax:tool_call><invoke name=\"noparams\"></invoke></minimax:tool_call>",
+      "namespace": "minimax",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "noparams",
+          "arguments": "{}"
+        }
+      ]
+    },
+    {
+      "input": "no namespaced call here",
+      "namespace": "minimax",
+      "cleaned": "no namespaced call here",
+      "calls": null
+    },
+    {
+      "input": "<minimax:tool_call><invoke name=\"withjson\"><parameter name=\"cfg\">{\"a\": [1, 2]}</parameter></invoke></minimax:tool_call>",
+      "namespace": "minimax",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "withjson",
+          "arguments": "{\"cfg\": {\"a\": [1, 2]}}"
+        }
+      ]
+    }
+  ],
+  "bracket": [
+    {
+      "input": "sure [Calling tool: get_weather({\"city\": \"Tokyo\"})] done",
+      "cleaned": "sure  done",
+      "calls": [
+        {
+          "name": "get_weather",
+          "arguments": "{\"city\": \"Tokyo\"}"
+        }
+      ]
+    },
+    {
+      "input": "[Tool call: search({\"q\": \"cats\", \"n\": 3})]",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "search",
+          "arguments": "{\"q\": \"cats\", \"n\": 3}"
+        }
+      ]
+    },
+    {
+      "input": "[Tool call: simple_name]",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "simple_name",
+          "arguments": "{}"
+        }
+      ]
+    },
+    {
+      "input": "[Calling tool: a({\"x\": 1})] and [Tool call: b]",
+      "cleaned": "and",
+      "calls": [
+        {
+          "name": "a",
+          "arguments": "{\"x\": 1}"
+        },
+        {
+          "name": "b",
+          "arguments": "{}"
+        }
+      ]
+    },
+    {
+      "input": "no bracket calls in this text",
+      "cleaned": "no bracket calls in this text",
+      "calls": null
+    },
+    {
+      "input": "[Tool call: bad_args(not json)]",
+      "cleaned": "[Tool call: bad_args(not json)]",
+      "calls": null
+    },
+    {
+      "input": "[Calling tool: ns.scoped-name({\"k\": \"v\"})]",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "ns.scoped-name",
+          "arguments": "{\"k\": \"v\"}"
+        }
+      ]
+    },
+    {
+      "input": "[Tool call: dup] [Tool call: dup({\"a\": 1})]",
+      "cleaned": "",
+      "calls": [
+        {
+          "name": "dup",
+          "arguments": "{\"a\": 1}"
+        },
+        {
+          "name": "dup",
+          "arguments": "{}"
+        }
+      ]
+    }
+  ]
+}
