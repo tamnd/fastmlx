@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package scheduler implements continuous batching over a pipeline.DecodeStrategy.
 // It runs the step loop (schedule waiting -> decode -> process

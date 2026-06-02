@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package tokenizer defines the tokenizer seam used by the engine and the
 // scheduler. The real tokenizer is a cgo HuggingFace binding that lands with the

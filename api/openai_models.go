@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package api holds the OpenAI/Anthropic-compatible request and response models
 // (exact json tags so existing SDKs are drop-in) and the streaming SSE encoder.

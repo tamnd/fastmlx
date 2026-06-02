@@ -22,13 +22,15 @@ under load - where Python's GIL serializes the scheduler, detokenizer, parsers, 
 
 Early. The build runs through milestones v0.1 to v1.0:
 
-- **v0.1 (in progress)** - foundations: config/settings parsing, model discovery, CLI skeleton.
-- v0.2 - `net/http` serving layer + scheduler behind a mock decode backend.
+- **v0.1 (done)** - foundations: config/settings parsing, model discovery, CLI skeleton.
+- **v0.2 (done)** - `net/http` serving layer + scheduler behind a mock decode backend; the
+  OpenAI-compatible chat/completions/models/health path runs end-to-end with zero-allocation SSE.
 - v0.3 - tool/reasoning parsers, Anthropic + Responses routes, MCP.
 - v0.4 - the compute backend: `mlxgo` cgo bindings over `mlx-c`, first real token.
 - v0.5+ - tiered cache, speculative decoding, architecture breadth, management, multimodal, benchmark.
 
-See `docs/` (TBD) and the spec for the full plan.
+Each milestone lands as its own pull request carrying its code, tests, and benchmarks. See the spec
+for the full plan.
 
 ## Build
 
@@ -42,4 +44,11 @@ build tag selects a pure-Go stub so everything builds and the serving layer test
 
 ## License
 
-Licensed under the Apache License, Version 2.0.
+Licensed under either of
+
+- MIT license ([LICENSE-MIT](LICENSE-MIT))
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
+
+at your option. Both licenses are offered so you can pick whichever fits your project.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this
+work shall be dual licensed as above, without any additional terms or conditions.

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package engine defines the request lifecycle types and the Engine interface
 // shared by every model backend (batched LLM, VLM, embedding, reranker, audio).

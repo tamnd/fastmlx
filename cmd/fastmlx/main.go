@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Command fastmlx is the fastmlx CLI: a continuous-batching
 // MLX LLM inference server for Apple Silicon. It provides serve/launch/diagnose

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package server wires the net/http application: lifespan (bind, engine start,
 // readiness), middleware (request-id, access logging, CORS, auth), exception

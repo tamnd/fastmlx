@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package pipeline defines the decode seam between the scheduler and a compute
 // backend. The scheduler depends only on DecodeStrategy, so the mock backend

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package enginecore drives the scheduler from a single goroutine and fans
 // per-request increments out over channels. It replaces an asyncio-style engine

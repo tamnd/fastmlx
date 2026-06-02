@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package discovery classifies models on disk into engine-routable types
 // for engine routing. The type and architecture sets are kept

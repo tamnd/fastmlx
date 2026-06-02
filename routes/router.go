@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
 // Package routes implements the OpenAI-compatible HTTP handlers. It depends on a
 // narrow Engine interface so any concrete engine (the mock-backed BatchedEngine
