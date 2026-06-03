@@ -3,6 +3,7 @@
 package discovery
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -19,13 +20,12 @@ var contextLengthKeys = []string{
 // above ~1e18 is treated as the sentinel, not a real context length.
 const tokenizerMaxLengthSentinel = int64(1_000_000_000_000_000_000)
 
-// modelConfig is the subset of config.json we read for classification.
+// modelConfig is the subset of config.json we read for classification. The
+// vision-subconfig and context-length decisions read Raw directly so they can
+// honour Python's key-presence and isinstance(int) semantics exactly.
 type modelConfig struct {
 	ModelType     string         `json:"model_type"`
 	Architectures []string       `json:"architectures"`
-	VisionConfig  map[string]any `json:"vision_config"`
-	VitConfig     map[string]any `json:"vit_config"`
-	MMVisionTower any            `json:"mm_vision_tower"`
 	Raw           map[string]any `json:"-"`
 }
 
@@ -52,8 +52,8 @@ func readConfig(modelPath string) (*modelConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	var raw map[string]any
-	if err := json.Unmarshal(b, &raw); err != nil {
+	raw, err := decodeNumberMap(b)
+	if err != nil {
 		return nil, err
 	}
 	var c modelConfig
@@ -64,9 +64,18 @@ func readConfig(modelPath string) (*modelConfig, error) {
 	return &c, nil
 }
 
-// hasVisionSubconfig reports whether the config carries a vision subconfig.
-func (c *modelConfig) hasVisionSubconfig() bool {
-	return c.VisionConfig != nil || c.VitConfig != nil || c.MMVisionTower != nil
+// decodeNumberMap unmarshals a JSON object into a map, keeping numbers as
+// json.Number so integer literals stay distinguishable from floats. Python's
+// isinstance(value, int) rejects a float like 32768.0; the default float64
+// decode cannot, so context-length resolution relies on this.
+func decodeNumberMap(b []byte) (map[string]any, error) {
+	dec := json.NewDecoder(bytes.NewReader(b))
+	dec.UseNumber()
+	var m map[string]any
+	if err := dec.Decode(&m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // DetectModelType classifies a model directory, following the same
@@ -112,7 +121,7 @@ func DetectModelType(modelPath string) (ModelType, error) {
 	}
 
 	// 3. Vision-subconfig heuristic.
-	if c.hasVisionSubconfig() {
+	if HasVisionSubconfig(c.Raw) {
 		return TypeVLM, nil
 	}
 	return TypeLLM, nil
@@ -123,31 +132,15 @@ func DetectModelType(modelPath string) (ModelType, error) {
 // tokenizer_config.json's model_max_length (ignoring the int(1e30) sentinel).
 // Returns 0 when no usable value is found.
 func ReadModelContextLength(modelPath string) int {
+	var config map[string]any
 	if c, err := readConfig(modelPath); err == nil {
-		if v := pickContextKey(c.Raw); v > 0 {
-			return v
-		}
-		for _, nest := range []string{"text_config", "language_config"} {
-			if sub, ok := c.Raw[nest].(map[string]any); ok {
-				if v := pickContextKey(sub); v > 0 {
-					return v
-				}
-			}
-		}
-	}
-
-	b, err := os.ReadFile(filepath.Join(modelPath, "tokenizer_config.json"))
-	if err != nil {
-		return 0
+		config = c.Raw
 	}
 	var tc map[string]any
-	if json.Unmarshal(b, &tc) != nil {
-		return 0
+	if b, err := os.ReadFile(filepath.Join(modelPath, "tokenizer_config.json")); err == nil {
+		tc, _ = decodeNumberMap(b)
 	}
-	if v, ok := asInt(tc["model_max_length"]); ok && v > 0 && v < tokenizerMaxLengthSentinel {
-		return int(v)
-	}
-	return 0
+	return ContextLengthFromConfigs(config, tc)
 }
 
 func pickContextKey(m map[string]any) int {
@@ -159,15 +152,12 @@ func pickContextKey(m map[string]any) int {
 	return 0
 }
 
-// asInt extracts an integer from a JSON-decoded value (json numbers decode to
-// float64). Non-integral floats are rejected, matching Python's isinstance(int).
+// asInt extracts an integer from a JSON-decoded value, matching Python's
+// isinstance(value, int): only an integer literal qualifies, so a float like
+// 32768.0 (or an exponent form) is rejected. Inputs must be decoded with
+// decodeNumberMap so numbers arrive as json.Number rather than float64.
 func asInt(v any) (int64, bool) {
-	switch n := v.(type) {
-	case float64:
-		if n == float64(int64(n)) {
-			return int64(n), true
-		}
-	case json.Number:
+	if n, ok := v.(json.Number); ok {
 		if i, err := n.Int64(); err == nil {
 			return i, true
 		}

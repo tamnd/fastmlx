@@ -1,0 +1,194 @@
+{
+  "context_keys": [
+    "max_position_embeddings",
+    "max_seq_len",
+    "max_seq_length",
+    "seq_length",
+    "n_positions"
+  ],
+  "sentinel": 1000000000000000000,
+  "vision": [
+    {
+      "config": "{\"vision_config\": {\"depth\": 32}}",
+      "result": true
+    },
+    {
+      "config": "{\"vision_config\": null}",
+      "result": true
+    },
+    {
+      "config": "{\"vit_config\": {}}",
+      "result": true
+    },
+    {
+      "config": "{\"mm_vision_tower\": \"openai/clip\"}",
+      "result": true
+    },
+    {
+      "config": "{\"mm_vision_tower\": \"\"}",
+      "result": false
+    },
+    {
+      "config": "{\"mm_vision_tower\": null}",
+      "result": false
+    },
+    {
+      "config": "{\"model_type\": \"qwen2\"}",
+      "result": false
+    },
+    {
+      "config": "{}",
+      "result": false
+    }
+  ],
+  "arch": [
+    {
+      "architectures": [
+        "Qwen2ForCausalLM"
+      ],
+      "result": true
+    },
+    {
+      "architectures": [
+        "LlamaForCausalLM",
+        "Other"
+      ],
+      "result": true
+    },
+    {
+      "architectures": [
+        "LFM2AudioModel"
+      ],
+      "result": false
+    },
+    {
+      "architectures": [
+        "GemmaForConditionalGeneration"
+      ],
+      "result": false
+    },
+    {
+      "architectures": [],
+      "result": false
+    },
+    {
+      "architectures": [
+        "MyCausalLMHead"
+      ],
+      "result": true
+    },
+    {
+      "architectures": [
+        "bertmodel"
+      ],
+      "result": false
+    }
+  ],
+  "context": [
+    {
+      "config": "{\"max_position_embeddings\": 32768}",
+      "tokenizer_config": null,
+      "result": 32768
+    },
+    {
+      "config": "{\"seq_length\": 4096, \"max_position_embeddings\": 8192}",
+      "tokenizer_config": null,
+      "result": 8192
+    },
+    {
+      "config": "{\"n_positions\": 2048}",
+      "tokenizer_config": null,
+      "result": 2048
+    },
+    {
+      "config": "{\"max_position_embeddings\": 32768.0}",
+      "tokenizer_config": null,
+      "result": null
+    },
+    {
+      "config": "{\"max_position_embeddings\": 0}",
+      "tokenizer_config": null,
+      "result": null
+    },
+    {
+      "config": "{\"text_config\": {\"max_seq_len\": 131072}}",
+      "tokenizer_config": null,
+      "result": 131072
+    },
+    {
+      "config": "{\"language_config\": {\"seq_length\": 8192}}",
+      "tokenizer_config": null,
+      "result": 8192
+    },
+    {
+      "config": "{\"foo\": 1}",
+      "tokenizer_config": "{\"model_max_length\": 4096}",
+      "result": 4096
+    },
+    {
+      "config": "{\"foo\": 1}",
+      "tokenizer_config": "{\"model_max_length\": 1000000000000000000000000000000}",
+      "result": null
+    },
+    {
+      "config": "{\"foo\": 1}",
+      "tokenizer_config": "{\"model_max_length\": 0}",
+      "result": null
+    },
+    {
+      "config": null,
+      "tokenizer_config": "{\"model_max_length\": 2048}",
+      "result": 2048
+    },
+    {
+      "config": "{\"foo\": 1}",
+      "tokenizer_config": null,
+      "result": null
+    },
+    {
+      "config": null,
+      "tokenizer_config": null,
+      "result": null
+    }
+  ],
+  "thinking": [
+    {
+      "template": "{% if enable_thinking is false %}...",
+      "result": true
+    },
+    {
+      "template": "{{ enable_thinking | default(false) }}",
+      "result": false
+    },
+    {
+      "template": "loop over enable_thinking) here",
+      "result": false
+    },
+    {
+      "template": "no toggle here",
+      "result": null
+    },
+    {
+      "template": "",
+      "result": null
+    },
+    {
+      "template": "{% if enable_thinking %}on{% endif %}",
+      "result": null
+    }
+  ],
+  "preserve": [
+    {
+      "template": "keeps preserve_thinking blocks",
+      "result": true
+    },
+    {
+      "template": "no flag",
+      "result": null
+    },
+    {
+      "template": "",
+      "result": null
+    }
+  ]
+}
