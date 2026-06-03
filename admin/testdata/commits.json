@@ -1,0 +1,218 @@
+{
+  "direct": [
+    {
+      "direct_url": {
+        "url": "https://github.com/ml-explore/mlx-lm.git",
+        "vcs_info": {
+          "commit_id": "abc1234def5678"
+        }
+      },
+      "default_url": "https://github.com/fallback/repo",
+      "out": {
+        "commit": "abc1234def5678",
+        "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234def5678"
+      }
+    },
+    {
+      "direct_url": {
+        "url": "https://github.com/ml-explore/mlx-lm/",
+        "vcs_info": {
+          "commit_id": "deadbeef"
+        }
+      },
+      "default_url": "https://fallback",
+      "out": {
+        "commit": "deadbeef",
+        "url": "https://github.com/ml-explore/mlx-lm/commit/deadbeef"
+      }
+    },
+    {
+      "direct_url": {
+        "vcs_info": {
+          "commit_id": "cafe0001"
+        }
+      },
+      "default_url": "https://github.com/x/y",
+      "out": {
+        "commit": "cafe0001",
+        "url": "https://github.com/x/y/commit/cafe0001"
+      }
+    },
+    {
+      "direct_url": {
+        "url": "https://github.com/x/y",
+        "vcs_info": {}
+      },
+      "default_url": "https://github.com/x/y",
+      "out": null
+    },
+    {
+      "direct_url": {
+        "vcs_info": {
+          "commit_id": ""
+        }
+      },
+      "default_url": "https://github.com/x/y",
+      "out": null
+    },
+    {
+      "direct_url": {},
+      "default_url": "https://github.com/x/y",
+      "out": null
+    }
+  ],
+  "engine": [
+    {
+      "data": {
+        "mlx-lm": {
+          "commit": "abc1234",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234"
+        }
+      },
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-lm": {
+          "commit": "abc1234",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234"
+        }
+      }
+    },
+    {
+      "data": {
+        "mlx-lm": {
+          "commit": "deadbeef"
+        }
+      },
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-lm": {
+          "commit": "deadbeef",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/deadbeef"
+        }
+      }
+    },
+    {
+      "data": {
+        "mlx-lm": {
+          "commit": "feed01",
+          "url": "https://github.com/ml-explore/mlx-lm"
+        }
+      },
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-lm": {
+          "commit": "feed01",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/feed01"
+        }
+      }
+    },
+    {
+      "data": {
+        "mlx-lm": "not-a-dict",
+        "mlx-vlm": {
+          "commit": "9999aaa"
+        }
+      },
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-vlm": {
+          "commit": "9999aaa",
+          "url": "https://github.com/Blaizzy/mlx-vlm/commit/9999aaa"
+        }
+      }
+    },
+    {
+      "data": {
+        "unknown-pkg": {
+          "commit": "1234567"
+        }
+      },
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "unknown-pkg": {
+          "commit": "1234567",
+          "url": "/commit/1234567"
+        }
+      }
+    },
+    {
+      "data": {},
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {}
+    }
+  ],
+  "pyproject": [
+    {
+      "content": "\"mlx-lm @ git+https://github.com/ml-explore/mlx-lm@abc1234def\"",
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-lm": {
+          "commit": "abc1234def",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234def"
+        }
+      }
+    },
+    {
+      "content": "dependencies = [\n    \"mlx-lm @ git+https://github.com/ml-explore/mlx-lm@abc1234567\",\n    \"mlx-vlm @ git+https://github.com/Blaizzy/mlx-vlm@deadbeef0011\",\n    \"numpy>=1.0\",\n]",
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {
+        "mlx-lm": {
+          "commit": "abc1234567",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234567"
+        },
+        "mlx-vlm": {
+          "commit": "deadbeef0011",
+          "url": "https://github.com/Blaizzy/mlx-vlm/commit/deadbeef0011"
+        }
+      }
+    },
+    {
+      "content": "\"UNKNOWN @ git+https://github.com/x/y@abc1234\"",
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {}
+    },
+    {
+      "content": "\"mlx-lm @ git+https://github.com/x/mlx-lm@xyz\"",
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {}
+    },
+    {
+      "content": "no urls here",
+      "packages": {
+        "mlx-lm": "https://github.com/ml-explore/mlx-lm",
+        "mlx-vlm": "https://github.com/Blaizzy/mlx-vlm"
+      },
+      "out": {}
+    }
+  ]
+}
