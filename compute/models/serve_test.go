@@ -6,9 +6,12 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/tamnd/fastmlx/compute"
 	"github.com/tamnd/fastmlx/mlxgo"
 	"github.com/tamnd/fastmlx/pipeline"
 )
@@ -71,6 +74,37 @@ func TestNewBatchDecodeEndToEnd(t *testing.T) {
 	}
 }
 
+func TestNewBatchDecodeDirEndToEnd(t *testing.T) {
+	args, err := ParseQwen3Args([]byte(minimalQwen3Config))
+	if err != nil {
+		t.Fatalf("ParseQwen3Args: %v", err)
+	}
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, compute.ConfigFileName), []byte(minimalQwen3Config), 0o644); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "model.safetensors"), fabricateBlob(args.WeightNames()), 0o644); err != nil {
+		t.Fatalf("write weights: %v", err)
+	}
+
+	dec, err := NewBatchDecodeDir(dir, 2)
+	if err != nil {
+		t.Fatalf("NewBatchDecodeDir: %v", err)
+	}
+	if _, err := dec.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2}, MaxTokens: 4, Sampler: nopSampler{}}); err != nil {
+		t.Fatalf("Insert: %v", err)
+	}
+	if _, err := dec.Step(); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("Step err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
+func TestNewBatchDecodeDirMissing(t *testing.T) {
+	if _, err := NewBatchDecodeDir(filepath.Join(t.TempDir(), "nope"), 0); err == nil {
+		t.Fatal("NewBatchDecodeDir accepted a missing directory")
+	}
+}
+
 func TestNewBatchDecodeBadConfig(t *testing.T) {
 	if _, err := NewBatchDecode([]byte(`{not json`), nil, 0); err == nil {
 		t.Fatal("NewBatchDecode accepted invalid config JSON")
@@ -78,7 +112,9 @@ func TestNewBatchDecodeBadConfig(t *testing.T) {
 }
 
 func TestNewBatchDecodeNoModelType(t *testing.T) {
-	_, err := NewBatchDecode([]byte(`{"hidden_size":8}`), nil, 0)
+	// Valid empty blob so weight loading succeeds; the missing model_type is what
+	// must fail.
+	_, err := NewBatchDecode([]byte(`{"hidden_size":8}`), fabricateBlob(nil), 0)
 	if err == nil || !strings.Contains(err.Error(), "model_type") {
 		t.Fatalf("err = %v, want a no-model_type error", err)
 	}
