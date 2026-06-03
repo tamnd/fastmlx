@@ -1,0 +1,369 @@
+[
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "weather?"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "c1",
+            "function": {
+              "name": "get_weather",
+              "arguments": "{\"city\": \"Seoul\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": "{\"temp\": 21}"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "weather?"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "c1",
+            "function": {
+              "name": "get_weather",
+              "arguments": {
+                "city": "Seoul"
+              }
+            }
+          }
+        ],
+        "_preserve_role_boundary": true,
+        "tool_responses": [
+          {
+            "name": "get_weather",
+            "response": {
+              "temp": 21
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c9",
+        "content": "orphan result"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_responses": [
+          {
+            "name": "c9",
+            "response": "orphan result"
+          }
+        ],
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "known",
+            "function": {
+              "name": "fn_a",
+              "arguments": "{}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "other",
+        "content": "x"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "known",
+            "function": {
+              "name": "fn_a",
+              "arguments": {}
+            }
+          }
+        ],
+        "_preserve_role_boundary": true,
+        "tool_responses": [
+          {
+            "name": "other",
+            "response": "x"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "<think>\nplan\n</think>\nfinal answer"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "final answer"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "look"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "http://x/y.png"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "look"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "http://x/y.png"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "a"
+          },
+          {
+            "type": "text",
+            "text": "b"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "a\nb"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "q"
+      },
+      {
+        "role": "developer",
+        "content": "be terse"
+      },
+      {
+        "role": "system",
+        "content": "sys2"
+      }
+    ],
+    "result": [
+      {
+        "role": "system",
+        "content": "be terse\n\nsys2"
+      },
+      {
+        "role": "user",
+        "content": "q"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "one"
+      },
+      {
+        "role": "user",
+        "content": "two"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "one\n\ntwo"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a",
+            "function": {
+              "name": "fa",
+              "arguments": "{}"
+            }
+          },
+          {
+            "id": "b",
+            "function": {
+              "name": "fb",
+              "arguments": "{}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "a",
+        "content": "ra"
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "b",
+        "content": "{\"k\": 1}"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a",
+            "function": {
+              "name": "fa",
+              "arguments": {}
+            }
+          },
+          {
+            "id": "b",
+            "function": {
+              "name": "fb",
+              "arguments": {}
+            }
+          }
+        ],
+        "_preserve_role_boundary": true,
+        "tool_responses": [
+          {
+            "name": "fa",
+            "response": "ra"
+          },
+          {
+            "name": "fb",
+            "response": {
+              "k": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "listed"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "listed"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  }
+]
