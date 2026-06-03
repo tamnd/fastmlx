@@ -1,0 +1,733 @@
+{
+ "kv": [
+  {
+   "label": "single_decode",
+   "steps": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 1,
+     "offset": 1,
+     "capacity": 256,
+     "size": 1,
+     "fetch": 1
+    },
+    {
+     "S": 1,
+     "offset": 2,
+     "capacity": 256,
+     "size": 2,
+     "fetch": 2
+    },
+    {
+     "S": 1,
+     "offset": 3,
+     "capacity": 256,
+     "size": 3,
+     "fetch": 3
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 256,
+     "size": 4,
+     "fetch": 4
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 256,
+     "size": 5,
+     "fetch": 5
+    }
+   ]
+  },
+  {
+   "label": "prefill_then_decode",
+   "steps": [
+    10,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 10,
+     "offset": 10,
+     "capacity": 256,
+     "size": 10,
+     "fetch": 10
+    },
+    {
+     "S": 1,
+     "offset": 11,
+     "capacity": 256,
+     "size": 11,
+     "fetch": 11
+    },
+    {
+     "S": 1,
+     "offset": 12,
+     "capacity": 256,
+     "size": 12,
+     "fetch": 12
+    },
+    {
+     "S": 1,
+     "offset": 13,
+     "capacity": 256,
+     "size": 13,
+     "fetch": 13
+    }
+   ]
+  },
+  {
+   "label": "cross_step_boundary",
+   "steps": [
+    200,
+    100,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 200,
+     "offset": 200,
+     "capacity": 256,
+     "size": 200,
+     "fetch": 200
+    },
+    {
+     "S": 100,
+     "offset": 300,
+     "capacity": 456,
+     "size": 300,
+     "fetch": 300
+    },
+    {
+     "S": 1,
+     "offset": 301,
+     "capacity": 456,
+     "size": 301,
+     "fetch": 301
+    },
+    {
+     "S": 1,
+     "offset": 302,
+     "capacity": 456,
+     "size": 302,
+     "fetch": 302
+    }
+   ]
+  },
+  {
+   "label": "big_prefill",
+   "steps": [
+    500
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 500,
+     "offset": 500,
+     "capacity": 512,
+     "size": 500,
+     "fetch": 500
+    }
+   ]
+  },
+  {
+   "label": "unaligned_then_grow",
+   "steps": [
+    3,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 3,
+     "offset": 3,
+     "capacity": 256,
+     "size": 3,
+     "fetch": 3
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 256,
+     "size": 4,
+     "fetch": 4
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 256,
+     "size": 5,
+     "fetch": 5
+    }
+   ]
+  },
+  {
+   "label": "prefill_decode_trim",
+   "steps": [
+    10,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": [
+    3,
+    100
+   ],
+   "records": [
+    {
+     "S": 10,
+     "offset": 10,
+     "capacity": 256,
+     "size": 10,
+     "fetch": 10
+    },
+    {
+     "S": 1,
+     "offset": 11,
+     "capacity": 256,
+     "size": 11,
+     "fetch": 11
+    },
+    {
+     "S": 1,
+     "offset": 12,
+     "capacity": 256,
+     "size": 12,
+     "fetch": 12
+    },
+    {
+     "S": 1,
+     "offset": 13,
+     "capacity": 256,
+     "size": 13,
+     "fetch": 13
+    },
+    {
+     "S": 1,
+     "offset": 14,
+     "capacity": 256,
+     "size": 14,
+     "fetch": 14
+    },
+    {
+     "trim": 3,
+     "trimmed": 3,
+     "offset": 11,
+     "capacity": 256
+    },
+    {
+     "trim": 100,
+     "trimmed": 11,
+     "offset": 0,
+     "capacity": 256
+    }
+   ]
+  }
+ ],
+ "rot": [
+  {
+   "label": "decode_under_max",
+   "max_size": 8,
+   "keep": 2,
+   "steps": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 1,
+     "offset": 1,
+     "capacity": 8,
+     "idx": 1,
+     "size": 1,
+     "fetch": 1,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 2,
+     "capacity": 8,
+     "idx": 2,
+     "size": 2,
+     "fetch": 2,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 3,
+     "capacity": 8,
+     "idx": 3,
+     "size": 3,
+     "fetch": 3,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 8,
+     "idx": 4,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 8,
+     "idx": 5,
+     "size": 5,
+     "fetch": 5,
+     "trimmable": true
+    }
+   ]
+  },
+  {
+   "label": "decode_past_max",
+   "max_size": 8,
+   "keep": 2,
+   "steps": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 1,
+     "offset": 1,
+     "capacity": 8,
+     "idx": 1,
+     "size": 1,
+     "fetch": 1,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 2,
+     "capacity": 8,
+     "idx": 2,
+     "size": 2,
+     "fetch": 2,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 3,
+     "capacity": 8,
+     "idx": 3,
+     "size": 3,
+     "fetch": 3,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 8,
+     "idx": 4,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 8,
+     "idx": 5,
+     "size": 5,
+     "fetch": 5,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 6,
+     "capacity": 8,
+     "idx": 6,
+     "size": 6,
+     "fetch": 6,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 7,
+     "capacity": 8,
+     "idx": 7,
+     "size": 7,
+     "fetch": 7,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 8,
+     "capacity": 8,
+     "idx": 8,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 9,
+     "capacity": 8,
+     "idx": 3,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 10,
+     "capacity": 8,
+     "idx": 4,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 11,
+     "capacity": 8,
+     "idx": 5,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 12,
+     "capacity": 8,
+     "idx": 6,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 13,
+     "capacity": 8,
+     "idx": 7,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 14,
+     "capacity": 8,
+     "idx": 8,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 15,
+     "capacity": 8,
+     "idx": 3,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": false
+    }
+   ]
+  },
+  {
+   "label": "decode_no_keep",
+   "max_size": 4,
+   "keep": 0,
+   "steps": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 1,
+     "offset": 1,
+     "capacity": 4,
+     "idx": 1,
+     "size": 1,
+     "fetch": 1,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 2,
+     "capacity": 4,
+     "idx": 2,
+     "size": 2,
+     "fetch": 2,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 3,
+     "capacity": 4,
+     "idx": 3,
+     "size": 3,
+     "fetch": 3,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 4,
+     "idx": 4,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 4,
+     "idx": 1,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 6,
+     "capacity": 4,
+     "idx": 2,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 7,
+     "capacity": 4,
+     "idx": 3,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 8,
+     "capacity": 4,
+     "idx": 4,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 9,
+     "capacity": 4,
+     "idx": 1,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 10,
+     "capacity": 4,
+     "idx": 2,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": false
+    }
+   ]
+  },
+  {
+   "label": "concat_prefill",
+   "max_size": 16,
+   "keep": 4,
+   "steps": [
+    6,
+    1,
+    1,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 6,
+     "offset": 6,
+     "capacity": 6,
+     "idx": 6,
+     "size": 6,
+     "fetch": 6,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 7,
+     "capacity": 16,
+     "idx": 7,
+     "size": 7,
+     "fetch": 7,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 8,
+     "capacity": 16,
+     "idx": 8,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 9,
+     "capacity": 16,
+     "idx": 9,
+     "size": 9,
+     "fetch": 9,
+     "trimmable": true
+    }
+   ]
+  },
+  {
+   "label": "concat_over_max",
+   "max_size": 10,
+   "keep": 4,
+   "steps": [
+    8,
+    8,
+    1
+   ],
+   "trims": null,
+   "records": [
+    {
+     "S": 8,
+     "offset": 8,
+     "capacity": 8,
+     "idx": 8,
+     "size": 8,
+     "fetch": 8,
+     "trimmable": true
+    },
+    {
+     "S": 8,
+     "offset": 16,
+     "capacity": 16,
+     "idx": 16,
+     "size": 10,
+     "fetch": 16,
+     "trimmable": false
+    },
+    {
+     "S": 1,
+     "offset": 17,
+     "capacity": 10,
+     "idx": 5,
+     "size": 10,
+     "fetch": 10,
+     "trimmable": false
+    }
+   ]
+  },
+  {
+   "label": "decode_trim",
+   "max_size": 8,
+   "keep": 2,
+   "steps": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "trims": [
+    2
+   ],
+   "records": [
+    {
+     "S": 1,
+     "offset": 1,
+     "capacity": 8,
+     "idx": 1,
+     "size": 1,
+     "fetch": 1,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 2,
+     "capacity": 8,
+     "idx": 2,
+     "size": 2,
+     "fetch": 2,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 3,
+     "capacity": 8,
+     "idx": 3,
+     "size": 3,
+     "fetch": 3,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 4,
+     "capacity": 8,
+     "idx": 4,
+     "size": 4,
+     "fetch": 4,
+     "trimmable": true
+    },
+    {
+     "S": 1,
+     "offset": 5,
+     "capacity": 8,
+     "idx": 5,
+     "size": 5,
+     "fetch": 5,
+     "trimmable": true
+    },
+    {
+     "trim": 2,
+     "trimmed": 2,
+     "offset": 3,
+     "idx": 3
+    }
+   ]
+  }
+ ]
+}
