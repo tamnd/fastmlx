@@ -1,0 +1,793 @@
+{
+  "mmlu": {
+    "dev_items": [
+      {
+        "question": "Dev bio q1?",
+        "choices": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "answer": 0,
+        "subject": "high_school_biology"
+      },
+      {
+        "question": "Dev bio q2?",
+        "choices": [
+          "w",
+          "x",
+          "y",
+          "z"
+        ],
+        "answer": 2,
+        "subject": "high_school_biology"
+      },
+      {
+        "question": "Dev math q1?",
+        "choices": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "answer": 1,
+        "subject": "abstract_algebra"
+      },
+      {
+        "question": "cap q0",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 0,
+        "subject": "world_religions"
+      },
+      {
+        "question": "cap q1",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 1,
+        "subject": "world_religions"
+      },
+      {
+        "question": "cap q2",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 2,
+        "subject": "world_religions"
+      },
+      {
+        "question": "cap q3",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 3,
+        "subject": "world_religions"
+      },
+      {
+        "question": "cap q4",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 0,
+        "subject": "world_religions"
+      },
+      {
+        "question": "cap q5",
+        "choices": [
+          "p",
+          "q",
+          "r",
+          "s"
+        ],
+        "answer": 1,
+        "subject": "world_religions"
+      }
+    ],
+    "fewshot": {
+      "high_school_biology": [
+        {
+          "question": "Dev bio q1?",
+          "choices": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "answer": "A"
+        },
+        {
+          "question": "Dev bio q2?",
+          "choices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "answer": "C"
+        }
+      ],
+      "abstract_algebra": [
+        {
+          "question": "Dev math q1?",
+          "choices": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "answer": "B"
+        }
+      ],
+      "world_religions": [
+        {
+          "question": "cap q0",
+          "choices": [
+            "p",
+            "q",
+            "r",
+            "s"
+          ],
+          "answer": "A"
+        },
+        {
+          "question": "cap q1",
+          "choices": [
+            "p",
+            "q",
+            "r",
+            "s"
+          ],
+          "answer": "B"
+        },
+        {
+          "question": "cap q2",
+          "choices": [
+            "p",
+            "q",
+            "r",
+            "s"
+          ],
+          "answer": "C"
+        },
+        {
+          "question": "cap q3",
+          "choices": [
+            "p",
+            "q",
+            "r",
+            "s"
+          ],
+          "answer": "D"
+        },
+        {
+          "question": "cap q4",
+          "choices": [
+            "p",
+            "q",
+            "r",
+            "s"
+          ],
+          "answer": "A"
+        }
+      ]
+    },
+    "normalize": [
+      {
+        "raw": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": 0,
+          "subject": "high_school_biology"
+        },
+        "out": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        }
+      },
+      {
+        "raw": {
+          "question": "Str choices?",
+          "choices": "['one','two','three','four']",
+          "answer": 3,
+          "subject": "abstract_algebra"
+        },
+        "out": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        }
+      }
+    ],
+    "prompt": [
+      {
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "The following are multiple choice questions about High School Biology. Answer with just the letter (A, B, C, or D).\n\nDev bio q1?\nA. a\nB. b\nC. c\nD. d\nAnswer: A\n\nDev bio q2?\nA. w\nB. x\nC. y\nD. z\nAnswer: C\n\nWhat is a cell?\nA. A unit\nB. Rock\nC. Air\nD. Fire\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "The following are multiple choice questions about Abstract Algebra. Answer with just the letter (A, B, C, or D).\n\nDev math q1?\nA. 1\nB. 2\nC. 3\nD. 4\nAnswer: B\n\nStr choices?\nA. one\nB. two\nC. three\nD. four\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "Answer: A",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": "A"
+      },
+      {
+        "resp": "The answer is D",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": "D"
+      },
+      {
+        "resp": "x",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "A",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": true
+      },
+      {
+        "pred": "D",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": false
+      },
+      {
+        "pred": "A",
+        "item": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        },
+        "out": false
+      },
+      {
+        "pred": "D",
+        "item": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        },
+        "out": true
+      },
+      {
+        "pred": "",
+        "item": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "question": "What is a cell?",
+          "choices": [
+            "A unit",
+            "Rock",
+            "Air",
+            "Fire"
+          ],
+          "answer": "A",
+          "subject": "high_school_biology"
+        },
+        "out": "high_school_biology"
+      },
+      {
+        "item": {
+          "question": "Str choices?",
+          "choices": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ],
+          "answer": "D",
+          "subject": "abstract_algebra"
+        },
+        "out": "abstract_algebra"
+      }
+    ]
+  },
+  "winogrande": {
+    "prompt": [
+      {
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Choose the correct option to fill in the blank (_). Answer with just the number (1 or 2).\n\nSentence: The trophy doesn't fit in the _ because it's too big.\n\n1. suitcase\n2. trophy\n\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "w2",
+          "sentence": "Sam helped Bob because _ was kind.",
+          "option1": "Sam",
+          "option2": "Bob",
+          "answer": "1"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Choose the correct option to fill in the blank (_). Answer with just the number (1 or 2).\n\nSentence: Sam helped Bob because _ was kind.\n\n1. Sam\n2. Bob\n\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "1",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": "1"
+      },
+      {
+        "resp": "Answer: 2",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": "2"
+      },
+      {
+        "resp": "none",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "1",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": true
+      },
+      {
+        "pred": "2",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "w1",
+          "sentence": "The trophy doesn't fit in the _ because it's too big.",
+          "option1": "suitcase",
+          "option2": "trophy",
+          "answer": "1"
+        },
+        "out": false
+      },
+      {
+        "pred": "1",
+        "item": {
+          "id": "w2",
+          "sentence": "Sam helped Bob because _ was kind.",
+          "option1": "Sam",
+          "option2": "Bob",
+          "answer": "1"
+        },
+        "out": true
+      },
+      {
+        "pred": "2",
+        "item": {
+          "id": "w2",
+          "sentence": "Sam helped Bob because _ was kind.",
+          "option1": "Sam",
+          "option2": "Bob",
+          "answer": "1"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "w2",
+          "sentence": "Sam helped Bob because _ was kind.",
+          "option1": "Sam",
+          "option2": "Bob",
+          "answer": "1"
+        },
+        "out": false
+      }
+    ]
+  },
+  "truthfulqa": {
+    "prompt": [
+      {
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Answer the following question truthfully. Choose the most accurate answer. Answer with just the letter.\n\nQuestion: Is the sky blue?\n\nA. No\nB. Yes\nC. Maybe\nD. Green\nE. Purple\n\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "1",
+          "question": "2+2?",
+          "choices": [
+            "3",
+            "4"
+          ],
+          "answer": 1
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Answer the following question truthfully. Choose the most accurate answer. Answer with just the letter.\n\nQuestion: 2+2?\n\nA. 3\nB. 4\n\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "Answer: E",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": "E"
+      },
+      {
+        "resp": "B",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": "B"
+      },
+      {
+        "resp": "D is right",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": "D"
+      }
+    ],
+    "check": [
+      {
+        "pred": "A",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": false
+      },
+      {
+        "pred": "B",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": true
+      },
+      {
+        "pred": "E",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "0",
+          "question": "Is the sky blue?",
+          "choices": [
+            "No",
+            "Yes",
+            "Maybe",
+            "Green",
+            "Purple"
+          ],
+          "answer": 1
+        },
+        "out": false
+      },
+      {
+        "pred": "A",
+        "item": {
+          "id": "1",
+          "question": "2+2?",
+          "choices": [
+            "3",
+            "4"
+          ],
+          "answer": 1
+        },
+        "out": false
+      },
+      {
+        "pred": "B",
+        "item": {
+          "id": "1",
+          "question": "2+2?",
+          "choices": [
+            "3",
+            "4"
+          ],
+          "answer": 1
+        },
+        "out": true
+      },
+      {
+        "pred": "E",
+        "item": {
+          "id": "1",
+          "question": "2+2?",
+          "choices": [
+            "3",
+            "4"
+          ],
+          "answer": 1
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "1",
+          "question": "2+2?",
+          "choices": [
+            "3",
+            "4"
+          ],
+          "answer": 1
+        },
+        "out": false
+      }
+    ]
+  }
+}
