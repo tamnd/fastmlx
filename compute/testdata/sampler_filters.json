@@ -1,0 +1,337 @@
+{
+ "cases": [
+  {
+   "label": "top_p_0.9",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_p",
+   "params": {
+    "top_p": 0.9
+   },
+   "kept": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true
+   ]
+  },
+  {
+   "label": "top_p_0.5",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_p",
+   "params": {
+    "top_p": 0.5
+   },
+   "kept": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "label": "top_p_0.2",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_p",
+   "params": {
+    "top_p": 0.2
+   },
+   "kept": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "label": "min_p_0.1",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_min_p",
+   "params": {
+    "min_p": 0.1
+   },
+   "kept": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "label": "min_p_0.3",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_min_p",
+   "params": {
+    "min_p": 0.3
+   },
+   "kept": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "label": "min_p_0.3_keep4",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_min_p",
+   "params": {
+    "min_p": 0.3,
+    "min_tokens_to_keep": 4
+   },
+   "kept": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true
+   ]
+  },
+  {
+   "label": "top_k_3",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_k",
+   "params": {
+    "top_k": 3
+   },
+   "kept": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "label": "top_k_6",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_k",
+   "params": {
+    "top_k": 6
+   },
+   "kept": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    true
+   ]
+  },
+  {
+   "label": "top_k_1",
+   "logits": [
+    3.1,
+    1.2,
+    -0.4,
+    2.7,
+    0.9,
+    -2.3,
+    4.6,
+    -1.1,
+    0.05,
+    1.9,
+    -0.8,
+    2.2
+   ],
+   "op": "apply_top_k",
+   "params": {
+    "top_k": 1
+   },
+   "kept": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  }
+ ],
+ "argmax": {
+  "logits": [
+   3.1,
+   1.2,
+   -0.4,
+   2.7,
+   0.9,
+   -2.3,
+   4.6,
+   -1.1,
+   0.05,
+   1.9,
+   -0.8,
+   2.2
+  ],
+  "index": 6
+ }
+}
