@@ -35,6 +35,73 @@ func ArchitectureIndicatesCausalLM(architectures []string) bool {
 	return false
 }
 
+// IsUnsupportedModel reports whether a parsed config.json names a model family
+// discovery must skip: any architecture in UnsupportedArchitectures, or a
+// model_type in UnsupportedModelTypes by its normalized (lowercase, '-'→'_') or
+// raw spelling. Only top-level fields are checked, so a multimodal model with a
+// nested audio_config is unaffected. Both sets are empty upstream today, so this
+// returns false for everything until an entry is added.
+func IsUnsupportedModel(config map[string]any) bool {
+	if archs, ok := config["architectures"].([]any); ok {
+		for _, a := range archs {
+			if s, ok := a.(string); ok && has(UnsupportedArchitectures, s) {
+				return true
+			}
+		}
+	}
+	modelType, _ := config["model_type"].(string)
+	normalized := NormalizeModelType(modelType)
+	return has(UnsupportedModelTypes, normalized) || has(UnsupportedModelTypes, modelType)
+}
+
+// IsCausalLMReranker reports whether a model directory name marks a causal-LM
+// fine-tuned as a reranker (the config is identical to the base LLM, so the name
+// is the only signal): a "reranker" or "rerank" substring, case-insensitive.
+func IsCausalLMReranker(dirName string) bool {
+	n := strings.ToLower(dirName)
+	return strings.Contains(n, "reranker") || strings.Contains(n, "rerank")
+}
+
+// IsCausalLMEmbedding reports whether a model directory name marks a causal-LM
+// fine-tuned for embeddings: an "embedding" or "embed" substring, case-insensitive.
+func IsCausalLMEmbedding(dirName string) bool {
+	n := strings.ToLower(dirName)
+	return strings.Contains(n, "embedding") || strings.Contains(n, "embed")
+}
+
+// HasSentenceTransformersEmbeddingPipeline reports whether a parsed modules.json
+// describes a sentence-transformers embedding export: it must be a list carrying
+// a "sentence_transformers.models.Transformer" module plus at least one other
+// "sentence_transformers.models.*" module (a pooling/normalize/dense head).
+// Non-list input and entries that are not objects are ignored, matching the
+// reference. The file read is the caller's seam.
+func HasSentenceTransformersEmbeddingPipeline(modules any) bool {
+	list, ok := modules.([]any)
+	if !ok {
+		return false
+	}
+	const transformer = "sentence_transformers.models.Transformer"
+	const prefix = "sentence_transformers.models."
+	types := make(map[string]struct{})
+	for _, m := range list {
+		obj, ok := m.(map[string]any)
+		if !ok {
+			continue
+		}
+		t, _ := obj["type"].(string)
+		types[t] = struct{}{}
+	}
+	if _, ok := types[transformer]; !ok {
+		return false
+	}
+	for t := range types {
+		if t != transformer && strings.HasPrefix(t, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
 // ContextLengthFromConfigs resolves the declared context length from already
 // parsed config.json and tokenizer_config.json maps (the file reads are the
 // caller's seam; a nil map means the file was absent). Resolution order: the

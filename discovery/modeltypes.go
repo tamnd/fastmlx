@@ -118,6 +118,15 @@ var MultimodalEmbeddingArchitectures = set("Qwen3VLForConditionalGeneration")
 // architectures used for type detection.
 var RerankerArchitectures = union(SupportedRerankerArchitectures, UnsupportedRerankerArchitectures)
 
+// UnsupportedArchitectures and UnsupportedModelTypes name model families that
+// discovery skips entirely. Both are empty in the reference today (whisper and
+// qwen3_tts moved to the audio types), but the detector and these sets are
+// ported so a future entry takes effect without code changes.
+var UnsupportedArchitectures = set()
+
+// UnsupportedModelTypes is the model_type skip set (empty upstream today).
+var UnsupportedModelTypes = set()
+
 func set(items ...string) map[string]struct{} {
 	m := make(map[string]struct{}, len(items))
 	for _, it := range items {

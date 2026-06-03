@@ -1,0 +1,84 @@
+{
+  "unsupported_arch_count": 0,
+  "unsupported_type_count": 0,
+  "st_pipeline": [
+    {
+      "modules": "[{\"type\": \"sentence_transformers.models.Transformer\"}, {\"type\": \"sentence_transformers.models.Pooling\"}]",
+      "result": true
+    },
+    {
+      "modules": "[{\"type\": \"sentence_transformers.models.Transformer\"}]",
+      "result": false
+    },
+    {
+      "modules": "[{\"type\": \"sentence_transformers.models.Transformer\"}, {\"type\": \"sentence_transformers.models.Normalize\"}]",
+      "result": true
+    },
+    {
+      "modules": "[{\"type\": \"sentence_transformers.models.Pooling\"}]",
+      "result": false
+    },
+    {
+      "modules": "[]",
+      "result": false
+    },
+    {
+      "modules": "{\"type\": \"x\"}",
+      "result": false
+    },
+    {
+      "modules": "[{\"type\": \"sentence_transformers.models.Transformer\"}, \"not-a-dict\", {\"type\": \"sentence_transformers.models.Dense\"}]",
+      "result": true
+    }
+  ],
+  "unsupported": [
+    {
+      "config": "{\"architectures\": [\"Qwen3ForCausalLM\"], \"model_type\": \"qwen3\"}",
+      "result": false
+    },
+    {
+      "config": "{\"architectures\": [], \"model_type\": \"whisper\"}",
+      "result": false
+    },
+    {
+      "config": "{}",
+      "result": false
+    }
+  ],
+  "reranker": [
+    {
+      "name": "Qwen3-Reranker-4B",
+      "result": true
+    },
+    {
+      "name": "BGE-rerank-base",
+      "result": true
+    },
+    {
+      "name": "Qwen3-4B",
+      "result": false
+    },
+    {
+      "name": "embed-model",
+      "result": false
+    }
+  ],
+  "embedding": [
+    {
+      "name": "Qwen3-Embedding-8B",
+      "result": true
+    },
+    {
+      "name": "nomic-embed-text",
+      "result": true
+    },
+    {
+      "name": "Qwen3-4B",
+      "result": false
+    },
+    {
+      "name": "Reranker-x",
+      "result": false
+    }
+  ]
+}

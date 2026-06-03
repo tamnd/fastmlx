@@ -155,6 +155,90 @@ func TestModelTemplateText(t *testing.T) {
 	}
 }
 
+type detectorsFixture struct {
+	UnsupportedArchCount int `json:"unsupported_arch_count"`
+	UnsupportedTypeCount int `json:"unsupported_type_count"`
+	STPipeline           []struct {
+		Modules string `json:"modules"`
+		Result  bool   `json:"result"`
+	} `json:"st_pipeline"`
+	Unsupported []struct {
+		Config string `json:"config"`
+		Result bool   `json:"result"`
+	} `json:"unsupported"`
+	Reranker []struct {
+		Name   string `json:"name"`
+		Result bool   `json:"result"`
+	} `json:"reranker"`
+	Embedding []struct {
+		Name   string `json:"name"`
+		Result bool   `json:"result"`
+	} `json:"embedding"`
+}
+
+func loadDetectorsFixture(t *testing.T) detectorsFixture {
+	t.Helper()
+	data, err := os.ReadFile("testdata/detectors.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var f detectorsFixture
+	if err := json.Unmarshal(data, &f); err != nil {
+		t.Fatal(err)
+	}
+	return f
+}
+
+func TestUnsupportedSetsEmpty(t *testing.T) {
+	f := loadDetectorsFixture(t)
+	if got := len(UnsupportedArchitectures); got != f.UnsupportedArchCount {
+		t.Errorf("UnsupportedArchitectures len = %d, want %d", got, f.UnsupportedArchCount)
+	}
+	if got := len(UnsupportedModelTypes); got != f.UnsupportedTypeCount {
+		t.Errorf("UnsupportedModelTypes len = %d, want %d", got, f.UnsupportedTypeCount)
+	}
+}
+
+func TestHasSentenceTransformersEmbeddingPipelineParity(t *testing.T) {
+	for _, c := range loadDetectorsFixture(t).STPipeline {
+		var modules any
+		if err := json.Unmarshal([]byte(c.Modules), &modules); err != nil {
+			t.Fatalf("unmarshal %s: %v", c.Modules, err)
+		}
+		if got := HasSentenceTransformersEmbeddingPipeline(modules); got != c.Result {
+			t.Errorf("HasSentenceTransformersEmbeddingPipeline(%s) = %v, want %v", c.Modules, got, c.Result)
+		}
+	}
+}
+
+func TestIsUnsupportedModelParity(t *testing.T) {
+	for _, c := range loadDetectorsFixture(t).Unsupported {
+		var config map[string]any
+		if err := json.Unmarshal([]byte(c.Config), &config); err != nil {
+			t.Fatalf("unmarshal %s: %v", c.Config, err)
+		}
+		if got := IsUnsupportedModel(config); got != c.Result {
+			t.Errorf("IsUnsupportedModel(%s) = %v, want %v", c.Config, got, c.Result)
+		}
+	}
+}
+
+func TestIsCausalLMRerankerParity(t *testing.T) {
+	for _, c := range loadDetectorsFixture(t).Reranker {
+		if got := IsCausalLMReranker(c.Name); got != c.Result {
+			t.Errorf("IsCausalLMReranker(%q) = %v, want %v", c.Name, got, c.Result)
+		}
+	}
+}
+
+func TestIsCausalLMEmbeddingParity(t *testing.T) {
+	for _, c := range loadDetectorsFixture(t).Embedding {
+		if got := IsCausalLMEmbedding(c.Name); got != c.Result {
+			t.Errorf("IsCausalLMEmbedding(%q) = %v, want %v", c.Name, got, c.Result)
+		}
+	}
+}
+
 func BenchmarkContextLengthFromConfigs(b *testing.B) {
 	config, _ := decodeNumberMap([]byte(`{"text_config":{"max_position_embeddings":131072}}`))
 	b.ReportAllocs()
