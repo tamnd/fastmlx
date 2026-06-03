@@ -1,0 +1,121 @@
+{
+  "disk": [
+    {
+      "in": {
+        "total_bytes": 994662584320,
+        "ok": true
+      },
+      "out": {
+        "total_bytes": 994662584320,
+        "total_formatted": "926.35 GB"
+      }
+    },
+    {
+      "in": {
+        "total_bytes": 0,
+        "ok": false
+      },
+      "out": {
+        "total_bytes": 0,
+        "total_formatted": "Unknown"
+      }
+    },
+    {
+      "in": {
+        "total_bytes": 512,
+        "ok": true
+      },
+      "out": {
+        "total_bytes": 512,
+        "total_formatted": "512 B"
+      }
+    },
+    {
+      "in": {
+        "total_bytes": 1610612736,
+        "ok": true
+      },
+      "out": {
+        "total_bytes": 1610612736,
+        "total_formatted": "1.50 GB"
+      }
+    }
+  ],
+  "memory": [
+    {
+      "in": {
+        "total_bytes": 17179869184,
+        "available": 8589934592,
+        "phys": 4294967296,
+        "iogpu": 12884901888,
+        "wired_req": 10737418240,
+        "free": 2147483648,
+        "inactive": 1073741824,
+        "active": 3221225472
+      },
+      "out": {
+        "total_bytes": 17179869184,
+        "total_formatted": "16.00 GB",
+        "auto_limit_bytes": 13743895347,
+        "auto_limit_formatted": "12.80 GB",
+        "available_bytes": 8589934592,
+        "fastmlx_phys_footprint_bytes": 4294967296,
+        "iogpu_wired_limit_bytes": 12884901888,
+        "fastmlx_wired_limit_request_bytes": 10737418240,
+        "free_memory_bytes": 2147483648,
+        "inactive_memory_bytes": 1073741824,
+        "active_memory_bytes": 3221225472
+      }
+    },
+    {
+      "in": {
+        "total_bytes": 68719476736,
+        "available": 34359738368,
+        "phys": 0,
+        "iogpu": 0,
+        "wired_req": 0,
+        "free": 0,
+        "inactive": 0,
+        "active": 0
+      },
+      "out": {
+        "total_bytes": 68719476736,
+        "total_formatted": "64.00 GB",
+        "auto_limit_bytes": 54975581388,
+        "auto_limit_formatted": "51.20 GB",
+        "available_bytes": 34359738368,
+        "fastmlx_phys_footprint_bytes": 0,
+        "iogpu_wired_limit_bytes": 0,
+        "fastmlx_wired_limit_request_bytes": 0,
+        "free_memory_bytes": 0,
+        "inactive_memory_bytes": 0,
+        "active_memory_bytes": 0
+      }
+    },
+    {
+      "in": {
+        "total_bytes": 0,
+        "available": 0,
+        "phys": 0,
+        "iogpu": 0,
+        "wired_req": 0,
+        "free": 0,
+        "inactive": 0,
+        "active": 0
+      },
+      "out": {
+        "total_bytes": 0,
+        "total_formatted": "0 B",
+        "auto_limit_bytes": 0,
+        "auto_limit_formatted": "0 B",
+        "available_bytes": 0,
+        "fastmlx_phys_footprint_bytes": 0,
+        "iogpu_wired_limit_bytes": 0,
+        "fastmlx_wired_limit_request_bytes": 0,
+        "free_memory_bytes": 0,
+        "inactive_memory_bytes": 0,
+        "active_memory_bytes": 0
+      }
+    }
+  ]
+}
