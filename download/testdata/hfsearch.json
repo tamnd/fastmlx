@@ -1,0 +1,684 @@
+{
+  "corpus": [
+    {
+      "id": "mlx-community/Llama-3-8B-4bit",
+      "downloads": 5000,
+      "likes": 120,
+      "trending_score": 9,
+      "parameters": {
+        "F16": 8000000000
+      }
+    },
+    {
+      "id": "mlx-community/Phi-3-mini",
+      "downloads": 90,
+      "likes": 4,
+      "trending_score": 1,
+      "parameters": {
+        "F16": 3800000000
+      }
+    },
+    {
+      "id": "mlx-community/Qwen2-72B",
+      "downloads": 800,
+      "likes": 60,
+      "trending_score": 5,
+      "parameters": {
+        "BF16": 72000000000
+      }
+    },
+    {
+      "id": "mlx-community/tiny-test",
+      "downloads": 300,
+      "likes": 10,
+      "trending_score": 2,
+      "parameters": {
+        "I8": 500000
+      }
+    },
+    {
+      "id": "someone/no-safetensors",
+      "downloads": 1000,
+      "likes": 30,
+      "trending_score": 3,
+      "parameters": {}
+    }
+  ],
+  "recommended": [
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 50,
+      "out": [
+        {
+          "repo_id": "mlx-community/Llama-3-8B-4bit",
+          "name": "Llama-3-8B-4bit",
+          "downloads": 5000,
+          "likes": 120,
+          "trending_score": 9,
+          "size": 16000000000,
+          "size_formatted": "14.9 GB",
+          "params": 8000000000,
+          "params_formatted": "8.0B"
+        },
+        {
+          "repo_id": "mlx-community/tiny-test",
+          "name": "tiny-test",
+          "downloads": 300,
+          "likes": 10,
+          "trending_score": 2,
+          "size": 500000,
+          "size_formatted": "488.3 KB",
+          "params": 500000,
+          "params_formatted": "500000"
+        }
+      ]
+    },
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 1,
+      "out": [
+        {
+          "repo_id": "mlx-community/Llama-3-8B-4bit",
+          "name": "Llama-3-8B-4bit",
+          "downloads": 5000,
+          "likes": 120,
+          "trending_score": 9,
+          "size": 16000000000,
+          "size_formatted": "14.9 GB",
+          "params": 8000000000,
+          "params_formatted": "8.0B"
+        }
+      ]
+    },
+    {
+      "max_memory_bytes": 5368709120,
+      "result_limit": 50,
+      "out": [
+        {
+          "repo_id": "mlx-community/tiny-test",
+          "name": "tiny-test",
+          "downloads": 300,
+          "likes": 10,
+          "trending_score": 2,
+          "size": 500000,
+          "size_formatted": "488.3 KB",
+          "params": 500000,
+          "params_formatted": "500000"
+        }
+      ]
+    }
+  ],
+  "search": [
+    {
+      "opts": {
+        "sort": "trending",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "most_params",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          },
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "least_params",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "largest",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          },
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "smallest",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "trending",
+        "limit": 100,
+        "min_params": 1000000000,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          }
+        ],
+        "total": 3
+      }
+    },
+    {
+      "opts": {
+        "sort": "trending",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": 10737418240,
+        "sort_by_size": false,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 3
+      }
+    },
+    {
+      "opts": {
+        "sort": "trending",
+        "limit": 2,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": true,
+        "sort_ascending": true
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "opts": {
+        "sort": "downloads",
+        "limit": 100,
+        "min_params": null,
+        "max_params": null,
+        "min_size": null,
+        "max_size": null,
+        "sort_by_size": true,
+        "sort_ascending": false
+      },
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "mlx-community/Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 5,
+            "size": 144000000000,
+            "size_formatted": "134.1 GB",
+            "params": 72000000000,
+            "params_formatted": "72.0B"
+          },
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "mlx-community/Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 9,
+            "size": 16000000000,
+            "size_formatted": "14.9 GB",
+            "params": 8000000000,
+            "params_formatted": "8.0B"
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini",
+            "name": "mlx-community/Phi-3-mini",
+            "downloads": 90,
+            "likes": 4,
+            "trending_score": 1,
+            "size": 7600000000,
+            "size_formatted": "7.1 GB",
+            "params": 3800000000,
+            "params_formatted": "3.8B"
+          },
+          {
+            "repo_id": "mlx-community/tiny-test",
+            "name": "mlx-community/tiny-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 2,
+            "size": 500000,
+            "size_formatted": "488.3 KB",
+            "params": 500000,
+            "params_formatted": "500000"
+          },
+          {
+            "repo_id": "someone/no-safetensors",
+            "name": "someone/no-safetensors",
+            "downloads": 1000,
+            "likes": 30,
+            "trending_score": 3,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    }
+  ]
+}
