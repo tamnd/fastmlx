@@ -1,0 +1,38 @@
+{
+ "blob_b64": "ZAEAAAAAAAB7Il9fbWV0YWRhdGFfXyI6bnVsbCwibW9kZWwuZW1iZWRfdG9rZW5zLndlaWdodCI6eyJkYXRhX29mZnNldHMiOlszNiw2MF0sImR0eXBlIjoiRjMyIiwic2hhcGUiOlszLDJdfSwibW9kZWwubGF5ZXJzLjAubWxwLmdhdGVfcHJvai53ZWlnaHQiOnsiZGF0YV9vZmZzZXRzIjpbMCw4XSwiZHR5cGUiOiJCRjE2Iiwic2hhcGUiOlsyLDJdfSwibW9kZWwubGF5ZXJzLjAuc2VsZl9hdHRuLnFfcHJvai53ZWlnaHQiOnsiZGF0YV9vZmZzZXRzIjpbMjAsMzZdLCJkdHlwZSI6IkkzMiIsInNoYXBlIjpbMiwyXX0sIm1vZGVsLm5vcm0ud2VpZ2h0Ijp7ImRhdGFfb2Zmc2V0cyI6WzgsMjBdLCJkdHlwZSI6IkYzMiIsInNoYXBlIjpbM119fYA/AEBAQIBAAADAPwAAEMAAAEBAAAAAAAEAAAACAAAAAwAAAAAAAAAAAIA/AAAAQAAAQEAAAIBAAACgQA==",
+ "data_start": 364,
+ "has_bf16": true,
+ "expected": {
+  "model.embed_tokens.weight": {
+   "dtype": "F32",
+   "shape": [
+    3,
+    2
+   ],
+   "bytes_b64": "AAAAAAAAgD8AAABAAABAQAAAgEAAAKBA"
+  },
+  "model.layers.0.mlp.gate_proj.weight": {
+   "dtype": "BF16",
+   "shape": [
+    2,
+    2
+   ],
+   "bytes_b64": "gD8AQEBAgEA="
+  },
+  "model.layers.0.self_attn.q_proj.weight": {
+   "dtype": "I32",
+   "shape": [
+    2,
+    2
+   ],
+   "bytes_b64": "AAAAAAEAAAACAAAAAwAAAA=="
+  },
+  "model.norm.weight": {
+   "dtype": "F32",
+   "shape": [
+    3
+   ],
+   "bytes_b64": "AADAPwAAEMAAAEBA"
+  }
+ }
+}

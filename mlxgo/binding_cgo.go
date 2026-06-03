@@ -116,6 +116,25 @@ func NewInt32(data []int32, shape ...int) (*Array, error) {
 	return wrap(c), nil
 }
 
+// NewBytes builds an array of any dtype from its raw little-endian element
+// bytes and a shape. The loader uses this for weights whose dtype has no Go
+// scalar (float16, bfloat16): the bytes go straight to mlx unchanged.
+func NewBytes(data []byte, dtype Dtype, shape ...int) (*Array, error) {
+	if !dtype.Valid() || dtype.Size() == 0 {
+		return nil, errShape("NewBytes", len(data), shape)
+	}
+	if len(data) != elementCount(shape)*dtype.Size() {
+		return nil, errShape("NewBytes", len(data), shape)
+	}
+	dims, ndim := cShape(shape)
+	var ptr unsafe.Pointer
+	if len(data) > 0 {
+		ptr = unsafe.Pointer(&data[0])
+	}
+	c := C.mlx_array_new_data(ptr, dims, ndim, dtypeToC(dtype))
+	return wrap(c), nil
+}
+
 // Zeros builds a zero-filled array of the given dtype and shape.
 func Zeros(dtype Dtype, shape ...int) (*Array, error) {
 	if !dtype.Valid() {

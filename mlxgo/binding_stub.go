@@ -41,6 +41,23 @@ func NewInt32(data []int32, shape ...int) (*Array, error) {
 	return &Array{shape: cloneShape(shape), dtype: Int32, data: cp}, nil
 }
 
+// NewBytes builds an array of any dtype from its raw little-endian element
+// bytes and a shape. This is the loader path: safetensors weights arrive as a
+// byte range with a dtype tag (including float16 and bfloat16, which have no Go
+// scalar), and the cgo build hands those bytes straight to mlx. The data length
+// must equal the element count times the dtype's element size.
+func NewBytes(data []byte, dtype Dtype, shape ...int) (*Array, error) {
+	if !dtype.Valid() || dtype.Size() == 0 {
+		return nil, errShape("NewBytes", len(data), shape)
+	}
+	if len(data) != elementCount(shape)*dtype.Size() {
+		return nil, errShape("NewBytes", len(data), shape)
+	}
+	cp := make([]byte, len(data))
+	copy(cp, data)
+	return &Array{shape: cloneShape(shape), dtype: dtype, data: cp}, nil
+}
+
 // Zeros builds a zero-filled array of the given dtype and shape.
 func Zeros(dtype Dtype, shape ...int) (*Array, error) {
 	if !dtype.Valid() {
