@@ -1,0 +1,93 @@
+[
+  {
+    "model_name": "Qwen3.5-122B-A10B",
+    "oq_level": 4,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Qwen3.5-122B-A10B-oQ4"
+  },
+  {
+    "model_name": "Qwen3.5-122B-A10B",
+    "oq_level": 4,
+    "dtype": "float16",
+    "preserve_mtp": false,
+    "result": "Qwen3.5-122B-A10B-oQ4-fp16"
+  },
+  {
+    "model_name": "Qwen3.5-122B-A10B-oQ6-fp16",
+    "oq_level": 2,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Qwen3.5-122B-A10B-oQ2"
+  },
+  {
+    "model_name": "Qwen3.5-27B",
+    "oq_level": 4,
+    "dtype": "bfloat16",
+    "preserve_mtp": true,
+    "result": "Qwen3.5-27B-oQ4-mtp"
+  },
+  {
+    "model_name": "Qwen3.5-27B",
+    "oq_level": 4,
+    "dtype": "float16",
+    "preserve_mtp": true,
+    "result": "Qwen3.5-27B-oQ4-fp16-mtp"
+  },
+  {
+    "model_name": "Mistral-7B-4bit",
+    "oq_level": 3,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Mistral-7B-oQ3"
+  },
+  {
+    "model_name": "Mistral-7B-4_bit",
+    "oq_level": 5,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Mistral-7B-oQ5"
+  },
+  {
+    "model_name": "Foo-bf16",
+    "oq_level": 8,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Foo-oQ8"
+  },
+  {
+    "model_name": "Bar-oQ3.5",
+    "oq_level": 3.5,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Bar-oQ3.5"
+  },
+  {
+    "model_name": "Bar-mtp-fp16-oQ4",
+    "oq_level": 6,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Bar-oQ6"
+  },
+  {
+    "model_name": "PlainName",
+    "oq_level": 2,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "PlainName-oQ2"
+  },
+  {
+    "model_name": "Name-oq4e",
+    "oq_level": 4,
+    "dtype": "bfloat16",
+    "preserve_mtp": false,
+    "result": "Name-oQ4"
+  },
+  {
+    "model_name": "Name-8bit-fp32",
+    "oq_level": 4,
+    "dtype": "float16",
+    "preserve_mtp": true,
+    "result": "Name-oQ4-fp16-mtp"
+  }
+]
