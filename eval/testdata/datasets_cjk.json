@@ -1,0 +1,710 @@
+{
+  "cmmlu": {
+    "dev_items": [
+      {
+        "question": "甲问题?",
+        "choices": [
+          "子",
+          "丑",
+          "寅",
+          "卯"
+        ],
+        "answer": "B",
+        "subject": "chinese_history"
+      },
+      {
+        "question": "乙问题?",
+        "choices": [
+          "甲",
+          "乙",
+          "丙",
+          "丁"
+        ],
+        "answer": "A",
+        "subject": "chinese_history"
+      },
+      {
+        "question": "丙问题?",
+        "choices": [
+          "东",
+          "南",
+          "西",
+          "北"
+        ],
+        "answer": "C",
+        "subject": "world_history-modern"
+      }
+    ],
+    "fewshot": {
+      "chinese_history": [
+        {
+          "question": "甲问题?",
+          "choices": [
+            "子",
+            "丑",
+            "寅",
+            "卯"
+          ],
+          "answer": "B"
+        },
+        {
+          "question": "乙问题?",
+          "choices": [
+            "甲",
+            "乙",
+            "丙",
+            "丁"
+          ],
+          "answer": "A"
+        }
+      ],
+      "world_history-modern": [
+        {
+          "question": "丙问题?",
+          "choices": [
+            "东",
+            "南",
+            "西",
+            "北"
+          ],
+          "answer": "C"
+        }
+      ]
+    },
+    "prompt": [
+      {
+        "item": {
+          "question": "天问题?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "D",
+          "subject": "chinese_history"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "以下是关于Chinese History的单选题，请直接回答正确选项的字母（A、B、C或D）。\n\n甲问题?\nA. 子\nB. 丑\nC. 寅\nD. 卯\n答案: B\n\n乙问题?\nA. 甲\nB. 乙\nC. 丙\nD. 丁\n答案: A\n\n天问题?\nA. 春\nB. 夏\nC. 秋\nD. 冬\n答案:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "地问题?",
+          "choices": [
+            "金",
+            "木",
+            "水",
+            "火"
+          ],
+          "answer": "A",
+          "subject": "world_history-modern"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "以下是关于World History Modern的单选题，请直接回答正确选项的字母（A、B、C或D）。\n\n丙问题?\nA. 东\nB. 南\nC. 西\nD. 北\n答案: C\n\n地问题?\nA. 金\nB. 木\nC. 水\nD. 火\n答案:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "玄问题?",
+          "choices": [
+            "上",
+            "中",
+            "下",
+            "外"
+          ],
+          "answer": "B",
+          "subject": "missing_subject"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "以下是关于Missing Subject的单选题，请直接回答正确选项的字母（A、B、C或D）。\n\n玄问题?\nA. 上\nB. 中\nC. 下\nD. 外\n答案:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "The answer is C.",
+        "item": {},
+        "out": "C"
+      },
+      {
+        "resp": "answer: b",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "I think D",
+        "item": {},
+        "out": "D"
+      },
+      {
+        "resp": "It is clearly a",
+        "item": {},
+        "out": "A"
+      },
+      {
+        "resp": "no letter here at all",
+        "item": {},
+        "out": ""
+      },
+      {
+        "resp": "answer is A but maybe B",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "",
+        "item": {},
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "D",
+        "item": {
+          "question": "天问题?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "D",
+          "subject": "chinese_history"
+        },
+        "out": true
+      },
+      {
+        "pred": "A",
+        "item": {
+          "question": "天问题?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "D",
+          "subject": "chinese_history"
+        },
+        "out": false
+      },
+      {
+        "pred": "A",
+        "item": {
+          "question": "地问题?",
+          "choices": [
+            "金",
+            "木",
+            "水",
+            "火"
+          ],
+          "answer": "A",
+          "subject": "world_history-modern"
+        },
+        "out": true
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "question": "天问题?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "D",
+          "subject": "chinese_history"
+        },
+        "out": "chinese_history"
+      },
+      {
+        "item": {
+          "question": "地问题?",
+          "choices": [
+            "金",
+            "木",
+            "水",
+            "火"
+          ],
+          "answer": "A",
+          "subject": "world_history-modern"
+        },
+        "out": "world_history-modern"
+      },
+      {
+        "item": {
+          "question": "玄问题?",
+          "choices": [
+            "上",
+            "中",
+            "下",
+            "外"
+          ],
+          "answer": "B",
+          "subject": "missing_subject"
+        },
+        "out": "missing_subject"
+      }
+    ]
+  },
+  "jmmlu": {
+    "prompt": [
+      {
+        "item": {
+          "question": "問一?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "C",
+          "subject": "japanese_history"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "以下はJapanese Historyに関する選択問題です。正解のアルファベット（A、B、C、D）だけを答えてください。\n\n問一?\nA. 春\nB. 夏\nC. 秋\nD. 冬\n答え:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "問二?",
+          "choices": [
+            "北",
+            "東",
+            "南",
+            "西"
+          ],
+          "answer": "A",
+          "subject": "world_history-early_modern"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "以下はWorld History Early Modernに関する選択問題です。正解のアルファベット（A、B、C、D）だけを答えてください。\n\n問二?\nA. 北\nB. 東\nC. 南\nD. 西\n答え:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "The answer is C.",
+        "item": {},
+        "out": "C"
+      },
+      {
+        "resp": "answer: b",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "I think D",
+        "item": {},
+        "out": "D"
+      },
+      {
+        "resp": "It is clearly a",
+        "item": {},
+        "out": "A"
+      },
+      {
+        "resp": "no letter here at all",
+        "item": {},
+        "out": ""
+      },
+      {
+        "resp": "answer is A but maybe B",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "",
+        "item": {},
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "C",
+        "item": {
+          "question": "問一?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "C",
+          "subject": "japanese_history"
+        },
+        "out": true
+      },
+      {
+        "pred": "B",
+        "item": {
+          "question": "問一?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "C",
+          "subject": "japanese_history"
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "question": "問一?",
+          "choices": [
+            "春",
+            "夏",
+            "秋",
+            "冬"
+          ],
+          "answer": "C",
+          "subject": "japanese_history"
+        },
+        "out": "japanese_history"
+      },
+      {
+        "item": {
+          "question": "問二?",
+          "choices": [
+            "北",
+            "東",
+            "南",
+            "西"
+          ],
+          "answer": "A",
+          "subject": "world_history-early_modern"
+        },
+        "out": "world_history-early_modern"
+      }
+    ]
+  },
+  "kmmlu": {
+    "dev_items": [
+      {
+        "question": "문제 하나?",
+        "choices": [
+          "가",
+          "나",
+          "다",
+          "라"
+        ],
+        "answer": 2,
+        "subject": "korean-history"
+      },
+      {
+        "question": "문제 둘?",
+        "choices": [
+          "봄",
+          "여름",
+          "가을",
+          "겨울"
+        ],
+        "answer": 4,
+        "subject": "korean-history"
+      },
+      {
+        "question": "문제 셋?",
+        "choices": [
+          "동",
+          "서",
+          "남",
+          "북"
+        ],
+        "answer": 1,
+        "subject": "law"
+      }
+    ],
+    "fewshot": {
+      "korean-history": [
+        {
+          "question": "문제 하나?",
+          "choices": [
+            "가",
+            "나",
+            "다",
+            "라"
+          ],
+          "answer": "B"
+        },
+        {
+          "question": "문제 둘?",
+          "choices": [
+            "봄",
+            "여름",
+            "가을",
+            "겨울"
+          ],
+          "answer": "D"
+        }
+      ],
+      "law": [
+        {
+          "question": "문제 셋?",
+          "choices": [
+            "동",
+            "서",
+            "남",
+            "북"
+          ],
+          "answer": "A"
+        }
+      ]
+    },
+    "normalize": [
+      {
+        "raw": {
+          "question": "본 문제?",
+          "choices": [
+            "하나",
+            "둘",
+            "셋",
+            "넷"
+          ],
+          "answer": 3,
+          "subject": "korean-history"
+        },
+        "out": {
+          "question": "본 문제?",
+          "choices": [
+            "하나",
+            "둘",
+            "셋",
+            "넷"
+          ],
+          "answer": "C",
+          "subject": "korean-history"
+        }
+      },
+      {
+        "raw": {
+          "question": "둘째 문제?",
+          "choices": [
+            "금",
+            "은",
+            "동",
+            "철"
+          ],
+          "answer": 1,
+          "subject": "law"
+        },
+        "out": {
+          "question": "둘째 문제?",
+          "choices": [
+            "금",
+            "은",
+            "동",
+            "철"
+          ],
+          "answer": "A",
+          "subject": "law"
+        }
+      },
+      {
+        "raw": {
+          "question": "범위 밖?",
+          "choices": [
+            "하나",
+            "둘"
+          ],
+          "answer": 7,
+          "subject": "edge_case"
+        },
+        "out": {
+          "question": "범위 밖?",
+          "choices": [
+            "하나",
+            "둘"
+          ],
+          "answer": "7",
+          "subject": "edge_case"
+        }
+      }
+    ],
+    "prompt": [
+      {
+        "item": {
+          "question": "본 문제?",
+          "choices": [
+            "하나",
+            "둘",
+            "셋",
+            "넷"
+          ],
+          "answer": "C",
+          "subject": "korean-history"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "다음은 Korean History에 대한 객관식 문제입니다. 정답의 알파벳(A, B, C, D)만 답하세요.\n\n문제 하나?\nA. 가\nB. 나\nC. 다\nD. 라\n정답: B\n\n문제 둘?\nA. 봄\nB. 여름\nC. 가을\nD. 겨울\n정답: D\n\n본 문제?\nA. 하나\nB. 둘\nC. 셋\nD. 넷\n정답:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "둘째 문제?",
+          "choices": [
+            "금",
+            "은",
+            "동",
+            "철"
+          ],
+          "answer": "A",
+          "subject": "law"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "다음은 Law에 대한 객관식 문제입니다. 정답의 알파벳(A, B, C, D)만 답하세요.\n\n문제 셋?\nA. 동\nB. 서\nC. 남\nD. 북\n정답: A\n\n둘째 문제?\nA. 금\nB. 은\nC. 동\nD. 철\n정답:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "The answer is C.",
+        "item": {},
+        "out": "C"
+      },
+      {
+        "resp": "answer: b",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "I think D",
+        "item": {},
+        "out": "D"
+      },
+      {
+        "resp": "It is clearly a",
+        "item": {},
+        "out": "A"
+      },
+      {
+        "resp": "no letter here at all",
+        "item": {},
+        "out": ""
+      },
+      {
+        "resp": "answer is A but maybe B",
+        "item": {},
+        "out": "B"
+      },
+      {
+        "resp": "",
+        "item": {},
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "C",
+        "item": {
+          "question": "본 문제?",
+          "choices": [
+            "하나",
+            "둘",
+            "셋",
+            "넷"
+          ],
+          "answer": "C",
+          "subject": "korean-history"
+        },
+        "out": true
+      },
+      {
+        "pred": "A",
+        "item": {
+          "question": "둘째 문제?",
+          "choices": [
+            "금",
+            "은",
+            "동",
+            "철"
+          ],
+          "answer": "A",
+          "subject": "law"
+        },
+        "out": true
+      },
+      {
+        "pred": "7",
+        "item": {
+          "question": "범위 밖?",
+          "choices": [
+            "하나",
+            "둘"
+          ],
+          "answer": "7",
+          "subject": "edge_case"
+        },
+        "out": true
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "question": "본 문제?",
+          "choices": [
+            "하나",
+            "둘",
+            "셋",
+            "넷"
+          ],
+          "answer": "C",
+          "subject": "korean-history"
+        },
+        "out": "korean-history"
+      },
+      {
+        "item": {
+          "question": "둘째 문제?",
+          "choices": [
+            "금",
+            "은",
+            "동",
+            "철"
+          ],
+          "answer": "A",
+          "subject": "law"
+        },
+        "out": "law"
+      },
+      {
+        "item": {
+          "question": "범위 밖?",
+          "choices": [
+            "하나",
+            "둘"
+          ],
+          "answer": "7",
+          "subject": "edge_case"
+        },
+        "out": "edge_case"
+      }
+    ]
+  }
+}
