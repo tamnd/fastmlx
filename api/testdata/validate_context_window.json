@@ -1,0 +1,80 @@
+[
+  {
+    "num_prompt_tokens": 10,
+    "max_ctx_is_none": true,
+    "max_ctx": 0,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 0,
+    "max_ctx_is_none": false,
+    "max_ctx": 0,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 100,
+    "max_ctx_is_none": false,
+    "max_ctx": 0,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 100,
+    "max_ctx_is_none": false,
+    "max_ctx": 128,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 128,
+    "max_ctx_is_none": false,
+    "max_ctx": 128,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 129,
+    "max_ctx_is_none": false,
+    "max_ctx": 128,
+    "error": "Prompt too long: 129 tokens exceeds max context window of 128 tokens"
+  },
+  {
+    "num_prompt_tokens": 200000,
+    "max_ctx_is_none": false,
+    "max_ctx": 131072,
+    "error": "Prompt too long: 200000 tokens exceeds max context window of 131072 tokens"
+  },
+  {
+    "num_prompt_tokens": 131072,
+    "max_ctx_is_none": false,
+    "max_ctx": 131072,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 131073,
+    "max_ctx_is_none": false,
+    "max_ctx": 131072,
+    "error": "Prompt too long: 131073 tokens exceeds max context window of 131072 tokens"
+  },
+  {
+    "num_prompt_tokens": 1,
+    "max_ctx_is_none": false,
+    "max_ctx": 1,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 2,
+    "max_ctx_is_none": false,
+    "max_ctx": 1,
+    "error": "Prompt too long: 2 tokens exceeds max context window of 1 tokens"
+  },
+  {
+    "num_prompt_tokens": 5000,
+    "max_ctx_is_none": false,
+    "max_ctx": 32768,
+    "error": ""
+  },
+  {
+    "num_prompt_tokens": 40000,
+    "max_ctx_is_none": false,
+    "max_ctx": 32768,
+    "error": "Prompt too long: 40000 tokens exceeds max context window of 32768 tokens"
+  }
+]
