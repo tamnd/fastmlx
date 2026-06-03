@@ -1,0 +1,57 @@
+{
+  "version": "0.4.0",
+  "today": "2026-06-03",
+  "cases": [
+    {
+      "model_name": "Qwen3-30B-A3B-oQ4",
+      "config": {
+        "model_type": "qwen3",
+        "quantization": {
+          "bits": 4,
+          "group_size": 64
+        }
+      },
+      "redownload_notice": false,
+      "out": "---\nlibrary_name: mlx\ntags:\n- mlx\n- oq\n- quantized\n---\n\n# Qwen3-30B-A3B-oQ4\n\nThis model was quantized using [oQ](https://github.com/tamnd/fastmlx) (fastmlx v0.4.0) mixed-precision quantization.\n\n## Quantization details\n\n- **Model type**: qwen3\n- **Bits**: 4\n- **Group size**: 64\n- **Format**: MLX safetensors\n"
+    },
+    {
+      "model_name": "Llama-3B-oQ4e",
+      "config": {
+        "model_type": "llama",
+        "quantization": {
+          "bits": 4,
+          "group_size": 32
+        }
+      },
+      "redownload_notice": true,
+      "out": "---\nlibrary_name: mlx\ntags:\n- mlx\n- oq\n- quantized\n---\n\n> [!IMPORTANT]\n> This quantization was uploaded on **2026-06-03** and replaces a previous version.\n> If you downloaded this model before this date, please re-download for the updated weights.\n\n# Llama-3B-oQ4e\n\nThis model was quantized using [oQ](https://github.com/tamnd/fastmlx) (fastmlx v0.4.0) mixed-precision quantization.\n\n## Quantization details\n\n- **Model type**: llama\n- **Bits**: 4\n- **Group size**: 32\n- **Format**: MLX safetensors\n"
+    },
+    {
+      "model_name": "Mystery-oQ3",
+      "config": {},
+      "redownload_notice": false,
+      "out": "---\nlibrary_name: mlx\ntags:\n- mlx\n- oq\n- quantized\n---\n\n# Mystery-oQ3\n\nThis model was quantized using [oQ](https://github.com/tamnd/fastmlx) (fastmlx v0.4.0) mixed-precision quantization.\n\n## Quantization details\n\n- **Model type**: unknown\n- **Bits**: ?\n- **Group size**: ?\n- **Format**: MLX safetensors\n"
+    },
+    {
+      "model_name": "Partial-oQ",
+      "config": {
+        "model_type": "phi3",
+        "quantization": {}
+      },
+      "redownload_notice": false,
+      "out": "---\nlibrary_name: mlx\ntags:\n- mlx\n- oq\n- quantized\n---\n\n# Partial-oQ\n\nThis model was quantized using [oQ](https://github.com/tamnd/fastmlx) (fastmlx v0.4.0) mixed-precision quantization.\n\n## Quantization details\n\n- **Model type**: phi3\n- **Bits**: ?\n- **Group size**: ?\n- **Format**: MLX safetensors\n"
+    },
+    {
+      "model_name": "Qwen3.6-27B-oQ3.5e",
+      "config": {
+        "model_type": "qwen3",
+        "quantization": {
+          "bits": 3.5,
+          "group_size": 64
+        }
+      },
+      "redownload_notice": true,
+      "out": "---\nlibrary_name: mlx\ntags:\n- mlx\n- oq\n- quantized\n---\n\n> [!IMPORTANT]\n> This quantization was uploaded on **2026-06-03** and replaces a previous version.\n> If you downloaded this model before this date, please re-download for the updated weights.\n\n# Qwen3.6-27B-oQ3.5e\n\nThis model was quantized using [oQ](https://github.com/tamnd/fastmlx) (fastmlx v0.4.0) mixed-precision quantization.\n\n## Quantization details\n\n- **Model type**: qwen3\n- **Bits**: 3.5\n- **Group size**: 64\n- **Format**: MLX safetensors\n"
+    }
+  ]
+}
