@@ -1,0 +1,157 @@
+{
+  "default_memory_bytes": 8589934592,
+  "chip": [
+    {
+      "input": "Apple M4 Pro",
+      "name": "M4",
+      "variant": "Pro"
+    },
+    {
+      "input": "Apple M3 Max",
+      "name": "M3",
+      "variant": "Max"
+    },
+    {
+      "input": "Apple M2",
+      "name": "M2",
+      "variant": ""
+    },
+    {
+      "input": "Apple M1 Ultra",
+      "name": "M1",
+      "variant": "Ultra"
+    },
+    {
+      "input": "Apple M4",
+      "name": "M4",
+      "variant": ""
+    },
+    {
+      "input": "Apple M10 Pro",
+      "name": "M10",
+      "variant": "Pro"
+    },
+    {
+      "input": "Intel Core i9",
+      "name": "M1",
+      "variant": ""
+    },
+    {
+      "input": "",
+      "name": "M1",
+      "variant": ""
+    },
+    {
+      "input": "Apple Silicon",
+      "name": "M1",
+      "variant": ""
+    },
+    {
+      "input": "M3Max",
+      "name": "M3",
+      "variant": "Max"
+    },
+    {
+      "input": "Apple  M2  Max",
+      "name": "M2",
+      "variant": "Max"
+    }
+  ],
+  "memory_gb": [
+    {
+      "bytes": 0,
+      "gb": 0.0
+    },
+    {
+      "bytes": 1023,
+      "gb": 9.527429938316345e-07
+    },
+    {
+      "bytes": 1024,
+      "gb": 9.5367431640625e-07
+    },
+    {
+      "bytes": 17179869184,
+      "gb": 16.0
+    },
+    {
+      "bytes": 8589934592,
+      "gb": 8.0
+    },
+    {
+      "bytes": 38654705664,
+      "gb": 36.0
+    },
+    {
+      "bytes": 1,
+      "gb": 9.313225746154785e-10
+    },
+    {
+      "bytes": 17179869184,
+      "gb": 16.0
+    }
+  ],
+  "working_set": [
+    {
+      "total_ram": null,
+      "bytes": 8589934592
+    },
+    {
+      "total_ram": 0,
+      "bytes": 0
+    },
+    {
+      "total_ram": 17179869184,
+      "bytes": 12884901888
+    },
+    {
+      "total_ram": 8589934592,
+      "bytes": 6442450944
+    },
+    {
+      "total_ram": 68719476736,
+      "bytes": 51539607552
+    },
+    {
+      "total_ram": 12345678901,
+      "bytes": 9259259175
+    }
+  ],
+  "owner_hash": [
+    {
+      "uuid": "ABC-123",
+      "chip_name": "M4",
+      "gpu_cores": 16,
+      "memory_gb": 36,
+      "hash": "2c0371acb5faf5c611fe36d135d93e48bccd28a198d19c1c1f1e7f6314d96ac18"
+    },
+    {
+      "uuid": "ABC-123",
+      "chip_name": "M4",
+      "gpu_cores": null,
+      "memory_gb": 36,
+      "hash": "4a4a02d87951a0d8bd8f15cf5928cd9d68314831c4fe2bdd573f40ccb7ca245a6"
+    },
+    {
+      "uuid": "",
+      "chip_name": "M1",
+      "gpu_cores": 0,
+      "memory_gb": 8,
+      "hash": "4844b24ba5898cba64e607e818c9fe184e3d8505ec48bb405c92ddfc836c58361"
+    },
+    {
+      "uuid": "uuid-xyz",
+      "chip_name": "M3 Max",
+      "gpu_cores": 40,
+      "memory_gb": 128,
+      "hash": "ba9e3b5553c1cc7dbf39e316d237b1b6dc12a84cf49d573240736b5cad948ce78"
+    },
+    {
+      "uuid": "deadbeef",
+      "chip_name": "M2",
+      "gpu_cores": 10,
+      "memory_gb": 24,
+      "hash": "c905ae3d81377f02f28379911f9f135a8da4d192155d1fa8243e654fbc1bf3a0u"
+    }
+  ]
+}
