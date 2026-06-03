@@ -1,0 +1,288 @@
+{
+  "valid_prompt_lengths": [
+    1024,
+    4096,
+    8192,
+    16384,
+    32768,
+    65536,
+    131072,
+    200000
+  ],
+  "valid_batch_sizes": [
+    2,
+    4,
+    8
+  ],
+  "metrics": [
+    {
+      "in": {
+        "prompt_tokens": 1024,
+        "completion_tokens": 128,
+        "start_time": 0.0,
+        "first_token_time": 0.5,
+        "end_time": 2.5,
+        "peak_memory": 8000000000,
+        "cached_tokens": 0
+      },
+      "out": {
+        "ttft_ms": 500.0,
+        "tpot_ms": 15.75,
+        "gen_tps": 64.0,
+        "processing_tps": 2048.0,
+        "e2e_latency_s": 2.5,
+        "total_throughput": 460.8,
+        "peak_memory_bytes": 8000000000,
+        "prompt_tokens": 1024,
+        "completion_tokens": 128,
+        "cached_tokens": 0
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 4096,
+        "completion_tokens": 1,
+        "start_time": 10.0,
+        "first_token_time": 11.2,
+        "end_time": 11.2,
+        "peak_memory": 1234,
+        "cached_tokens": 512
+      },
+      "out": {
+        "ttft_ms": 1200.0,
+        "tpot_ms": 0.0,
+        "gen_tps": 1000000000.0,
+        "processing_tps": 3413.3,
+        "e2e_latency_s": 1.2,
+        "total_throughput": 3414.2,
+        "peak_memory_bytes": 1234,
+        "prompt_tokens": 4096,
+        "completion_tokens": 1,
+        "cached_tokens": 512
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 200000,
+        "completion_tokens": 256,
+        "start_time": 0.0,
+        "first_token_time": 8.0,
+        "end_time": 20.0,
+        "peak_memory": 0,
+        "cached_tokens": 100000
+      },
+      "out": {
+        "ttft_ms": 8000.0,
+        "tpot_ms": 47.06,
+        "gen_tps": 21.3,
+        "processing_tps": 25000.0,
+        "e2e_latency_s": 20.0,
+        "total_throughput": 10012.8,
+        "peak_memory_bytes": 0,
+        "prompt_tokens": 200000,
+        "completion_tokens": 256,
+        "cached_tokens": 100000
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "start_time": 5.0,
+        "first_token_time": 5.0,
+        "end_time": 5.0,
+        "peak_memory": 0,
+        "cached_tokens": 0
+      },
+      "out": {
+        "ttft_ms": 0.0,
+        "tpot_ms": 0.0,
+        "gen_tps": 0.0,
+        "processing_tps": 0.0,
+        "e2e_latency_s": 0.0,
+        "total_throughput": 0.0,
+        "peak_memory_bytes": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "cached_tokens": 0
+      }
+    }
+  ],
+  "detect": [
+    {
+      "config": "{\"quantization_config\": {\"bits\": 4}}",
+      "dirname": "Qwen3-30B-A3B-4bit",
+      "result": "4bit"
+    },
+    {
+      "config": "{\"quantization_config\": {\"bits\": 8}}",
+      "dirname": "model",
+      "result": "8bit"
+    },
+    {
+      "config": "{\"quantization_config\": {}}",
+      "dirname": "Llama-3-8B-bf16",
+      "result": "bf16"
+    },
+    {
+      "config": null,
+      "dirname": "Qwen3-4B-FP16",
+      "result": "fp16"
+    },
+    {
+      "config": null,
+      "dirname": "some-MXFP4-model",
+      "result": "mxfp4"
+    },
+    {
+      "config": null,
+      "dirname": "plain-model",
+      "result": "unknown"
+    },
+    {
+      "config": "{}",
+      "dirname": "Gemma-2-9B",
+      "result": "unknown"
+    }
+  ],
+  "clean": [
+    {
+      "model_id": "Qwen3-30B-A3B-4bit",
+      "result": "Qwen3-30B-A3B"
+    },
+    {
+      "model_id": "Qwen3-30B-A3B",
+      "result": "Qwen3-30B-A3B"
+    },
+    {
+      "model_id": "Llama-3-8B-mlx-8bit",
+      "result": "Llama-3-8B"
+    },
+    {
+      "model_id": "model-MLX-",
+      "result": "model"
+    },
+    {
+      "model_id": "Qwen2.5-bf16",
+      "result": "Qwen2.5"
+    },
+    {
+      "model_id": "name_4bit",
+      "result": "name"
+    },
+    {
+      "model_id": "MLX-Qwen-4bit",
+      "result": "Qwen"
+    },
+    {
+      "model_id": "plain",
+      "result": "plain"
+    }
+  ],
+  "prompt_validation": [
+    {
+      "in": [],
+      "out": {
+        "error": "At least one prompt length is required"
+      }
+    },
+    {
+      "in": [
+        1024
+      ],
+      "out": {
+        "sorted": [
+          1024
+        ]
+      }
+    },
+    {
+      "in": [
+        4096,
+        1024
+      ],
+      "out": {
+        "sorted": [
+          1024,
+          4096
+        ]
+      }
+    },
+    {
+      "in": [
+        1024,
+        999
+      ],
+      "out": {
+        "error": "Invalid prompt length 999. Must be one of [1024, 4096, 8192, 16384, 32768, 65536, 131072, 200000]"
+      }
+    },
+    {
+      "in": [
+        200000,
+        8192,
+        1024
+      ],
+      "out": {
+        "sorted": [
+          1024,
+          8192,
+          200000
+        ]
+      }
+    }
+  ],
+  "batch_validation": [
+    {
+      "in": [],
+      "out": {
+        "sorted": []
+      }
+    },
+    {
+      "in": [
+        2
+      ],
+      "out": {
+        "sorted": [
+          2
+        ]
+      }
+    },
+    {
+      "in": [
+        8,
+        2
+      ],
+      "out": {
+        "sorted": [
+          2,
+          8
+        ]
+      }
+    },
+    {
+      "in": [
+        2,
+        3
+      ],
+      "out": {
+        "error": "Invalid batch size 3. Must be one of [2, 4, 8]"
+      }
+    },
+    {
+      "in": [
+        4,
+        8,
+        2
+      ],
+      "out": {
+        "sorted": [
+          2,
+          4,
+          8
+        ]
+      }
+    }
+  ]
+}
