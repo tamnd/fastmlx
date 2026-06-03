@@ -1,0 +1,170 @@
+{
+  "merge": {
+    "agg_merged": {
+      "request_id": "req1",
+      "new_token_ids": [
+        10,
+        11,
+        12
+      ],
+      "new_text": "Hello",
+      "output_token_ids": [
+        10,
+        11,
+        12
+      ],
+      "output_text": "Hello",
+      "finished": false,
+      "finish_reason": null,
+      "prompt_tokens": 7,
+      "completion_tokens": 3,
+      "cached_tokens": 2,
+      "error": null
+    },
+    "agg_after": null,
+    "agg_err": {
+      "request_id": "req2",
+      "new_token_ids": [
+        1,
+        2
+      ],
+      "new_text": "ab",
+      "output_token_ids": [
+        1,
+        2
+      ],
+      "output_text": "ab",
+      "finished": false,
+      "finish_reason": null,
+      "prompt_tokens": 7,
+      "completion_tokens": 2,
+      "cached_tokens": 2,
+      "error": "boom"
+    },
+    "noagg": {
+      "request_id": "req3",
+      "new_token_ids": [
+        2
+      ],
+      "new_text": "b",
+      "output_token_ids": [
+        1,
+        2
+      ],
+      "output_text": "ab",
+      "finished": true,
+      "finish_reason": "stop",
+      "prompt_tokens": 7,
+      "completion_tokens": 2,
+      "cached_tokens": 2,
+      "error": null
+    },
+    "after_clear": null
+  },
+  "should_send": [
+    {
+      "in": [
+        1,
+        0,
+        0,
+        false
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        1,
+        0,
+        0,
+        true
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        4,
+        0,
+        1,
+        false
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        4,
+        2,
+        3,
+        false
+      ],
+      "out": false
+    },
+    {
+      "in": [
+        4,
+        2,
+        6,
+        false
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        4,
+        2,
+        5,
+        true
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        1,
+        5,
+        6,
+        false
+      ],
+      "out": true
+    },
+    {
+      "in": [
+        10,
+        5,
+        5,
+        false
+      ],
+      "out": false
+    }
+  ],
+  "mark_sent_seq": [
+    {
+      "total": 1,
+      "finished": false,
+      "send": true,
+      "sent_after": 1
+    },
+    {
+      "total": 2,
+      "finished": false,
+      "send": false,
+      "sent_after": 1
+    },
+    {
+      "total": 4,
+      "finished": false,
+      "send": true,
+      "sent_after": 4
+    },
+    {
+      "total": 5,
+      "finished": false,
+      "send": false,
+      "sent_after": 4
+    },
+    {
+      "total": 10,
+      "finished": true,
+      "send": true,
+      "sent_after": 10
+    }
+  ]
+}
