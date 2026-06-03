@@ -1,0 +1,727 @@
+{
+  "gsm8k": {
+    "prompt": [
+      {
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Solve the following math problem step by step. End your answer with #### followed by the final numeric answer.\n\nQuestion: There are 15 trees in the grove. Grove workers will plant trees in the grove today. After they are done, there will be 21 trees. How many trees did the grove workers plant today?\nAnswer: There are 15 trees originally. Then there were 21 trees after some more were planted. So there must have been 21 - 15 = 6 trees planted. #### 6\n\nQuestion: If there are 3 cars in the parking lot and 2 more cars arrive, how many cars are in the parking lot?\nAnswer: There are originally 3 cars. Then 2 more arrive. So there are 3 + 2 = 5 cars. #### 5\n\nQuestion: Leah had 32 chocolates and her sister had 42. If they ate 35, how many pieces do they have left in total?\nAnswer: Originally, Leah had 32 chocolates and her sister had 42. So in total they had 32 + 42 = 74. After eating 35, they had 74 - 35 = 39. #### 39\n\nQuestion: Jason had 20 lollipops. He gave Denny some lollipops. Now Jason has 12 lollipops. How many lollipops did Jason give to Denny?\nAnswer: Jason had 20 lollipops originally. Then he had 12 after giving some to Denny. So he gave Denny 20 - 12 = 8 lollipops. #### 8\n\nQuestion: Shawn has five toys. For Christmas, he got two toys each from his mom and dad. How many toys does he have now?\nAnswer: Shawn started with 5 toys. He got 2 from mom and 2 from dad, so 2 + 2 = 4 more toys. Now he has 5 + 4 = 9 toys. #### 9\n\nQuestion: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "question": "A robe takes 2 bolts of blue fiber. How many in total?",
+          "answer": "3"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Solve the following math problem step by step. End your answer with #### followed by the final numeric answer.\n\nQuestion: There are 15 trees in the grove. Grove workers will plant trees in the grove today. After they are done, there will be 21 trees. How many trees did the grove workers plant today?\nAnswer: There are 15 trees originally. Then there were 21 trees after some more were planted. So there must have been 21 - 15 = 6 trees planted. #### 6\n\nQuestion: If there are 3 cars in the parking lot and 2 more cars arrive, how many cars are in the parking lot?\nAnswer: There are originally 3 cars. Then 2 more arrive. So there are 3 + 2 = 5 cars. #### 5\n\nQuestion: Leah had 32 chocolates and her sister had 42. If they ate 35, how many pieces do they have left in total?\nAnswer: Originally, Leah had 32 chocolates and her sister had 42. So in total they had 32 + 42 = 74. After eating 35, they had 74 - 35 = 39. #### 39\n\nQuestion: Jason had 20 lollipops. He gave Denny some lollipops. Now Jason has 12 lollipops. How many lollipops did Jason give to Denny?\nAnswer: Jason had 20 lollipops originally. Then he had 12 after giving some to Denny. So he gave Denny 20 - 12 = 8 lollipops. #### 8\n\nQuestion: Shawn has five toys. For Christmas, he got two toys each from his mom and dad. How many toys does he have now?\nAnswer: Shawn started with 5 toys. He got 2 from mom and 2 from dad, so 2 + 2 = 4 more toys. Now he has 5 + 4 = 9 toys. #### 9\n\nQuestion: A robe takes 2 bolts of blue fiber. How many in total?\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "Step by step... so #### 72",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": "72"
+      },
+      {
+        "resp": "The answer is 3.14 dollars and 3 bolts. #### 3",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": "3"
+      },
+      {
+        "resp": "no number here",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "72",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": true
+      },
+      {
+        "pred": "3",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": false
+      },
+      {
+        "pred": "71",
+        "item": {
+          "question": "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did she sell altogether?",
+          "answer": "72"
+        },
+        "out": false
+      },
+      {
+        "pred": "72",
+        "item": {
+          "question": "A robe takes 2 bolts of blue fiber. How many in total?",
+          "answer": "3"
+        },
+        "out": false
+      },
+      {
+        "pred": "3",
+        "item": {
+          "question": "A robe takes 2 bolts of blue fiber. How many in total?",
+          "answer": "3"
+        },
+        "out": true
+      },
+      {
+        "pred": "",
+        "item": {
+          "question": "A robe takes 2 bolts of blue fiber. How many in total?",
+          "answer": "3"
+        },
+        "out": false
+      },
+      {
+        "pred": "71",
+        "item": {
+          "question": "A robe takes 2 bolts of blue fiber. How many in total?",
+          "answer": "3"
+        },
+        "out": false
+      }
+    ]
+  },
+  "arc": {
+    "prompt": [
+      {
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Answer the following science question. Answer with just the letter.\n\nQuestion: Which is a gas?\n\nA. rock\nB. water\nC. oxygen\nD. sand\n\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Answer the following science question. Answer with just the letter.\n\nQuestion: Numbered choices?\n\n1. one\n2. two\n3. three\n\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "The answer is C",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": "C"
+      },
+      {
+        "resp": "I think B",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": "B"
+      },
+      {
+        "resp": "2 is correct",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": ""
+      },
+      {
+        "resp": "2 is correct",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": "2"
+      },
+      {
+        "resp": "answer: 3",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": "3"
+      }
+    ],
+    "check": [
+      {
+        "pred": "C",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": true
+      },
+      {
+        "pred": "2",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": false
+      },
+      {
+        "pred": "A",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "q1",
+          "question": "Which is a gas?",
+          "choices": [
+            "rock",
+            "water",
+            "oxygen",
+            "sand"
+          ],
+          "labels": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "answer": "C"
+        },
+        "out": false
+      },
+      {
+        "pred": "C",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": false
+      },
+      {
+        "pred": "2",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": true
+      },
+      {
+        "pred": "A",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "q2",
+          "question": "Numbered choices?",
+          "choices": [
+            "one",
+            "two",
+            "three"
+          ],
+          "labels": [
+            "1",
+            "2",
+            "3"
+          ],
+          "answer": "2"
+        },
+        "out": false
+      }
+    ]
+  },
+  "hellaswag": {
+    "prompt": [
+      {
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Choose the most plausible continuation. Answer with just the letter (A, B, C, or D).\n\nContext: A man is cooking.\n\nA. He eats a car.\nB. He stirs the pot.\nC. He flies away.\nD. He sings opera.\n\nAnswer:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Choose the most plausible continuation. Answer with just the letter (A, B, C, or D).\n\nContext: A dog runs.\n\nA. e1\nB. e2\nC. e3\nD. e4\n\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "Answer: B",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": "B"
+      },
+      {
+        "resp": "D",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": "D"
+      },
+      {
+        "resp": "garbage",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": ""
+      }
+    ],
+    "check": [
+      {
+        "pred": "A",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": false
+      },
+      {
+        "pred": "B",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": true
+      },
+      {
+        "pred": "C",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": false
+      },
+      {
+        "pred": "D",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": false
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": false
+      },
+      {
+        "pred": "A",
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": false
+      },
+      {
+        "pred": "B",
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": false
+      },
+      {
+        "pred": "C",
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": false
+      },
+      {
+        "pred": "D",
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": true
+      },
+      {
+        "pred": "",
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "id": "h1",
+          "context": "A man is cooking.",
+          "endings": [
+            "He eats a car.",
+            "He stirs the pot.",
+            "He flies away.",
+            "He sings opera."
+          ],
+          "answer": 1,
+          "activity_label": "Cooking"
+        },
+        "out": "Cooking"
+      },
+      {
+        "item": {
+          "id": "h2",
+          "context": "A dog runs.",
+          "endings": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "answer": 3,
+          "activity_label": "Animals"
+        },
+        "out": "Animals"
+      }
+    ]
+  }
+}
