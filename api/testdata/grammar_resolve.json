@@ -1,0 +1,247 @@
+[
+  {
+    "fn": "normalize",
+    "structured_outputs": null,
+    "guided_grammar": null,
+    "out": null
+  },
+  {
+    "fn": "normalize",
+    "structured_outputs": null,
+    "guided_grammar": "",
+    "out": null
+  },
+  {
+    "fn": "normalize",
+    "structured_outputs": null,
+    "guided_grammar": "root ::= \"x\"",
+    "out": {
+      "grammar": "root ::= \"x\""
+    }
+  },
+  {
+    "fn": "normalize",
+    "structured_outputs": {
+      "regex": "a+"
+    },
+    "guided_grammar": "ignored",
+    "out": {
+      "regex": "a+"
+    }
+  },
+  {
+    "fn": "normalize",
+    "structured_outputs": {},
+    "guided_grammar": "g",
+    "out": {}
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "response_format": null,
+    "out": {
+      "type": "json_schema",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "json": {
+        "type": "string"
+      }
+    },
+    "response_format": null,
+    "out": {
+      "type": "json_schema",
+      "json_schema": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "json_schema": "{\"type\": \"number\"}"
+    },
+    "response_format": null,
+    "out": {
+      "type": "json_schema",
+      "json_schema": {
+        "type": "number"
+      }
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "grammar": "root ::= \"a\""
+    },
+    "response_format": null,
+    "out": {
+      "type": "grammar",
+      "grammar": "root ::= \"a\""
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "regex": "[0-9]+"
+    },
+    "response_format": null,
+    "out": {
+      "type": "regex",
+      "pattern": "[0-9]+"
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "choice": [
+        "yes",
+        "no",
+        "maybe"
+      ]
+    },
+    "response_format": null,
+    "out": {
+      "type": "grammar",
+      "grammar": "root ::= \"yes\" | \"no\" | \"maybe\""
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "choice": [
+        "café",
+        "naïve"
+      ]
+    },
+    "response_format": null,
+    "out": {
+      "type": "grammar",
+      "grammar": "root ::= \"caf\\u00e9\" | \"na\\u00efve\""
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "choice": [
+        "a"
+      ]
+    },
+    "response_format": null,
+    "out": {
+      "type": "grammar",
+      "grammar": "root ::= \"a\""
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "choice": []
+    },
+    "response_format": null,
+    "out": {
+      "type": "grammar",
+      "grammar": "root ::= "
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {},
+    "response_format": null,
+    "out": null
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": {
+      "type": "json_object"
+    },
+    "out": {
+      "type": "json_schema",
+      "json_schema": {}
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "out": {
+      "type": "json_schema",
+      "json_schema": {
+        "type": "object"
+      }
+    }
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "x"
+      }
+    },
+    "out": null
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": {
+      "type": "json_schema"
+    },
+    "out": null
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": {
+      "type": "text"
+    },
+    "out": null
+  },
+  {
+    "fn": "format",
+    "structured_outputs": null,
+    "response_format": null,
+    "out": null
+  },
+  {
+    "fn": "format",
+    "structured_outputs": {
+      "regex": "x"
+    },
+    "response_format": {
+      "type": "json_object"
+    },
+    "out": {
+      "type": "regex",
+      "pattern": "x"
+    }
+  }
+]
