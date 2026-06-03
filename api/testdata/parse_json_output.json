@@ -1,0 +1,195 @@
+[
+  {
+    "text": "anything at all",
+    "response_format": null,
+    "result": {
+      "cleaned_text": "anything at all",
+      "parsed": null,
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "plain text response",
+    "response_format": {
+      "type": "text"
+    },
+    "result": {
+      "cleaned_text": "plain text response",
+      "parsed": null,
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "plain text and unknown",
+    "response_format": {
+      "type": "weird_mode"
+    },
+    "result": {
+      "cleaned_text": "plain text and unknown",
+      "parsed": null,
+      "valid": false,
+      "error_message": "Failed to extract valid JSON from output"
+    }
+  },
+  {
+    "text": "{\"y\": 9}",
+    "response_format": {
+      "type": "weird_mode"
+    },
+    "result": {
+      "cleaned_text": "{\"y\": 9}",
+      "parsed": null,
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "{\"a\": 1, \"b\": [2, 3]}",
+    "response_format": {
+      "type": "json_object"
+    },
+    "result": {
+      "cleaned_text": "{\"a\": 1, \"b\": [2, 3]}",
+      "parsed": {
+        "a": 1,
+        "b": [
+          2,
+          3
+        ]
+      },
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "here is json: {\"x\": true}",
+    "response_format": {
+      "type": "json_object"
+    },
+    "result": {
+      "cleaned_text": "here is json: {\"x\": true}",
+      "parsed": {
+        "x": true
+      },
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "no json here at all",
+    "response_format": {
+      "type": "json_object"
+    },
+    "result": {
+      "cleaned_text": "no json here at all",
+      "parsed": null,
+      "valid": false,
+      "error_message": "Failed to extract valid JSON from output"
+    }
+  },
+  {
+    "text": "```json\n{\"k\": \"v\"}\n```",
+    "response_format": {
+      "type": "json_object"
+    },
+    "result": {
+      "cleaned_text": "```json\n{\"k\": \"v\"}\n```",
+      "parsed": {
+        "k": "v"
+      },
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "{\"ok\": 1}",
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "schema": {}
+      }
+    },
+    "result": {
+      "cleaned_text": "{\"ok\": 1}",
+      "parsed": {
+        "ok": 1
+      },
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "{\"ok\": 1}",
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "schema": {
+          "title": "PASS",
+          "type": "object"
+        }
+      }
+    },
+    "result": {
+      "cleaned_text": "{\"ok\": 1}",
+      "parsed": {
+        "ok": 1
+      },
+      "valid": true,
+      "error_message": null
+    }
+  },
+  {
+    "text": "{\"bad\": 1}",
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "schema": {
+          "title": "FAIL",
+          "type": "object"
+        }
+      }
+    },
+    "result": {
+      "cleaned_text": "{\"bad\": 1}",
+      "parsed": {
+        "bad": 1
+      },
+      "valid": false,
+      "error_message": "JSON Schema validation failed: stub: data does not match schema"
+    }
+  },
+  {
+    "text": "not json",
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "schema": {
+          "title": "FAIL"
+        }
+      }
+    },
+    "result": {
+      "cleaned_text": "not json",
+      "parsed": null,
+      "valid": false,
+      "error_message": "Failed to extract valid JSON from output"
+    }
+  },
+  {
+    "text": "{\"v\": 2}",
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {}
+    },
+    "result": {
+      "cleaned_text": "{\"v\": 2}",
+      "parsed": {
+        "v": 2
+      },
+      "valid": true,
+      "error_message": null
+    }
+  }
+]
