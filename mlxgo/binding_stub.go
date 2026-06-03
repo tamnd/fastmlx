@@ -155,6 +155,7 @@ func Mul(a, b *Array, s *Stream) (*Array, error)                  { return nil, 
 func Sub(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
 func Div(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
 func Softmax(a *Array, axis int, s *Stream) (*Array, error)       { return nil, ErrMLXUnavailable }
+func Sigmoid(a *Array, s *Stream) (*Array, error)                 { return nil, ErrMLXUnavailable }
 func RMSNorm(x, w *Array, eps float32, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
 func Reshape(a *Array, shape []int, s *Stream) (*Array, error)    { return nil, ErrMLXUnavailable }
 func Transpose(a *Array, axes []int, s *Stream) (*Array, error)   { return nil, ErrMLXUnavailable }
@@ -170,8 +171,10 @@ func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, off
 }
 
 // ScaledDotProductAttention is the fused attention kernel
-// (mlx_fast_scaled_dot_product_attention).
-func ScaledDotProductAttention(q, k, v *Array, scale float32, mask *Array, s *Stream) (*Array, error) {
+// (mlx_fast_scaled_dot_product_attention). maskMode selects a built-in mask
+// ("causal" or "" for none); an explicit additive mask array may be passed
+// instead.
+func ScaledDotProductAttention(q, k, v *Array, scale float32, maskMode string, mask *Array, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 

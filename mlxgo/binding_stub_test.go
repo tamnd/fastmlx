@@ -133,6 +133,7 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Sub(a, b, s) },
 		func() (*Array, error) { return Div(a, b, s) },
 		func() (*Array, error) { return Softmax(a, -1, s) },
+		func() (*Array, error) { return Sigmoid(a, s) },
 		func() (*Array, error) { return RMSNorm(a, b, 1e-5, s) },
 		func() (*Array, error) { return Reshape(a, []int{2, 1}, s) },
 		func() (*Array, error) { return Transpose(a, nil, s) },
@@ -140,7 +141,7 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Take(a, b, 0, s) },
 		func() (*Array, error) { return Argmax(a, -1, s) },
 		func() (*Array, error) { return RoPE(a, 2, false, 10000, 1, 0, s) },
-		func() (*Array, error) { return ScaledDotProductAttention(a, a, a, 1, nil, s) },
+		func() (*Array, error) { return ScaledDotProductAttention(a, a, a, 1, "causal", nil, s) },
 		func() (*Array, error) { return QuantizedMatMul(a, b, a, b, true, 64, 4, s) },
 	}
 	for i, op := range ops {

@@ -342,6 +342,15 @@ func Softmax(a *Array, axis int, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func Sigmoid(a *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_sigmoid(&out, a.c, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func RMSNorm(x, w *Array, eps float32, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_fast_rms_norm(&out, x.c, w.c, C.float(eps), s.stream()) != 0 {
@@ -414,10 +423,10 @@ func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, off
 	return wrap(out), nil
 }
 
-func ScaledDotProductAttention(q, k, v *Array, scale float32, mask *Array, s *Stream) (*Array, error) {
+func ScaledDotProductAttention(q, k, v *Array, scale float32, maskMode string, mask *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	var maskC C.mlx_array
-	maskStr := C.CString("")
+	maskStr := C.CString(maskMode)
 	defer C.free(unsafe.Pointer(maskStr))
 	if mask != nil {
 		maskC = mask.c
