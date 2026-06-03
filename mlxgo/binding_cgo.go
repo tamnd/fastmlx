@@ -497,6 +497,24 @@ func Cumsum(a *Array, axis int, reverse, inclusive bool, s *Stream) (*Array, err
 	return wrap(out), nil
 }
 
+func TakeAlongAxis(a, indices *Array, axis int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_take_along_axis(&out, a.c, indices.c, C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Argpartition(a *Array, kth, axis int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_argpartition_axis(&out, a.c, C.int(kth), C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	freq := C.mlx_array_new()

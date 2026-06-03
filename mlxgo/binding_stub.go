@@ -208,6 +208,20 @@ func Cumsum(a *Array, axis int, reverse, inclusive bool, s *Stream) (*Array, err
 	return nil, ErrMLXUnavailable
 }
 
+// TakeAlongAxis gathers from a along axis using per-position indices of the same
+// rank as a. It is the expert-dispatch gather a mixture-of-experts router uses to
+// pull each token's selected expert rows after the top-k pick.
+func TakeAlongAxis(a, indices *Array, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// Argpartition returns the indices that place the kth element of a along axis in
+// its sorted position, with all smaller-ranked indices before it. A mixture-of-experts
+// router takes the top-k expert indices from its partitioned scores this way.
+func Argpartition(a *Array, kth, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // RoPE applies rotary position embedding.
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable

@@ -143,6 +143,8 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Argmax(a, -1, s) },
 		func() (*Array, error) { return Where(a, a, b, s) },
 		func() (*Array, error) { return Cumsum(a, -1, false, true, s) },
+		func() (*Array, error) { return TakeAlongAxis(a, b, 0, s) },
+		func() (*Array, error) { return Argpartition(a, 1, -1, s) },
 		func() (*Array, error) { return RoPE(a, 2, false, 10000, 1, 0, s) },
 		func() (*Array, error) { return ScaledDotProductAttention(a, a, a, 1, "causal", nil, s) },
 		func() (*Array, error) { return QuantizedMatMul(a, b, a, b, true, 64, 4, s) },
