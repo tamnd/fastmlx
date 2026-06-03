@@ -1,0 +1,324 @@
+[
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": "{\"temp\": 21}"
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": {
+          "temp": 21
+        }
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c2",
+        "content": "plain text"
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c2",
+        "content": "plain text"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c3",
+        "content": [
+          {
+            "type": "text",
+            "text": "a"
+          },
+          {
+            "type": "text",
+            "text": "b"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c3",
+        "content": "a\nb"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "content": "{\"k\": [1, 2]}"
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "",
+        "content": {
+          "k": [
+            1,
+            2
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c4",
+        "content": ""
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c4",
+        "content": ""
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a1",
+            "function": {
+              "name": "fn",
+              "arguments": "{\"x\": 1}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a1",
+            "function": {
+              "name": "fn",
+              "arguments": {
+                "x": 1
+              }
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant"
+      }
+    ],
+    "result": []
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "listed"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "listed"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "q"
+      },
+      {
+        "role": "developer",
+        "content": "terse"
+      },
+      {
+        "role": "system",
+        "content": "sys2"
+      }
+    ],
+    "result": [
+      {
+        "role": "system",
+        "content": "terse\n\nsys2"
+      },
+      {
+        "role": "user",
+        "content": "q"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "one"
+      },
+      {
+        "role": "user",
+        "content": "two"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "one\n\ntwo"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": 5
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "5"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": true
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "True"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "t1",
+            "function": {
+              "name": "f",
+              "arguments": "{}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": "{\"r\": true}"
+      },
+      {
+        "role": "assistant",
+        "content": "done"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "t1",
+            "function": {
+              "name": "f",
+              "arguments": {}
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": {
+          "r": true
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "done"
+      }
+    ]
+  }
+]
