@@ -1,0 +1,270 @@
+{
+  "now": "2024-01-15T12:00:00+00:00",
+  "save": [
+    {
+      "label": "basic",
+      "error": null,
+      "record": {
+        "name": "creative",
+        "display_name": "Creative",
+        "description": "loose sampling",
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.9,
+          "top_p": 0.95
+        }
+      }
+    },
+    {
+      "label": "filters_model_specific",
+      "error": null,
+      "record": {
+        "name": "u1",
+        "display_name": "u1",
+        "description": null,
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "label": "display_name_defaults_to_name",
+      "error": null,
+      "record": {
+        "name": "named",
+        "display_name": "named",
+        "description": null,
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {}
+      }
+    },
+    {
+      "label": "invalid_name",
+      "error": "Invalid profile/template name: 'Bad Name!'. Must match ^[a-z0-9][a-z0-9_-]{0,31}$",
+      "record": null
+    },
+    {
+      "label": "empty_settings",
+      "error": null,
+      "record": {
+        "name": "empty",
+        "display_name": "Empty",
+        "description": "desc",
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {}
+      }
+    }
+  ],
+  "upsert": [
+    {
+      "label": "create_new",
+      "existing": null,
+      "record": {
+        "name": "fast",
+        "display_name": "Fast",
+        "description": null,
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.2
+        }
+      }
+    },
+    {
+      "label": "replace_keeps_created_at",
+      "existing": {
+        "name": "fast",
+        "display_name": "Fast",
+        "description": null,
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.2
+        }
+      },
+      "record": {
+        "name": "fast",
+        "display_name": "Faster",
+        "description": "v2",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.1
+        }
+      }
+    }
+  ],
+  "update": [
+    {
+      "label": "touch_only",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": null,
+      "display_name": null,
+      "description": null,
+      "settings": null,
+      "record": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "label": "rename",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": "t2",
+      "display_name": null,
+      "description": null,
+      "settings": null,
+      "record": {
+        "name": "t2",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "label": "change_display",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": null,
+      "display_name": "New Name",
+      "description": null,
+      "settings": null,
+      "record": {
+        "name": "t1",
+        "display_name": "New Name",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "label": "change_description",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": null,
+      "display_name": null,
+      "description": "updated",
+      "settings": null,
+      "record": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "updated",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "label": "replace_settings_filters",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": null,
+      "display_name": null,
+      "description": null,
+      "settings": {
+        "top_p": 0.8,
+        "dflash_enabled": true,
+        "is_pinned": true
+      },
+      "record": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "top_p": 0.8
+        }
+      }
+    },
+    {
+      "label": "rename_same_name_noop",
+      "current": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2023-06-01T08:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      },
+      "new_name": "t1",
+      "display_name": null,
+      "description": null,
+      "settings": null,
+      "record": {
+        "name": "t1",
+        "display_name": "T1",
+        "description": "orig",
+        "created_at": "2023-06-01T08:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5
+        }
+      }
+    }
+  ]
+}
