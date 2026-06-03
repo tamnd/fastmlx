@@ -1,0 +1,68 @@
+{
+  "normalize": [
+    {
+      "in": "[{\"type\": \"message\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"Hello\"}, {\"type\": \"output_text\", \"text\": \"World\"}]}]",
+      "out": "[{\"role\": \"assistant\", \"content\": \"Hello\\nWorld\"}]"
+    },
+    {
+      "in": "[{\"type\": \"reasoning\", \"summary\": [{\"text\": \"think a\"}, {\"text\": \"think b\"}, {\"no\": \"text\"}]}, {\"type\": \"message\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"Answer\"}]}]",
+      "out": "[{\"role\": \"assistant\", \"content\": \"Answer\", \"reasoning_content\": \"think a\\nthink b\"}]"
+    },
+    {
+      "in": "[{\"type\": \"function_call\", \"call_id\": \"call_123\", \"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\": \\\"SF\\\"}\"}]",
+      "out": "[{\"role\": \"assistant\", \"tool_calls\": [{\"id\": \"call_123\", \"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"arguments\": {\"city\": \"SF\"}}}]}]"
+    },
+    {
+      "in": "[{\"type\": \"reasoning\", \"summary\": [{\"text\": \"r\"}]}, {\"type\": \"function_call\", \"call_id\": \"c1\", \"name\": \"f\", \"arguments\": \"{}\"}]",
+      "out": "[{\"role\": \"assistant\", \"tool_calls\": [{\"id\": \"c1\", \"type\": \"function\", \"function\": {\"name\": \"f\", \"arguments\": {}}}], \"reasoning_content\": \"r\"}]"
+    },
+    {
+      "in": "[{\"type\": \"message\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"hi\"}]}, {\"type\": \"function_call\", \"call_id\": \"c2\", \"name\": \"f\", \"arguments\": \"{\\\"a\\\": 1}\"}]",
+      "out": "[{\"role\": \"assistant\", \"content\": \"hi\", \"tool_calls\": [{\"id\": \"c2\", \"type\": \"function\", \"function\": {\"name\": \"f\", \"arguments\": {\"a\": 1}}}]}]"
+    },
+    {
+      "in": "[{\"type\": \"function_call\", \"call_id\": \"c3\", \"name\": \"f\", \"arguments\": {\"x\": 1}}]",
+      "out": "[{\"role\": \"assistant\", \"tool_calls\": [{\"id\": \"c3\", \"type\": \"function\", \"function\": {\"name\": \"f\", \"arguments\": {\"x\": 1}}}]}]"
+    },
+    {
+      "in": "[{\"type\": \"function_call\", \"call_id\": \"c4\", \"name\": \"f\"}]",
+      "out": "[{\"role\": \"assistant\", \"tool_calls\": [{\"id\": \"c4\", \"type\": \"function\", \"function\": {\"name\": \"f\", \"arguments\": {}}}]}]"
+    },
+    {
+      "in": "[{\"type\": \"message\", \"role\": \"system\", \"content\": [{\"type\": \"output_text\", \"text\": \"sys\"}]}, {\"type\": \"message\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"a\"}]}]",
+      "out": "[{\"role\": \"system\", \"content\": \"sys\"}, {\"role\": \"assistant\", \"content\": \"a\"}]"
+    },
+    {
+      "in": "[]",
+      "out": "[]"
+    }
+  ],
+  "convert_stored": [
+    {
+      "in": "{\"output_messages\": [{\"role\": \"user\", \"content\": \"hi\"}]}",
+      "out": "[{\"role\": \"user\", \"content\": \"hi\"}]"
+    },
+    {
+      "in": "{\"output\": [{\"type\": \"message\", \"role\": \"assistant\", \"content\": [{\"type\": \"output_text\", \"text\": \"x\"}]}]}",
+      "out": "[{\"role\": \"assistant\", \"content\": \"x\"}]"
+    },
+    {
+      "in": "{}",
+      "out": "[]"
+    }
+  ],
+  "build_record": [
+    {
+      "public": "{\"id\": \"resp_1\", \"previous_response_id\": \"resp_0\", \"created_at\": 123, \"extra\": \"e\"}",
+      "input": "[{\"role\": \"user\", \"content\": \"q\"}]",
+      "output": "[{\"role\": \"assistant\", \"content\": \"a\"}]",
+      "out": "{\"response_id\": \"resp_1\", \"previous_response_id\": \"resp_0\", \"input_messages\": [{\"role\": \"user\", \"content\": \"q\"}], \"output_messages\": [{\"role\": \"assistant\", \"content\": \"a\"}], \"public_response\": {\"id\": \"resp_1\", \"previous_response_id\": \"resp_0\", \"created_at\": 123, \"extra\": \"e\"}, \"created_at\": 123}"
+    },
+    {
+      "public": "{\"id\": \"resp_2\"}",
+      "input": "[]",
+      "output": "[]",
+      "out": "{\"response_id\": \"resp_2\", \"previous_response_id\": null, \"input_messages\": [], \"output_messages\": [], \"public_response\": {\"id\": \"resp_2\"}, \"created_at\": 0}"
+    }
+  ]
+}
