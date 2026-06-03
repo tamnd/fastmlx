@@ -1,0 +1,14 @@
+[
+  {
+    "store_flag": null,
+    "result": true
+  },
+  {
+    "store_flag": true,
+    "result": true
+  },
+  {
+    "store_flag": false,
+    "result": false
+  }
+]

@@ -1,0 +1,153 @@
+[
+  {
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ],
+    "instruction": "Respond as JSON.",
+    "result": [
+      {
+        "role": "system",
+        "content": "Respond as JSON."
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Be terse."
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ],
+    "instruction": "Output JSON only.",
+    "result": [
+      {
+        "role": "system",
+        "content": "Be terse.\n\nOutput JSON only."
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "A"
+      },
+      {
+        "role": "user",
+        "content": "u"
+      },
+      {
+        "role": "system",
+        "content": "B"
+      }
+    ],
+    "instruction": "JSON!",
+    "result": [
+      {
+        "role": "system",
+        "content": "A\n\nJSON!"
+      },
+      {
+        "role": "user",
+        "content": "u"
+      },
+      {
+        "role": "system",
+        "content": "B"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": ""
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ],
+    "instruction": "JSON!",
+    "result": [
+      {
+        "role": "system",
+        "content": "\n\nJSON!"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ],
+    "instruction": "JSON!",
+    "result": [
+      {
+        "role": "system",
+        "content": "\n\nJSON!"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "messages": [],
+    "instruction": "JSON only.",
+    "result": [
+      {
+        "role": "system",
+        "content": "JSON only."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": null
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ],
+    "instruction": "JSON!",
+    "result": [
+      {
+        "role": "system",
+        "content": "None\n\nJSON!"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  }
+]
