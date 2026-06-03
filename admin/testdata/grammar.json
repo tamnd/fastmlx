@@ -1,0 +1,98 @@
+{
+  "docs": [
+    {
+      "doc": "",
+      "out": []
+    },
+    {
+      "doc": "No supported section here.",
+      "out": []
+    },
+    {
+      "doc": "Supported models:\n- qwen3\n- llama3\n- gemma2\n",
+      "out": [
+        "qwen3",
+        "llama3",
+        "gemma2"
+      ]
+    },
+    {
+      "doc": "Some intro.\n\nSupported models:\n  - deepseek-v3\n  - mistral\nMore text after.",
+      "out": [
+        "deepseek-v3",
+        "mistral"
+      ]
+    },
+    {
+      "doc": "Supported models:\n- single-model",
+      "out": [
+        "single-model"
+      ]
+    },
+    {
+      "doc": "Supported models:\n-- double-dash-model\n-   spaced-model   ",
+      "out": [
+        "double-dash-model",
+        "spaced-model"
+      ]
+    },
+    {
+      "doc": "Supported models:\n\nnot a bullet",
+      "out": []
+    },
+    {
+      "doc": "supported models:\n- wrong-case",
+      "out": []
+    }
+  ],
+  "sizes": [
+    {
+      "bytes": 0,
+      "out": "0 B"
+    },
+    {
+      "bytes": 512,
+      "out": "512 B"
+    },
+    {
+      "bytes": 1024,
+      "out": "1.0 KB"
+    },
+    {
+      "bytes": 1536,
+      "out": "1.5 KB"
+    },
+    {
+      "bytes": 1048576,
+      "out": "1.0 MB"
+    },
+    {
+      "bytes": 1572864,
+      "out": "1.5 MB"
+    },
+    {
+      "bytes": 1073741824,
+      "out": "1.00 GB"
+    },
+    {
+      "bytes": 1610612736,
+      "out": "1.50 GB"
+    },
+    {
+      "bytes": 8589934592,
+      "out": "8.00 GB"
+    },
+    {
+      "bytes": 1099511627776,
+      "out": "1.00 TB"
+    },
+    {
+      "bytes": 2199023255552,
+      "out": "2.00 TB"
+    },
+    {
+      "bytes": 5497558138880,
+      "out": "5.00 TB"
+    }
+  ]
+}
