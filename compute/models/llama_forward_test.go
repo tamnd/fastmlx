@@ -1,0 +1,124 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
+package models
+
+import (
+	"errors"
+	"testing"
+
+	"github.com/tamnd/fastmlx/mlxgo"
+)
+
+// tinyLlamaArgs is a 2-layer config small enough to assemble dummy weights for.
+// bias toggles the optional attention and MLP projection biases.
+func tinyLlamaArgs(t *testing.T, tie, bias bool) *LlamaArgs {
+	t.Helper()
+	cfg := `{"model_type":"llama","hidden_size":8,"num_hidden_layers":2,"intermediate_size":16,` +
+		`"num_attention_heads":4,"rms_norm_eps":1e-6,"vocab_size":32,"num_key_value_heads":2,` +
+		`"max_position_embeddings":128,"rope_theta":500000.0,"head_dim":2,"tie_word_embeddings":` +
+		boolStr(tie) + `,"attention_bias":` + boolStr(bias) + `,"mlp_bias":` + boolStr(bias) + `}`
+	a, err := ParseLlamaArgs([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseLlamaArgs: %v", err)
+	}
+	return a
+}
+
+// dummyLlamaWeights builds a stub array for every weight name the model expects.
+func dummyLlamaWeights(t *testing.T, a *LlamaArgs) map[string]*mlxgo.Array {
+	t.Helper()
+	w := make(map[string]*mlxgo.Array)
+	for _, name := range a.WeightNames() {
+		arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+		if err != nil {
+			t.Fatalf("NewFloat32: %v", err)
+		}
+		w[name] = arr
+	}
+	return w
+}
+
+func TestNewLlamaModelWiresWeights(t *testing.T) {
+	for _, tie := range []bool{true, false} {
+		for _, bias := range []bool{true, false} {
+			a := tinyLlamaArgs(t, tie, bias)
+			w := dummyLlamaWeights(t, a)
+			m, err := NewLlamaModel(a, w)
+			if err != nil {
+				t.Fatalf("NewLlamaModel(tie=%v,bias=%v): %v", tie, bias, err)
+			}
+			if len(m.layers) != a.NumHiddenLayers {
+				t.Errorf("layers = %d, want %d", len(m.layers), a.NumHiddenLayers)
+			}
+			if m.embedTokens == nil || m.norm == nil {
+				t.Error("embedTokens / norm not wired")
+			}
+			for i := range m.layers {
+				l := &m.layers[i]
+				if l.qProj == nil || l.kProj == nil || l.vProj == nil || l.oProj == nil ||
+					l.gateProj == nil || l.upProj == nil || l.downProj == nil ||
+					l.inputLayernorm == nil || l.postAttentionLayernorm == nil {
+					t.Errorf("layer %d has an unwired weight", i)
+				}
+				gotBias := l.qBias != nil && l.kBias != nil && l.vBias != nil && l.oBias != nil &&
+					l.gateBias != nil && l.upBias != nil && l.downBias != nil
+				if gotBias != bias {
+					t.Errorf("layer %d bias wiring = %v, want %v", i, gotBias, bias)
+				}
+			}
+			if tie && m.lmHead != nil {
+				t.Error("tied model should have a nil lmHead")
+			}
+			if !tie && m.lmHead == nil {
+				t.Error("untied model should wire lmHead")
+			}
+		}
+	}
+}
+
+func TestNewLlamaModelMissingWeight(t *testing.T) {
+	a := tinyLlamaArgs(t, false, false)
+	w := dummyLlamaWeights(t, a)
+	delete(w, "model.layers.1.mlp.down_proj.weight")
+	if _, err := NewLlamaModel(a, w); err == nil {
+		t.Error("expected an error for a missing weight")
+	}
+
+	// Bias enabled but a bias key missing.
+	ab := tinyLlamaArgs(t, false, true)
+	wb := dummyLlamaWeights(t, ab)
+	delete(wb, "model.layers.0.self_attn.q_proj.bias")
+	if _, err := NewLlamaModel(ab, wb); err == nil {
+		t.Error("expected an error for a missing bias")
+	}
+}
+
+func TestLlamaForwardGracefulWithoutBackend(t *testing.T) {
+	// The forward type-checks and runs against the stub up to the first kernel
+	// (the embedding take), then returns ErrMLXUnavailable instead of panicking.
+	for _, bias := range []bool{false, true} {
+		a := tinyLlamaArgs(t, true, bias)
+		m, err := NewLlamaModel(a, dummyLlamaWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewLlamaModel: %v", err)
+		}
+		caches := make([]*KVTensorCache, a.NumHiddenLayers)
+		for i := range caches {
+			caches[i] = &KVTensorCache{}
+		}
+		if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("Forward(bias=%v) err = %v, want ErrMLXUnavailable", bias, err)
+		}
+	}
+}
+
+func TestLlamaForwardCacheCountMismatch(t *testing.T) {
+	a := tinyLlamaArgs(t, true, false)
+	m, err := NewLlamaModel(a, dummyLlamaWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewLlamaModel: %v", err)
+	}
+	if _, err := m.Forward([]int32{1}, nil, mlxgo.DefaultStream()); err == nil {
+		t.Error("expected a cache-count mismatch error")
+	}
+}
