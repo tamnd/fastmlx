@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "cf_mitigated": "challenge",
+      "body": "<html>Just a moment...</html>",
+      "status": 403,
+      "out": "Upload blocked by Cloudflare (HTTP 403). This is a server-side issue with fastmlx.ai \u2014 retry later or report it to the maintainer."
+    },
+    {
+      "cf_mitigated": "",
+      "body": "Please wait... just a moment while we check",
+      "status": 503,
+      "out": "Upload blocked by Cloudflare (HTTP 503). This is a server-side issue with fastmlx.ai \u2014 retry later or report it to the maintainer."
+    },
+    {
+      "cf_mitigated": "",
+      "body": "<div class='cf-chl-bypass'></div>",
+      "status": 429,
+      "out": "Upload blocked by Cloudflare (HTTP 429). This is a server-side issue with fastmlx.ai \u2014 retry later or report it to the maintainer."
+    },
+    {
+      "cf_mitigated": "",
+      "body": "{\"error\": \"rate limit exceeded\"}",
+      "status": 429,
+      "out": "rate limit exceeded"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "{\"detail\": \"model not found\"}",
+      "status": 404,
+      "out": "model not found"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "{\"message\": \"bad request\"}",
+      "status": 400,
+      "out": "bad request"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "{\"foo\": \"bar\"}",
+      "status": 500,
+      "out": "{\"foo\": \"bar\"}"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "<!DOCTYPE html><title>Error</title>",
+      "status": 502,
+      "out": "HTTP 502 \u2014 unexpected non-JSON response (35 bytes)"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "  upstream timeout  ",
+      "status": 504,
+      "out": "upstream timeout"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "",
+      "status": 500,
+      "out": "HTTP 500"
+    },
+    {
+      "cf_mitigated": "",
+      "body": "{\"error\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "status": 422,
+      "out": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  ]
+}
