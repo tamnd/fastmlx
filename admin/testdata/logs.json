@@ -1,0 +1,306 @@
+{
+  "clamps": [
+    {
+      "n": -5,
+      "out": 1
+    },
+    {
+      "n": 0,
+      "out": 1
+    },
+    {
+      "n": 1,
+      "out": 1
+    },
+    {
+      "n": 50,
+      "out": 50
+    },
+    {
+      "n": 100,
+      "out": 100
+    },
+    {
+      "n": 9999,
+      "out": 9999
+    },
+    {
+      "n": 10000,
+      "out": 10000
+    },
+    {
+      "n": 10001,
+      "out": 10000
+    },
+    {
+      "n": 999999,
+      "out": 10000
+    }
+  ],
+  "names": [
+    {
+      "name": "server.log",
+      "out": true
+    },
+    {
+      "name": "server.log.2024-01-01",
+      "out": true
+    },
+    {
+      "name": "server",
+      "out": false
+    },
+    {
+      "name": "server.txt",
+      "out": false
+    },
+    {
+      "name": "other.log",
+      "out": false
+    },
+    {
+      "name": "server.",
+      "out": false
+    },
+    {
+      "name": "server.log.gz",
+      "out": true
+    },
+    {
+      "name": "serverlog",
+      "out": false
+    },
+    {
+      "name": "server.json.log",
+      "out": true
+    },
+    {
+      "name": "SERVER.log",
+      "out": false
+    }
+  ],
+  "files": [
+    {
+      "file": "server.log",
+      "out": false
+    },
+    {
+      "file": "../etc/passwd",
+      "out": true
+    },
+    {
+      "file": "a/b",
+      "out": true
+    },
+    {
+      "file": "a\\b",
+      "out": true
+    },
+    {
+      "file": "..",
+      "out": true
+    },
+    {
+      "file": "ok.log",
+      "out": false
+    },
+    {
+      "file": "x..y",
+      "out": true
+    }
+  ],
+  "tails": [
+    {
+      "content": "",
+      "n": 1,
+      "out": "",
+      "total": 0
+    },
+    {
+      "content": "",
+      "n": 2,
+      "out": "",
+      "total": 0
+    },
+    {
+      "content": "",
+      "n": 3,
+      "out": "",
+      "total": 0
+    },
+    {
+      "content": "",
+      "n": 100,
+      "out": "",
+      "total": 0
+    },
+    {
+      "content": "\n",
+      "n": 1,
+      "out": "\n",
+      "total": 1
+    },
+    {
+      "content": "\n",
+      "n": 2,
+      "out": "\n",
+      "total": 1
+    },
+    {
+      "content": "\n",
+      "n": 3,
+      "out": "\n",
+      "total": 1
+    },
+    {
+      "content": "\n",
+      "n": 100,
+      "out": "\n",
+      "total": 1
+    },
+    {
+      "content": "a\nb\nc\n",
+      "n": 1,
+      "out": "c\n",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc\n",
+      "n": 2,
+      "out": "b\nc\n",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc\n",
+      "n": 3,
+      "out": "a\nb\nc\n",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc\n",
+      "n": 100,
+      "out": "a\nb\nc\n",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc",
+      "n": 1,
+      "out": "c",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc",
+      "n": 2,
+      "out": "b\nc",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc",
+      "n": 3,
+      "out": "a\nb\nc",
+      "total": 3
+    },
+    {
+      "content": "a\nb\nc",
+      "n": 100,
+      "out": "a\nb\nc",
+      "total": 3
+    },
+    {
+      "content": "line1\nline2\nline3\nline4\nline5\n",
+      "n": 1,
+      "out": "line5\n",
+      "total": 5
+    },
+    {
+      "content": "line1\nline2\nline3\nline4\nline5\n",
+      "n": 2,
+      "out": "line4\nline5\n",
+      "total": 5
+    },
+    {
+      "content": "line1\nline2\nline3\nline4\nline5\n",
+      "n": 3,
+      "out": "line3\nline4\nline5\n",
+      "total": 5
+    },
+    {
+      "content": "line1\nline2\nline3\nline4\nline5\n",
+      "n": 100,
+      "out": "line1\nline2\nline3\nline4\nline5\n",
+      "total": 5
+    },
+    {
+      "content": "a\rb\r\nc\nd",
+      "n": 1,
+      "out": "d",
+      "total": 4
+    },
+    {
+      "content": "a\rb\r\nc\nd",
+      "n": 2,
+      "out": "c\nd",
+      "total": 4
+    },
+    {
+      "content": "a\rb\r\nc\nd",
+      "n": 3,
+      "out": "b\nc\nd",
+      "total": 4
+    },
+    {
+      "content": "a\rb\r\nc\nd",
+      "n": 100,
+      "out": "a\nb\nc\nd",
+      "total": 4
+    },
+    {
+      "content": "only-one-line-no-newline",
+      "n": 1,
+      "out": "only-one-line-no-newline",
+      "total": 1
+    },
+    {
+      "content": "only-one-line-no-newline",
+      "n": 2,
+      "out": "only-one-line-no-newline",
+      "total": 1
+    },
+    {
+      "content": "only-one-line-no-newline",
+      "n": 3,
+      "out": "only-one-line-no-newline",
+      "total": 1
+    },
+    {
+      "content": "only-one-line-no-newline",
+      "n": 100,
+      "out": "only-one-line-no-newline",
+      "total": 1
+    },
+    {
+      "content": "x\n\ny\n",
+      "n": 1,
+      "out": "y\n",
+      "total": 3
+    },
+    {
+      "content": "x\n\ny\n",
+      "n": 2,
+      "out": "\ny\n",
+      "total": 3
+    },
+    {
+      "content": "x\n\ny\n",
+      "n": 3,
+      "out": "x\n\ny\n",
+      "total": 3
+    },
+    {
+      "content": "x\n\ny\n",
+      "n": 100,
+      "out": "x\n\ny\n",
+      "total": 3
+    }
+  ]
+}
