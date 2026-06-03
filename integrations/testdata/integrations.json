@@ -1,0 +1,293 @@
+{
+ "cases": [
+  {
+   "host": "127.0.0.1",
+   "port": 8000
+  },
+  {
+   "host": "127.0.0.1",
+   "port": 8000,
+   "api_key": "sk-secret",
+   "model": "Qwen3-8B"
+  },
+  {
+   "host": "0.0.0.0",
+   "port": 1234,
+   "model": "Llama-3-8B-4bit",
+   "context_window": 32768,
+   "max_tokens": 4096
+  },
+  {
+   "host": "localhost",
+   "port": 9000,
+   "model": "m",
+   "opus_model": "big",
+   "sonnet_model": "mid",
+   "haiku_model": "small"
+  },
+  {
+   "host": "localhost",
+   "port": 9000,
+   "model": "m",
+   "sonnet_model": "mid"
+  },
+  {
+   "host": "localhost",
+   "port": 9000,
+   "model": "m",
+   "haiku_model": "small"
+  },
+  {
+   "host": "h",
+   "port": 80,
+   "opus_model": "o"
+  },
+  {
+   "host": "h",
+   "port": 80
+  },
+  {
+   "host": "1.2.3.4",
+   "port": 5678,
+   "api_key": "key",
+   "model": "vlm-model",
+   "model_type": "vlm",
+   "context_window": 200000
+  }
+ ],
+ "context": [
+  {
+   "base_url": "http://127.0.0.1:8000",
+   "openai_base_url": "http://127.0.0.1:8000/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://127.0.0.1:8000",
+   "openai_base_url": "http://127.0.0.1:8000/v1",
+   "auth_token": "sk-secret",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://0.0.0.0:1234",
+   "openai_base_url": "http://0.0.0.0:1234/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://localhost:9000",
+   "openai_base_url": "http://localhost:9000/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://localhost:9000",
+   "openai_base_url": "http://localhost:9000/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://localhost:9000",
+   "openai_base_url": "http://localhost:9000/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://h:80",
+   "openai_base_url": "http://h:80/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://h:80",
+   "openai_base_url": "http://h:80/v1",
+   "auth_token": "fastmlx",
+   "supports_images": false
+  },
+  {
+   "base_url": "http://1.2.3.4:5678",
+   "openai_base_url": "http://1.2.3.4:5678/v1",
+   "auth_token": "key",
+   "supports_images": true
+  }
+ ],
+ "claude": [
+  {
+   "ANTHROPIC_BASE_URL": "http://127.0.0.1:8000",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://127.0.0.1:8000",
+   "ANTHROPIC_AUTH_TOKEN": "sk-secret",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "Qwen3-8B",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "Qwen3-8B",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3-8B",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3-8B"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://0.0.0.0:1234",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "Llama-3-8B-4bit",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "Llama-3-8B-4bit",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Llama-3-8B-4bit",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "Llama-3-8B-4bit",
+   "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "32768"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://localhost:9000",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "big",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "mid",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "small",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "small"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://localhost:9000",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "m",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "mid",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "m",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "m"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://localhost:9000",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "m",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "m",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "small",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "small"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://h:80",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "o",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "o"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://h:80",
+   "ANTHROPIC_AUTH_TOKEN": "fastmlx",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  {
+   "ANTHROPIC_BASE_URL": "http://1.2.3.4:5678",
+   "ANTHROPIC_AUTH_TOKEN": "key",
+   "ANTHROPIC_API_KEY": "",
+   "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+   "API_TIMEOUT_MS": "3000000",
+   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+   "ANTHROPIC_DEFAULT_OPUS_MODEL": "vlm-model",
+   "ANTHROPIC_DEFAULT_SONNET_MODEL": "vlm-model",
+   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "vlm-model",
+   "CLAUDE_CODE_SUBAGENT_MODEL": "vlm-model",
+   "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "200000"
+  }
+ ],
+ "copilot": [
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://127.0.0.1:8000/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://127.0.0.1:8000/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "sk-secret",
+   "COPILOT_MODEL": "Qwen3-8B",
+   "COPILOT_PROVIDER_MODEL_ID": "Qwen3-8B",
+   "COPILOT_PROVIDER_WIRE_MODEL": "Qwen3-8B"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://0.0.0.0:1234/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx",
+   "COPILOT_MODEL": "Llama-3-8B-4bit",
+   "COPILOT_PROVIDER_MODEL_ID": "Llama-3-8B-4bit",
+   "COPILOT_PROVIDER_WIRE_MODEL": "Llama-3-8B-4bit",
+   "COPILOT_PROVIDER_MAX_PROMPT_TOKENS": "32768",
+   "COPILOT_PROVIDER_MAX_OUTPUT_TOKENS": "4096"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://localhost:9000/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx",
+   "COPILOT_MODEL": "m",
+   "COPILOT_PROVIDER_MODEL_ID": "m",
+   "COPILOT_PROVIDER_WIRE_MODEL": "m"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://localhost:9000/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx",
+   "COPILOT_MODEL": "m",
+   "COPILOT_PROVIDER_MODEL_ID": "m",
+   "COPILOT_PROVIDER_WIRE_MODEL": "m"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://localhost:9000/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx",
+   "COPILOT_MODEL": "m",
+   "COPILOT_PROVIDER_MODEL_ID": "m",
+   "COPILOT_PROVIDER_WIRE_MODEL": "m"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://h:80/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://h:80/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "fastmlx"
+  },
+  {
+   "COPILOT_PROVIDER_BASE_URL": "http://1.2.3.4:5678/v1",
+   "COPILOT_PROVIDER_TYPE": "openai",
+   "COPILOT_PROVIDER_WIRE_API": "responses",
+   "COPILOT_PROVIDER_BEARER_TOKEN": "key",
+   "COPILOT_MODEL": "vlm-model",
+   "COPILOT_PROVIDER_MODEL_ID": "vlm-model",
+   "COPILOT_PROVIDER_WIRE_MODEL": "vlm-model",
+   "COPILOT_PROVIDER_MAX_PROMPT_TOKENS": "200000"
+  }
+ ]
+}
