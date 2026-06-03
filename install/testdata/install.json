@@ -1,0 +1,186 @@
+{
+  "is_app_bundle": [
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": true
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "out": true
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": false
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": false
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": false
+    }
+  ],
+  "app_bundle_cli_path": [
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": "/Applications/fastmlx.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "out": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": "/Applications/fastmlx.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": "/Applications/fastmlx.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "out": "/Applications/fastmlx.app/Contents/MacOS/fastmlx-cli"
+    }
+  ],
+  "user_cli_shim_path": [
+    {
+      "home": "/Users/me",
+      "out": "/Users/me/.fastmlx/bin/fastmlx"
+    },
+    {
+      "home": "/home/u",
+      "out": "/home/u/.fastmlx/bin/fastmlx"
+    },
+    {
+      "home": "/root",
+      "out": "/root/.fastmlx/bin/fastmlx"
+    }
+  ],
+  "is_homebrew": [
+    {
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": true
+    },
+    {
+      "prefix": "/home/linuxbrew/.linuxbrew/opt/python",
+      "out": false
+    },
+    {
+      "prefix": "/usr/local",
+      "out": false
+    },
+    {
+      "prefix": "/Users/me/.venv",
+      "out": false
+    },
+    {
+      "prefix": "/Library/Frameworks/Python.framework/Versions/3.13",
+      "out": false
+    }
+  ],
+  "install_method": [
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": "dmg"
+    },
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/usr/local",
+      "out": "dmg"
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": "dmg"
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "prefix": "/usr/local",
+      "out": "dmg"
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": "homebrew"
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/usr/local",
+      "out": "pip"
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": "homebrew"
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/usr/local",
+      "out": "pip"
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/opt/homebrew/Cellar/python/3.13/Frameworks/Python.framework/Versions/3.13",
+      "out": "homebrew"
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "prefix": "/usr/local",
+      "out": "pip"
+    }
+  ],
+  "cli_prefix": [
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": true,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/Applications/fastmlx.app/Contents/Resources/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": false,
+      "out": "/Applications/fastmlx.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "user_shim_executable": true,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx/utils/install.py",
+      "user_shim_executable": false,
+      "out": "/Users/me/Apps/My App.app/Contents/MacOS/fastmlx-cli"
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": true,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/opt/homebrew/Cellar/fastmlx/0.1.0/libexec/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": false,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": true,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/usr/local/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": false,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": true,
+      "out": "fastmlx"
+    },
+    {
+      "here": "/home/u/.venv/lib/python3.13/site-packages/fastmlx/utils/install.py",
+      "user_shim_executable": false,
+      "out": "fastmlx"
+    }
+  ]
+}
