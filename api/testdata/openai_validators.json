@@ -1,0 +1,180 @@
+{
+  "coerce": [
+    {
+      "kind": "dict",
+      "in": {},
+      "ok": true,
+      "out": "{}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "location": "Tokyo"
+      },
+      "ok": true,
+      "out": "{\"location\": \"Tokyo\"}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "x": 1.5,
+        "y": 1000.0,
+        "n": 5,
+        "z": 0
+      },
+      "ok": true,
+      "out": "{\"x\": 1.5, \"y\": 1000.0, \"n\": 5, \"z\": 0}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "nested": {
+          "a": [
+            1,
+            2
+          ]
+        },
+        "u": "caf\u00e9"
+      },
+      "ok": true,
+      "out": "{\"nested\": {\"a\": [1, 2]}, \"u\": \"caf\u00e9\"}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"location\": \"Paris\"}",
+      "ok": true,
+      "out": "{\"location\": \"Paris\"}"
+    },
+    {
+      "kind": "str",
+      "in": "  {\"a\": 1}  ",
+      "ok": true,
+      "out": "  {\"a\": 1}  "
+    },
+    {
+      "kind": "str",
+      "in": "{\"x\": 1.50}",
+      "ok": true,
+      "out": "{\"x\": 1.50}"
+    },
+    {
+      "kind": "str",
+      "in": "",
+      "ok": true,
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "   ",
+      "ok": true,
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "not json",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "[1, 2, 3]",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "42",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "\"bare string\"",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "true",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "{\"trailing\": 1,}",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "str",
+      "in": "{\"a\": 1} extra",
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": 42,
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": null,
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": [
+        1,
+        2
+      ],
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": true,
+      "ok": false,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": 3.14,
+      "ok": false,
+      "out": null
+    }
+  ],
+  "name": [
+    {
+      "kind": "str",
+      "in": "  spaced  ",
+      "out": "spaced"
+    },
+    {
+      "kind": "str",
+      "in": "clean",
+      "out": "clean"
+    },
+    {
+      "kind": "str",
+      "in": "\t\nws\n ",
+      "out": "ws"
+    },
+    {
+      "kind": "str",
+      "in": "",
+      "out": ""
+    },
+    {
+      "kind": "other",
+      "in": null,
+      "out": null
+    },
+    {
+      "kind": "other",
+      "in": 42,
+      "out": 42
+    }
+  ]
+}
