@@ -1,0 +1,322 @@
+{
+  "refs": [
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "hello"
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "assistant"
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "user",
+          "content": null
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "ok",
+          "tool_calls": [
+            {
+              "id": "c1"
+            }
+          ],
+          "name": "fn"
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "assistant",
+          "content": "ok",
+          "tool_calls": [
+            {
+              "id": "c1"
+            }
+          ],
+          "name": "fn"
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "look at this"
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "https://x/a.png"
+              }
+            },
+            {
+              "type": "text",
+              "text": "and that"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "look at this\nand that"
+        }
+      ],
+      "urls": [
+        "https://x/a.png"
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_image",
+              "image_url": "data:image/png;base64,AAAA"
+            },
+            {
+              "type": "text",
+              "text": "caption"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "caption"
+        }
+      ],
+      "urls": [
+        "data:image/png;base64,AAAA"
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_image",
+              "input_image": "https://y/b.jpg"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "urls": [
+        "https://y/b.jpg"
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {}
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            },
+            {
+              "type": "text",
+              "text": "kept"
+            },
+            {
+              "type": "text"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "kept"
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "u1"
+              }
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "u2"
+              }
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "between"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": "u3"
+              }
+            },
+            {
+              "type": "text",
+              "text": "third"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": "between"
+        },
+        {
+          "role": "user",
+          "content": "third"
+        }
+      ],
+      "urls": [
+        "u1",
+        "u2",
+        "u3"
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "hi"
+            }
+          ],
+          "name": "alice"
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "hi",
+          "name": "alice"
+        }
+      ],
+      "urls": []
+    },
+    {
+      "in": [],
+      "text_messages": [],
+      "urls": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "audio",
+              "audio": {
+                "url": "z"
+              }
+            },
+            {
+              "type": "text",
+              "text": "only text"
+            }
+          ]
+        }
+      ],
+      "text_messages": [
+        {
+          "role": "user",
+          "content": "only text"
+        }
+      ],
+      "urls": []
+    }
+  ]
+}
