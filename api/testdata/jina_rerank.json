@@ -1,0 +1,78 @@
+{
+  "sanitize": [
+    {
+      "in": "plain text",
+      "out": "plain text"
+    },
+    {
+      "in": "  spaced  ",
+      "out": "spaced"
+    },
+    {
+      "in": "has <|embed_token|> token",
+      "out": "has   token"
+    },
+    {
+      "in": "<|im_start|>x<|im_end|>",
+      "out": "x"
+    },
+    {
+      "in": "a<|rerank_token|>b<|score_token|>c",
+      "out": "a b c"
+    },
+    {
+      "in": "",
+      "out": ""
+    },
+    {
+      "in": "   ",
+      "out": ""
+    },
+    {
+      "in": "café <|im_end|>",
+      "out": "café"
+    }
+  ],
+  "format": [
+    {
+      "query": "what is ML?",
+      "documents": [
+        "ML is machine learning",
+        "weather today"
+      ],
+      "instruction": null,
+      "out": "<|im_start|>system\nYou are a search relevance expert who can determine a ranking of the passages based on how relevant they are to the query. If the query is a question, how relevant a passage is depends on how well it answers the question. If not, try to analyze the intent of the query and assess how well each passage satisfies the intent. If an instruction is provided, you should follow the instruction when determining the ranking.<|im_end|>\n<|im_start|>user\nI will provide you with 2 passages, each indicated by a numerical identifier. Rank the passages based on their relevance to query: what is ML?\n<passage id=\"0\">\nML is machine learning<|embed_token|>\n</passage>\n<passage id=\"1\">\nweather today<|embed_token|>\n</passage>\n<query>\nwhat is ML?<|rerank_token|>\n</query><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "query": "best food",
+      "documents": [
+        "pizza"
+      ],
+      "instruction": "prefer italian",
+      "out": "<|im_start|>system\nYou are a search relevance expert who can determine a ranking of the passages based on how relevant they are to the query. If the query is a question, how relevant a passage is depends on how well it answers the question. If not, try to analyze the intent of the query and assess how well each passage satisfies the intent. If an instruction is provided, you should follow the instruction when determining the ranking.<|im_end|>\n<|im_start|>user\nI will provide you with 1 passages, each indicated by a numerical identifier. Rank the passages based on their relevance to query: best food\n<instruct>\nprefer italian\n</instruct>\n<passage id=\"0\">\npizza<|embed_token|>\n</passage>\n<query>\nbest food<|rerank_token|>\n</query><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "query": "q <|rerank_token|>",
+      "documents": [
+        "d <|embed_token|>",
+        "e"
+      ],
+      "instruction": "  ",
+      "out": "<|im_start|>system\nYou are a search relevance expert who can determine a ranking of the passages based on how relevant they are to the query. If the query is a question, how relevant a passage is depends on how well it answers the question. If not, try to analyze the intent of the query and assess how well each passage satisfies the intent. If an instruction is provided, you should follow the instruction when determining the ranking.<|im_end|>\n<|im_start|>user\nI will provide you with 2 passages, each indicated by a numerical identifier. Rank the passages based on their relevance to query: q\n<passage id=\"0\">\nd<|embed_token|>\n</passage>\n<passage id=\"1\">\ne<|embed_token|>\n</passage>\n<query>\nq<|rerank_token|>\n</query><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "query": "empty docs",
+      "documents": [],
+      "instruction": null,
+      "out": "<|im_start|>system\nYou are a search relevance expert who can determine a ranking of the passages based on how relevant they are to the query. If the query is a question, how relevant a passage is depends on how well it answers the question. If not, try to analyze the intent of the query and assess how well each passage satisfies the intent. If an instruction is provided, you should follow the instruction when determining the ranking.<|im_end|>\n<|im_start|>user\nI will provide you with 0 passages, each indicated by a numerical identifier. Rank the passages based on their relevance to query: empty docs\n\n<query>\nempty docs<|rerank_token|>\n</query><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "query": "uni café",
+      "documents": [
+        "naïve doc"
+      ],
+      "instruction": "rank well",
+      "out": "<|im_start|>system\nYou are a search relevance expert who can determine a ranking of the passages based on how relevant they are to the query. If the query is a question, how relevant a passage is depends on how well it answers the question. If not, try to analyze the intent of the query and assess how well each passage satisfies the intent. If an instruction is provided, you should follow the instruction when determining the ranking.<|im_end|>\n<|im_start|>user\nI will provide you with 1 passages, each indicated by a numerical identifier. Rank the passages based on their relevance to query: uni café\n<instruct>\nrank well\n</instruct>\n<passage id=\"0\">\nnaïve doc<|embed_token|>\n</passage>\n<query>\nuni café<|rerank_token|>\n</query><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    }
+  ]
+}
