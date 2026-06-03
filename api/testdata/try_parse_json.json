@@ -1,0 +1,95 @@
+[
+  {
+    "input": "{\"name\": \"search\", \"args\": {\"q\": \"x\"}}",
+    "result_is_str": false,
+    "result": {
+      "name": "search",
+      "args": {
+        "q": "x"
+      }
+    }
+  },
+  {
+    "input": "[1, 2, 3]",
+    "result_is_str": false,
+    "result": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "input": "plain string",
+    "result_is_str": true,
+    "result": "plain string"
+  },
+  {
+    "input": "   ",
+    "result_is_str": true,
+    "result": ""
+  },
+  {
+    "input": "  {\"a\": 1}  ",
+    "result_is_str": false,
+    "result": {
+      "a": 1
+    }
+  },
+  {
+    "input": "{invalid json",
+    "result_is_str": true,
+    "result": "{invalid json"
+  },
+  {
+    "input": "{}",
+    "result_is_str": false,
+    "result": {}
+  },
+  {
+    "input": "[]",
+    "result_is_str": false,
+    "result": []
+  },
+  {
+    "input": "42",
+    "result_is_str": true,
+    "result": "42"
+  },
+  {
+    "input": "\"quoted\"",
+    "result_is_str": true,
+    "result": "\"quoted\""
+  },
+  {
+    "input": "true",
+    "result_is_str": true,
+    "result": "true"
+  },
+  {
+    "input": "{\"a\": 1} extra",
+    "result_is_str": true,
+    "result": "{\"a\": 1} extra"
+  },
+  {
+    "input": "{\"nested\": {\"deep\": [1, 2]}}",
+    "result_is_str": false,
+    "result": {
+      "nested": {
+        "deep": [
+          1,
+          2
+        ]
+      }
+    }
+  },
+  {
+    "input": "",
+    "result_is_str": true,
+    "result": ""
+  },
+  {
+    "input": "[1, 2",
+    "result_is_str": true,
+    "result": "[1, 2"
+  }
+]
