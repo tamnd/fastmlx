@@ -1,0 +1,382 @@
+{
+  "merge": [
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hello"
+        },
+        {
+          "role": "user",
+          "content": "world"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "hello\n\nworld"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "a"
+        },
+        {
+          "role": "assistant",
+          "content": "b"
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "a\n\nb"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "one"
+        },
+        {
+          "role": "user",
+          "content": "two"
+        },
+        {
+          "role": "user",
+          "content": "three"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "one\n\ntwo\n\nthree"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "yo"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "yo"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "system",
+          "content": "x"
+        },
+        {
+          "role": "system",
+          "content": "y"
+        }
+      ],
+      "out": [
+        {
+          "role": "system",
+          "content": "x"
+        },
+        {
+          "role": "system",
+          "content": "y"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "img-then"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "tail"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "img-then"
+            },
+            {
+              "type": "text",
+              "text": "tail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "head"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "block"
+            }
+          ]
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "head"
+            },
+            {
+              "type": "text",
+              "text": "block"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "p"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "n"
+            }
+          ]
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "p"
+            },
+            {
+              "type": "text",
+              "text": "n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "user",
+          "content": "filled"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "filled"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "keep"
+        },
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "keep"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "tc",
+          "_preserve_role_boundary": true
+        },
+        {
+          "role": "assistant",
+          "content": "next"
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "tc",
+          "_preserve_role_boundary": true
+        },
+        {
+          "role": "assistant",
+          "content": "next"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "a"
+        },
+        {
+          "role": "user",
+          "content": "b",
+          "_preserve_role_boundary": true
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "a"
+        },
+        {
+          "role": "user",
+          "content": "b",
+          "_preserve_role_boundary": true
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user"
+        },
+        {
+          "role": "user",
+          "content": "got"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "got"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "solo"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "solo"
+        }
+      ]
+    },
+    {
+      "in": [],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "u1"
+        },
+        {
+          "role": "user",
+          "content": "u2"
+        },
+        {
+          "role": "assistant",
+          "content": "a1"
+        },
+        {
+          "role": "assistant",
+          "content": "a2"
+        },
+        {
+          "role": "user",
+          "content": "u3"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "u1\n\nu2"
+        },
+        {
+          "role": "assistant",
+          "content": "a1\n\na2"
+        },
+        {
+          "role": "user",
+          "content": "u3"
+        }
+      ]
+    }
+  ]
+}
