@@ -1,0 +1,208 @@
+{
+  "clean": [
+    {
+      "in": [],
+      "out": {
+        "cleaned": []
+      }
+    },
+    {
+      "in": [
+        "host1",
+        "host2"
+      ],
+      "out": {
+        "cleaned": [
+          "host1",
+          "host2"
+        ]
+      }
+    },
+    {
+      "in": [
+        "  host1  ",
+        "host1",
+        "host2"
+      ],
+      "out": {
+        "cleaned": [
+          "host1",
+          "host2"
+        ]
+      }
+    },
+    {
+      "in": [
+        "",
+        "   ",
+        "host1"
+      ],
+      "out": {
+        "cleaned": [
+          "host1"
+        ]
+      }
+    },
+    {
+      "in": [
+        "192.168.1.1",
+        "10.0.0.1"
+      ],
+      "out": {
+        "cleaned": [
+          "192.168.1.1",
+          "10.0.0.1"
+        ]
+      }
+    },
+    {
+      "in": [
+        "host1",
+        "0.0.0.0"
+      ],
+      "out": {
+        "error": "Invalid server alias: '0.0.0.0' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "good",
+        "bad host"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'bad host' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "dup",
+        "dup",
+        "dup2"
+      ],
+      "out": {
+        "cleaned": [
+          "dup",
+          "dup2"
+        ]
+      }
+    },
+    {
+      "in": [
+        "foo_bar"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'foo_bar' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "host;rm -rf"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'host;rm -rf' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "a'b"
+      ],
+      "out": {
+        "error": "Invalid server alias: \"a'b\" (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "a\"b"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'a\"b' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "a'b\"c"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'a\\'b\"c' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "café"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'café' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "line\nbreak"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'line\\nbreak' (must be a hostname or IP address)"
+      }
+    },
+    {
+      "in": [
+        "tab\there"
+      ],
+      "out": {
+        "error": "Invalid server alias: 'tab\\there' (must be a hostname or IP address)"
+      }
+    }
+  ],
+  "repr": [
+    {
+      "in": "simple",
+      "out": "'simple'"
+    },
+    {
+      "in": "bad host",
+      "out": "'bad host'"
+    },
+    {
+      "in": "a'b",
+      "out": "\"a'b\""
+    },
+    {
+      "in": "a\"b",
+      "out": "'a\"b'"
+    },
+    {
+      "in": "a'b\"c",
+      "out": "'a\\'b\"c'"
+    },
+    {
+      "in": "café",
+      "out": "'café'"
+    },
+    {
+      "in": "line\nbreak",
+      "out": "'line\\nbreak'"
+    },
+    {
+      "in": "tab\there",
+      "out": "'tab\\there'"
+    },
+    {
+      "in": "back\\slash",
+      "out": "'back\\\\slash'"
+    },
+    {
+      "in": "\u0001ctrl",
+      "out": "'\\x01ctrl'"
+    },
+    {
+      "in": "emoji🎉",
+      "out": "'emoji🎉'"
+    },
+    {
+      "in": "0.0.0.0",
+      "out": "'0.0.0.0'"
+    },
+    {
+      "in": "",
+      "out": "''"
+    }
+  ]
+}

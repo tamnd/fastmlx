@@ -9,8 +9,10 @@
 package netutil
 
 import (
+	"fmt"
 	"net/netip"
 	"strings"
+	"unicode"
 )
 
 // IsValidHostname reports whether value looks like a valid DNS hostname. A
@@ -139,6 +141,73 @@ func DetectServerAliases(host string, sys SystemAliases) []string {
 		}
 	}
 	return dedupePreserveOrder(valid)
+}
+
+// CleanServerAliases validates and normalizes a caller-supplied server-alias
+// list the way the settings endpoint does before persisting it. Each entry is
+// stripped of surrounding whitespace; blank entries and duplicates are dropped
+// while first-seen order is kept. The first entry that survives stripping but is
+// neither a valid hostname nor a routable IP aborts the whole list: errDetail is
+// then the user-facing 400 message (with the offending value rendered the way
+// Python's repr would) and cleaned is nil. On success errDetail is empty and
+// cleaned is the deduplicated list. The persistence and the HTTP response are
+// the caller's seam; this is the pure validation core.
+func CleanServerAliases(aliases []string) (cleaned []string, errDetail string) {
+	cleaned = []string{}
+	seen := make(map[string]bool, len(aliases))
+	for _, alias := range aliases {
+		value := strings.TrimSpace(alias)
+		if value == "" || seen[value] {
+			continue
+		}
+		if !IsValidAlias(value) {
+			return nil, "Invalid server alias: " + pyStrRepr(value) + " (must be a hostname or IP address)"
+		}
+		seen[value] = true
+		cleaned = append(cleaned, value)
+	}
+	return cleaned, ""
+}
+
+// pyStrRepr renders a string the way Python's repr() does, which is how the
+// reference interpolates the offending alias into its error via {value!r}. The
+// quote is a single quote unless the string contains one and no double quote, in
+// which case it switches to a double quote. Backslash, the active quote, and the
+// tab/newline/carriage-return controls get their short escapes; any other
+// non-printable code point becomes \xXX, \uXXXX, or \UXXXXXXXX by magnitude.
+// Printability uses Go's unicode.IsPrint, which agrees with Python's
+// str.isprintable across the letters, marks, numbers, punctuation, symbols, and
+// the ASCII space that realistic aliases contain.
+func pyStrRepr(s string) string {
+	quote := byte('\'')
+	if strings.ContainsRune(s, '\'') && !strings.ContainsRune(s, '"') {
+		quote = '"'
+	}
+	var b strings.Builder
+	b.WriteByte(quote)
+	for _, r := range s {
+		switch {
+		case r == rune(quote) || r == '\\':
+			b.WriteByte('\\')
+			b.WriteRune(r)
+		case r == '\n':
+			b.WriteString(`\n`)
+		case r == '\r':
+			b.WriteString(`\r`)
+		case r == '\t':
+			b.WriteString(`\t`)
+		case unicode.IsPrint(r):
+			b.WriteRune(r)
+		case r < 0x100:
+			fmt.Fprintf(&b, `\x%02x`, r)
+		case r < 0x10000:
+			fmt.Fprintf(&b, `\u%04x`, r)
+		default:
+			fmt.Fprintf(&b, `\U%08x`, r)
+		}
+	}
+	b.WriteByte(quote)
+	return b.String()
 }
 
 // dedupePreserveOrder drops empty strings and repeats while keeping first-seen
