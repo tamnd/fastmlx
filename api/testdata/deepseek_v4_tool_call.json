@@ -1,0 +1,170 @@
+[
+  {
+    "text": "<｜DSML｜invoke name=\"get_weather\">\n<｜DSML｜parameter name=\"city\" string=\"true\">Seoul</｜DSML｜parameter>\n<｜DSML｜parameter name=\"unit\" string=\"false\">\"celsius\"</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "get_weather",
+      "arguments": {
+        "city": "Seoul",
+        "unit": "celsius"
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"f\">\n<｜DSML｜parameter name=\"n\" string=\"false\">42</｜DSML｜parameter>\n<｜DSML｜parameter name=\"x\" string=\"false\">3.14</｜DSML｜parameter>\n<｜DSML｜parameter name=\"b\" string=\"false\">true</｜DSML｜parameter>\n<｜DSML｜parameter name=\"z\" string=\"false\">null</｜DSML｜parameter>\n<｜DSML｜parameter name=\"arr\" string=\"false\">[1, 2, 3]</｜DSML｜parameter>\n<｜DSML｜parameter name=\"obj\" string=\"false\">{\"k\": \"v\"}</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "f",
+      "arguments": {
+        "n": 42,
+        "x": 3.14,
+        "b": true,
+        "z": null,
+        "arr": [
+          1,
+          2,
+          3
+        ],
+        "obj": {
+          "k": "v"
+        }
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"g\">\n<｜DSML｜parameter name=\"s\" string=\"true\">\npadded\n</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "g",
+      "arguments": {
+        "s": "padded"
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"g2\">\n<｜DSML｜parameter name=\"s\" string=\"true\">\n\ndouble\n\n</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "g2",
+      "arguments": {
+        "s": "\ndouble\n"
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"g3\">\n<｜DSML｜parameter name=\"n\" string=\"false\">\n7\n</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "g3",
+      "arguments": {
+        "n": 7
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"h\">\n<｜DSML｜parameter name=\"s\" string=\"true\">  spaced inside  </｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "h",
+      "arguments": {
+        "s": "  spaced inside  "
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"a\">\n<｜DSML｜parameter name=\"p\" string=\"true\">x</｜DSML｜parameter>\n</｜DSML｜invoke>\n<｜DSML｜invoke name=\"b\">\n<｜DSML｜parameter name=\"q\" string=\"false\">9</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": [
+      {
+        "name": "a",
+        "arguments": {
+          "p": "x"
+        }
+      },
+      {
+        "name": "b",
+        "arguments": {
+          "q": 9
+        }
+      }
+    ]
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"a\">\n\n</｜DSML｜invoke><｜DSML｜invoke name=\"b\">\n\n</｜DSML｜invoke><｜DSML｜invoke name=\"c\">\n\n</｜DSML｜invoke>",
+    "error": "",
+    "result": [
+      {
+        "name": "a",
+        "arguments": {}
+      },
+      {
+        "name": "b",
+        "arguments": {}
+      },
+      {
+        "name": "c",
+        "arguments": {}
+      }
+    ]
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"noargs\">\n\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "noargs",
+      "arguments": {}
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"py\">\n<｜DSML｜parameter name=\"t\" string=\"false\">True</｜DSML｜parameter>\n<｜DSML｜parameter name=\"f\" string=\"false\">False</｜DSML｜parameter>\n<｜DSML｜parameter name=\"nn\" string=\"false\">None</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "py",
+      "arguments": {
+        "t": true,
+        "f": false,
+        "nn": null
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"py2\">\n<｜DSML｜parameter name=\"sq\" string=\"false\">'single'</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "py2",
+      "arguments": {
+        "sq": "single"
+      }
+    }
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"raw\">\n<｜DSML｜parameter name=\"v\" string=\"false\">not json at all</｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "raw",
+      "arguments": {
+        "v": "not json at all"
+      }
+    }
+  },
+  {
+    "text": "just some text",
+    "error": "No <｜DSML｜invoke> block found in DeepSeek V4 tool-call text",
+    "result": null
+  },
+  {
+    "text": "",
+    "error": "No <｜DSML｜invoke> block found in DeepSeek V4 tool-call text",
+    "result": null
+  },
+  {
+    "text": "<｜DSML｜invoke name=\"e\">\n<｜DSML｜parameter name=\"v\" string=\"false\"></｜DSML｜parameter>\n</｜DSML｜invoke>",
+    "error": "",
+    "result": {
+      "name": "e",
+      "arguments": {
+        "v": ""
+      }
+    }
+  }
+]
