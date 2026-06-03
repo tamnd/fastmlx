@@ -1,0 +1,228 @@
+{
+  "robust": [
+    {
+      "input": "{\"location\": \"Tokyo\"}",
+      "result": {
+        "location": "Tokyo"
+      },
+      "error": null
+    },
+    {
+      "input": "{location: Tokyo}",
+      "result": {
+        "location": "Tokyo"
+      },
+      "error": null
+    },
+    {
+      "input": "{location: Tokyo, unit: celsius}",
+      "result": {
+        "location": "Tokyo",
+        "unit": "celsius"
+      },
+      "error": null
+    },
+    {
+      "input": "{count: 5}",
+      "result": {
+        "count": 5
+      },
+      "error": null
+    },
+    {
+      "input": "{flag: true}",
+      "result": {
+        "flag": true
+      },
+      "error": null
+    },
+    {
+      "input": "{x: null}",
+      "result": {
+        "x": null
+      },
+      "error": null
+    },
+    {
+      "input": "{a: 1, b: 2, c: 3}",
+      "result": {
+        "a": 1,
+        "b": 2,
+        "c": 3
+      },
+      "error": null
+    },
+    {
+      "input": "{name: <|\"|>John Doe<|\"|>}",
+      "result": {
+        "name": "John Doe"
+      },
+      "error": null
+    },
+    {
+      "input": "{msg: <|\"|>line1\nline2<|\"|>}",
+      "result": {
+        "msg": "line1\nline2"
+      },
+      "error": null
+    },
+    {
+      "input": "{a: <|\"|>x<|\"|>, b: bareword}",
+      "result": {
+        "a": "x",
+        "b": "bareword"
+      },
+      "error": null
+    },
+    {
+      "input": "{ key : value }",
+      "result": {
+        "key": "value"
+      },
+      "error": null
+    },
+    {
+      "input": "{path: /usr/local/bin}",
+      "result": {
+        "path": "/usr/local/bin"
+      },
+      "error": null
+    },
+    {
+      "input": "{ratio: 3.14}",
+      "result": {
+        "ratio": 3.14
+      },
+      "error": null
+    },
+    {
+      "input": "{a: -5}",
+      "result": {
+        "a": -5
+      },
+      "error": null
+    },
+    {
+      "input": "{quoted: \"already\"}",
+      "result": {
+        "quoted": "already"
+      },
+      "error": null
+    },
+    {
+      "input": "{nested: {x: 1}}",
+      "result": {
+        "nested": {
+          "x": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "{list: [1, 2, 3]}",
+      "result": {
+        "list": [
+          1,
+          2,
+          3
+        ]
+      },
+      "error": null
+    }
+  ],
+  "fallback": [
+    {
+      "input": "call:get_weather{\"location\": \"Tokyo\"}",
+      "result": {
+        "name": "get_weather",
+        "arguments": {
+          "location": "Tokyo"
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:get_weather{location: Tokyo}",
+      "result": {
+        "name": "get_weather",
+        "arguments": {
+          "location": "Tokyo"
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:a.b-c:d{x: 1}",
+      "result": {
+        "name": "a.b-c:d",
+        "arguments": {
+          "x": 1
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:f1{a: 1} call:f2{b: 2}",
+      "result": [
+        {
+          "name": "f1",
+          "arguments": {
+            "a": 1
+          }
+        },
+        {
+          "name": "f2",
+          "arguments": {
+            "b": 2
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "input": "prefix call:do{flag: true} suffix",
+      "result": {
+        "name": "do",
+        "arguments": {
+          "flag": true
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:outer{a: {b: 2}}",
+      "result": {
+        "name": "outer",
+        "arguments": {
+          "a": {
+            "b": 2
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:n{msg: <|\"|>hi there<|\"|>}",
+      "result": {
+        "name": "n",
+        "arguments": {
+          "msg": "hi there"
+        }
+      },
+      "error": null
+    },
+    {
+      "input": "call:empty{}",
+      "result": {
+        "name": "empty",
+        "arguments": {}
+      },
+      "error": null
+    },
+    {
+      "input": "no calls here at all",
+      "result": null,
+      "error": "ValueError:No function call found in Gemma 4 format"
+    }
+  ]
+}
