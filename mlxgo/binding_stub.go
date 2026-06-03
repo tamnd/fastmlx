@@ -1,0 +1,190 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
+//go:build !mlx
+
+package mlxgo
+
+// This is the default, GPU-free build of the binding. An Array holds its shape,
+// dtype, and (for arrays constructed from Go data) the host bytes, so the
+// metadata and host round-trip parts of the API work without MLX. Every
+// operation that would dispatch a kernel returns ErrMLXUnavailable. The cgo
+// build (-tags mlx) replaces this file with the real mlx-c surface and exports
+// the identical API.
+
+// Array mirrors the cgo build's Array. In the stub it carries only host-side
+// metadata and any data it was constructed with.
+type Array struct {
+	shape []int
+	dtype Dtype
+	data  any // []float32, []int32, or nil
+	freed bool
+}
+
+// NewFloat32 builds a float32 array from host data and a shape. The data length
+// must equal the product of the shape.
+func NewFloat32(data []float32, shape ...int) (*Array, error) {
+	if len(data) != elementCount(shape) {
+		return nil, errShape("NewFloat32", len(data), shape)
+	}
+	cp := make([]float32, len(data))
+	copy(cp, data)
+	return &Array{shape: cloneShape(shape), dtype: Float32, data: cp}, nil
+}
+
+// NewInt32 builds an int32 array from host data and a shape.
+func NewInt32(data []int32, shape ...int) (*Array, error) {
+	if len(data) != elementCount(shape) {
+		return nil, errShape("NewInt32", len(data), shape)
+	}
+	cp := make([]int32, len(data))
+	copy(cp, data)
+	return &Array{shape: cloneShape(shape), dtype: Int32, data: cp}, nil
+}
+
+// Zeros builds a zero-filled array of the given dtype and shape.
+func Zeros(dtype Dtype, shape ...int) (*Array, error) {
+	if !dtype.Valid() {
+		return nil, ErrMLXUnavailable
+	}
+	a := &Array{shape: cloneShape(shape), dtype: dtype}
+	switch dtype {
+	case Float32:
+		a.data = make([]float32, elementCount(shape))
+	case Int32:
+		a.data = make([]int32, elementCount(shape))
+	}
+	return a, nil
+}
+
+// Shape returns a copy of the array's shape.
+func (a *Array) Shape() []int { return cloneShape(a.shape) }
+
+// Dtype returns the array's element type.
+func (a *Array) Dtype() Dtype { return a.dtype }
+
+// Ndim returns the number of dimensions.
+func (a *Array) Ndim() int { return len(a.shape) }
+
+// Size returns the total number of elements.
+func (a *Array) Size() int { return elementCount(a.shape) }
+
+// Eval is a no-op in the stub (there is no deferred graph to materialize).
+func (a *Array) Eval() error {
+	if a.freed {
+		return ErrMLXUnavailable
+	}
+	return nil
+}
+
+// ToFloat32 returns the host float32 data of an array constructed from float32
+// data; any other case (no host data, or a kernel result that never ran) errors.
+func (a *Array) ToFloat32() ([]float32, error) {
+	if a.freed {
+		return nil, ErrMLXUnavailable
+	}
+	if d, ok := a.data.([]float32); ok {
+		out := make([]float32, len(d))
+		copy(out, d)
+		return out, nil
+	}
+	return nil, ErrMLXUnavailable
+}
+
+// ToInt32 returns the host int32 data of an int32 array.
+func (a *Array) ToInt32() ([]int32, error) {
+	if a.freed {
+		return nil, ErrMLXUnavailable
+	}
+	if d, ok := a.data.([]int32); ok {
+		out := make([]int32, len(d))
+		copy(out, d)
+		return out, nil
+	}
+	return nil, ErrMLXUnavailable
+}
+
+// Free releases the array. In the stub it just drops the host data.
+func (a *Array) Free() {
+	a.data = nil
+	a.freed = true
+}
+
+// Stream mirrors the cgo Stream. In the stub it is an inert handle.
+type Stream struct{ id int }
+
+// DefaultStream returns the default device stream.
+func DefaultStream() *Stream { return &Stream{} }
+
+// NewStream creates a new stream on the default device.
+func NewStream() (*Stream, error) { return &Stream{}, nil }
+
+// NewThreadLocalStream creates a stream pinned to the calling thread, mirroring
+// the per-engine Metal stream the serving layer dedicates to its step thread.
+func NewThreadLocalStream() (*Stream, error) { return &Stream{}, nil }
+
+// Synchronize blocks until the stream's queued work completes (a no-op here).
+func (s *Stream) Synchronize() error { return nil }
+
+// SetDefaultStream makes s the default stream (a no-op here).
+func SetDefaultStream(s *Stream) {}
+
+// ClearCache releases MLX's cached buffers (a no-op here).
+func ClearCache() {}
+
+// SetWiredLimit sets the Metal wired-memory limit in bytes (a no-op here).
+func SetWiredLimit(bytes uint64) {}
+
+// SetMemoryLimit sets the soft memory limit in bytes (a no-op here).
+func SetMemoryLimit(bytes uint64) {}
+
+// SetCacheLimit sets the buffer-cache limit in bytes (a no-op here).
+func SetCacheLimit(bytes uint64) {}
+
+// GetActiveMemory reports MLX's active memory in bytes (always 0 here).
+func GetActiveMemory() uint64 { return 0 }
+
+// GetPeakMemory reports MLX's peak memory in bytes (always 0 here).
+func GetPeakMemory() uint64 { return 0 }
+
+// The compute operations. Each returns ErrMLXUnavailable in the stub; the cgo
+// build dispatches the corresponding mlx-c kernel.
+
+func MatMul(a, b *Array, s *Stream) (*Array, error)               { return nil, ErrMLXUnavailable }
+func Add(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
+func Mul(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
+func Sub(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
+func Div(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
+func Softmax(a *Array, axis int, s *Stream) (*Array, error)       { return nil, ErrMLXUnavailable }
+func RMSNorm(x, w *Array, eps float32, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
+func Reshape(a *Array, shape []int, s *Stream) (*Array, error)    { return nil, ErrMLXUnavailable }
+func Transpose(a *Array, axes []int, s *Stream) (*Array, error)   { return nil, ErrMLXUnavailable }
+func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+func Take(a, indices *Array, axis int, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
+func Argmax(a *Array, axis int, s *Stream) (*Array, error)        { return nil, ErrMLXUnavailable }
+
+// RoPE applies rotary position embedding.
+func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// ScaledDotProductAttention is the fused attention kernel
+// (mlx_fast_scaled_dot_product_attention).
+func ScaledDotProductAttention(q, k, v *Array, scale float32, mask *Array, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// QuantizedMatMul multiplies x by a quantized weight (with its scales/biases).
+func QuantizedMatMul(x, w, scales, biases *Array, transpose bool, groupSize, bits int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+func cloneShape(shape []int) []int {
+	if len(shape) == 0 {
+		return nil
+	}
+	out := make([]int, len(shape))
+	copy(out, shape)
+	return out
+}

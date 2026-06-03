@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
-.PHONY: all build test race cover lint vet fmt fmtcheck vuln bench mlx clean
+.PHONY: all build test race cover lint vet fmt fmtcheck vuln bench mlx build-mlx test-mlx clean
 
 all: fmt vet lint test build
 
@@ -42,6 +42,16 @@ bench:
 # Populated when the third_party submodules land.
 mlx:
 	@echo "mlx-c bootstrap lands in v0.4 (spec 1990, 02_compute_backend_mlxc.md)"
+
+# The default build compiles the GPU-free mlxgo stub, so every target above
+# works without the MLX toolchain. build-mlx / test-mlx opt into the real cgo
+# backend with -tags mlx; they require the MLX dylibs + headers (run `make mlx`
+# first) and an Apple Silicon host with Metal.
+build-mlx:
+	go build -tags mlx ./...
+
+test-mlx:
+	go test -tags mlx ./...
 
 clean:
 	go clean ./...
