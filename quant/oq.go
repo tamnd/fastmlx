@@ -50,6 +50,29 @@ func BPWTargetsForLevel(oqLevel float64) (target, hardCap float64, ok bool) {
 	return t[0], t[1], true
 }
 
+// PositionSensitivityMap builds the position-based sensitivity proxy the
+// budget planner stashes in config["_oq_sensitivity_map"] when a level has a
+// bpw target. It mirrors the reference loop exactly: the outer eighth of the
+// stack on each end scores 0.05, the next eighth in toward the middle scores
+// 0.02, and the central half scores 0.01. Keys are the layer index rendered as
+// a decimal string, matching the str(i) the predicate later looks up. The
+// boundaries use truncating integer division, so small layer counts collapse
+// the way Python's floor division does (num_layers // 8 == 0 for n < 8).
+func PositionSensitivityMap(numLayers int) map[string]float64 {
+	posSens := make(map[string]float64, numLayers)
+	for i := range numLayers {
+		switch {
+		case i < numLayers/8 || i >= 7*numLayers/8:
+			posSens[strconv.Itoa(i)] = 0.05
+		case i < numLayers/4 || i >= 3*numLayers/4:
+			posSens[strconv.Itoa(i)] = 0.02
+		default:
+			posSens[strconv.Itoa(i)] = 0.01
+		}
+	}
+	return posSens
+}
+
 // MandatoryBoostPatterns are the consensus-critical tensors that the
 // byte-budgeted planner pre-allocates to 8-bit before distributing the rest.
 var MandatoryBoostPatterns = map[string]map[string]any{
