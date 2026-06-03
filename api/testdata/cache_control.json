@@ -1,0 +1,193 @@
+{
+  "cases": [
+    {
+      "request": {
+        "system": "be helpful",
+        "messages": [
+          {
+            "role": "user",
+            "content": "hi"
+          }
+        ]
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "a"
+          },
+          {
+            "role": "assistant",
+            "content": "b"
+          }
+        ]
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "system": [
+          {
+            "type": "text",
+            "text": "sys",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ],
+        "messages": []
+      },
+      "has": true
+    },
+    {
+      "request": {
+        "system": [
+          {
+            "type": "text",
+            "text": "sys",
+            "cache_control": null
+          }
+        ],
+        "messages": []
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "tools": [
+          {
+            "name": "t1"
+          },
+          {
+            "name": "t2",
+            "cache_control": {
+              "type": "ephemeral"
+            }
+          }
+        ],
+        "messages": []
+      },
+      "has": true
+    },
+    {
+      "request": {
+        "tools": null,
+        "messages": [
+          {
+            "role": "user",
+            "content": "x"
+          }
+        ]
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "hello",
+                "cache_control": {
+                  "type": "ephemeral"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "has": true
+    },
+    {
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "hello"
+              }
+            ]
+          }
+        ]
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "cache_control"
+          }
+        ]
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "system": "s",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "one"
+              }
+            ]
+          },
+          {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "two",
+                "cache_control": {
+                  "type": "ephemeral"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "has": true
+    },
+    {
+      "request": {
+        "messages": []
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "tools": [
+          {
+            "name": "t",
+            "cache_control": {}
+          }
+        ],
+        "messages": []
+      },
+      "has": false
+    },
+    {
+      "request": {
+        "system": [
+          {
+            "type": "text",
+            "cache_control": ""
+          }
+        ],
+        "messages": []
+      },
+      "has": false
+    }
+  ]
+}
