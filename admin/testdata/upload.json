@@ -1,0 +1,142 @@
+{
+  "names": [
+    {
+      "name": "Qwen3.5-122B-oQ4",
+      "out": true
+    },
+    {
+      "name": "Llama-3B-oQ4e",
+      "out": true
+    },
+    {
+      "name": "Qwen3.6-27B-oQ3.5e",
+      "out": true
+    },
+    {
+      "name": "Qwen3-4B-4bit",
+      "out": false
+    },
+    {
+      "name": "plain-model",
+      "out": false
+    },
+    {
+      "name": "OQ-upper",
+      "out": false
+    },
+    {
+      "name": "oq-lower",
+      "out": false
+    },
+    {
+      "name": "",
+      "out": false
+    }
+  ],
+  "readmes": [
+    {
+      "text": "",
+      "out": false
+    },
+    {
+      "text": "   \n\t ",
+      "out": false
+    },
+    {
+      "text": "# Real Model\n\nSome description.",
+      "out": true
+    },
+    {
+      "text": "---\nlibrary_name: mlx\n---\n",
+      "out": false
+    },
+    {
+      "text": "---\nlibrary_name: mlx\n---\n\n# Title\nBody text",
+      "out": true
+    },
+    {
+      "text": "---\nonly opening",
+      "out": false
+    },
+    {
+      "text": "------",
+      "out": false
+    },
+    {
+      "text": "Just plain text no frontmatter",
+      "out": true
+    },
+    {
+      "text": "  ---\nleading space before marker\n---\nbody",
+      "out": true
+    },
+    {
+      "text": "---\ntags:\n- mlx\n---",
+      "out": false
+    }
+  ],
+  "tasks": [
+    {
+      "task": {
+        "task_id": "u1",
+        "model_name": "Qwen3-4B-oQ4",
+        "model_path": "/m/q",
+        "repo_id": "user/Qwen3-4B-oQ4",
+        "status": "uploading",
+        "progress": 33.27,
+        "error": "",
+        "created_at": 1700.5,
+        "started_at": 1701.0,
+        "completed_at": 0.0,
+        "total_size": 4294967296,
+        "repo_url": "https://hf.co/user/Qwen3-4B-oQ4"
+      },
+      "out": {
+        "task_id": "u1",
+        "model_name": "Qwen3-4B-oQ4",
+        "model_path": "/m/q",
+        "repo_id": "user/Qwen3-4B-oQ4",
+        "status": "uploading",
+        "progress": 33.3,
+        "error": "",
+        "created_at": 1700.5,
+        "started_at": 1701.0,
+        "completed_at": 0.0,
+        "total_size": 4294967296,
+        "total_size_formatted": "4.0 GB",
+        "repo_url": "https://hf.co/user/Qwen3-4B-oQ4"
+      }
+    },
+    {
+      "task": {
+        "task_id": "u2",
+        "model_name": "M",
+        "model_path": "/p",
+        "repo_id": "u/m",
+        "status": "pending",
+        "progress": 0.0,
+        "error": "",
+        "created_at": 1.0,
+        "started_at": 0.0,
+        "completed_at": 0.0,
+        "total_size": 0,
+        "repo_url": ""
+      },
+      "out": {
+        "task_id": "u2",
+        "model_name": "M",
+        "model_path": "/p",
+        "repo_id": "u/m",
+        "status": "pending",
+        "progress": 0.0,
+        "error": "",
+        "created_at": 1.0,
+        "started_at": 0.0,
+        "completed_at": 0.0,
+        "total_size": 0,
+        "total_size_formatted": "",
+        "repo_url": ""
+      }
+    }
+  ]
+}
