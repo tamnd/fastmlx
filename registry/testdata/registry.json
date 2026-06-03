@@ -1,0 +1,128 @@
+{
+  "steps": [
+    {
+      "op": "acquire",
+      "model": "m1",
+      "engine": "A",
+      "force": false,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "is_owned",
+      "model": "m1",
+      "owned": true,
+      "owner": "A"
+    },
+    {
+      "op": "acquire",
+      "model": "m1",
+      "engine": "B",
+      "force": false,
+      "ok": false,
+      "raised": true
+    },
+    {
+      "op": "acquire",
+      "model": "m1",
+      "engine": "A",
+      "force": false,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "acquire",
+      "model": "m1",
+      "engine": "B",
+      "force": true,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "resets",
+      "engine": "A",
+      "resets": 1
+    },
+    {
+      "op": "is_owned",
+      "model": "m1",
+      "owned": true,
+      "owner": "B"
+    },
+    {
+      "op": "release",
+      "model": "m1",
+      "engine": "A",
+      "ok": false
+    },
+    {
+      "op": "release",
+      "model": "m1",
+      "engine": "B",
+      "ok": true
+    },
+    {
+      "op": "is_owned",
+      "model": "m1",
+      "owned": false,
+      "owner": null
+    },
+    {
+      "op": "acquire",
+      "model": "m2",
+      "engine": "C",
+      "force": false,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "acquire",
+      "model": "m3",
+      "engine": "D",
+      "force": false,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "stats",
+      "total_entries": 2,
+      "active_owners": 2
+    },
+    {
+      "op": "gc",
+      "engine": "C"
+    },
+    {
+      "op": "is_owned",
+      "model": "m2",
+      "owned": false,
+      "owner": null
+    },
+    {
+      "op": "stats",
+      "total_entries": 1,
+      "active_owners": 1
+    },
+    {
+      "op": "acquire",
+      "model": "m1",
+      "engine": "A",
+      "force": false,
+      "ok": true,
+      "raised": false
+    },
+    {
+      "op": "gc",
+      "engine": "D"
+    },
+    {
+      "op": "cleanup",
+      "cleaned": 1
+    },
+    {
+      "op": "stats",
+      "total_entries": 1,
+      "active_owners": 1
+    }
+  ]
+}
