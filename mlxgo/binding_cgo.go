@@ -11,7 +11,7 @@ package mlxgo
 // operation here dispatches a Metal kernel through mlx-c instead of returning
 // ErrMLXUnavailable.
 //
-// This is the initial binding surface — array construction, evaluation, host
+// This is the initial binding surface: array construction, evaluation, host
 // readback, the memory/stream controls, and a representative op set. It grows
 // per the surface list in 02_compute_backend_mlxc.md as the model forward
 // passes need each kernel.
@@ -364,6 +364,15 @@ func Softmax(a *Array, axis int, s *Stream) (*Array, error) {
 func Sigmoid(a *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_sigmoid(&out, a.c, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Tanh(a *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_tanh(&out, a.c, s.stream()) != 0 {
 		C.mlx_array_free(out)
 		return nil, ErrMLXUnavailable
 	}

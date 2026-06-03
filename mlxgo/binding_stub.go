@@ -173,6 +173,7 @@ func Sub(a, b *Array, s *Stream) (*Array, error)                  { return nil, 
 func Div(a, b *Array, s *Stream) (*Array, error)                  { return nil, ErrMLXUnavailable }
 func Softmax(a *Array, axis int, s *Stream) (*Array, error)       { return nil, ErrMLXUnavailable }
 func Sigmoid(a *Array, s *Stream) (*Array, error)                 { return nil, ErrMLXUnavailable }
+func Tanh(a *Array, s *Stream) (*Array, error)                    { return nil, ErrMLXUnavailable }
 func RMSNorm(x, w *Array, eps float32, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
 func Reshape(a *Array, shape []int, s *Stream) (*Array, error)    { return nil, ErrMLXUnavailable }
 func Transpose(a *Array, axes []int, s *Stream) (*Array, error)   { return nil, ErrMLXUnavailable }

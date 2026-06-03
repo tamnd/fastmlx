@@ -134,6 +134,7 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Div(a, b, s) },
 		func() (*Array, error) { return Softmax(a, -1, s) },
 		func() (*Array, error) { return Sigmoid(a, s) },
+		func() (*Array, error) { return Tanh(a, s) },
 		func() (*Array, error) { return RMSNorm(a, b, 1e-5, s) },
 		func() (*Array, error) { return Reshape(a, []int{2, 1}, s) },
 		func() (*Array, error) { return Transpose(a, nil, s) },
