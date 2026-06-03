@@ -1,0 +1,489 @@
+{
+  "versions": {
+    "SETTINGS_VERSION": 1,
+    "PROFILES_VERSION": 1,
+    "TEMPLATES_VERSION": 1
+  },
+  "to_dict": [
+    {
+      "label": "default",
+      "input": {},
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "scalars",
+      "input": {
+        "max_context_window": 4096,
+        "max_tokens": 512,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "top_k": 40,
+        "repetition_penalty": 1.1,
+        "min_p": 0.05,
+        "presence_penalty": 0.2,
+        "force_sampling": true,
+        "max_tool_result_tokens": 2000,
+        "ttl_seconds": 300,
+        "model_type_override": "vlm",
+        "model_alias": "my-model",
+        "index_cache_freq": 4,
+        "enable_thinking": true,
+        "preserve_thinking": false,
+        "thinking_budget_enabled": true,
+        "thinking_budget_tokens": 1024,
+        "reasoning_parser": "qwen",
+        "guided_grammar_enabled": true,
+        "guided_grammar": "root ::= \"yes\"",
+        "is_pinned": true,
+        "is_default": true,
+        "display_name": "Display",
+        "description": "desc",
+        "active_profile_name": "prof1"
+      },
+      "to_dict": {
+        "max_context_window": 4096,
+        "max_tokens": 512,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "top_k": 40,
+        "repetition_penalty": 1.1,
+        "min_p": 0.05,
+        "presence_penalty": 0.2,
+        "force_sampling": true,
+        "max_tool_result_tokens": 2000,
+        "ttl_seconds": 300,
+        "model_type_override": "vlm",
+        "model_alias": "my-model",
+        "index_cache_freq": 4,
+        "enable_thinking": true,
+        "preserve_thinking": false,
+        "thinking_budget_enabled": true,
+        "thinking_budget_tokens": 1024,
+        "reasoning_parser": "qwen",
+        "guided_grammar_enabled": true,
+        "guided_grammar": "root ::= \"yes\"",
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": true,
+        "is_default": true,
+        "trust_remote_code": false,
+        "display_name": "Display",
+        "description": "desc",
+        "active_profile_name": "prof1"
+      }
+    },
+    {
+      "label": "containers",
+      "input": {
+        "chat_template_kwargs": {
+          "enable_thinking": true,
+          "tools": []
+        },
+        "forced_ct_kwargs": [
+          "enable_thinking"
+        ]
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "chat_template_kwargs": {
+          "enable_thinking": true,
+          "tools": []
+        },
+        "forced_ct_kwargs": [
+          "enable_thinking"
+        ],
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "empty_containers",
+      "input": {
+        "chat_template_kwargs": {},
+        "forced_ct_kwargs": []
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "chat_template_kwargs": {},
+        "forced_ct_kwargs": [],
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "turboquant",
+      "input": {
+        "turboquant_kv_enabled": true,
+        "turboquant_kv_bits": 2.5,
+        "turboquant_skip_last": false
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": true,
+        "turboquant_kv_bits": 2.5,
+        "turboquant_skip_last": false,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "dflash",
+      "input": {
+        "dflash_enabled": true,
+        "dflash_draft_model": "draft-repo",
+        "dflash_draft_quant_enabled": true,
+        "dflash_draft_quant_weight_bits": 4,
+        "dflash_draft_quant_activation_bits": 16,
+        "dflash_draft_quant_group_size": 64,
+        "dflash_max_ctx": 8192,
+        "dflash_in_memory_cache": false,
+        "dflash_in_memory_cache_max_entries": 8,
+        "dflash_in_memory_cache_max_bytes": 4294967296,
+        "dflash_ssd_cache": true,
+        "dflash_ssd_cache_max_bytes": 10737418240,
+        "dflash_draft_window_size": 2048,
+        "dflash_draft_sink_size": 128,
+        "dflash_verify_mode": "adaptive"
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": true,
+        "dflash_draft_model": "draft-repo",
+        "dflash_draft_quant_enabled": true,
+        "dflash_draft_quant_weight_bits": 4,
+        "dflash_draft_quant_activation_bits": 16,
+        "dflash_draft_quant_group_size": 64,
+        "dflash_max_ctx": 8192,
+        "dflash_in_memory_cache": false,
+        "dflash_in_memory_cache_max_entries": 8,
+        "dflash_in_memory_cache_max_bytes": 4294967296,
+        "dflash_ssd_cache": true,
+        "dflash_ssd_cache_max_bytes": 10737418240,
+        "dflash_draft_window_size": 2048,
+        "dflash_draft_sink_size": 128,
+        "dflash_verify_mode": "adaptive",
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "specprefill",
+      "input": {
+        "specprefill_enabled": true,
+        "specprefill_draft_model": "sp-draft",
+        "specprefill_keep_pct": 0.3,
+        "specprefill_threshold": 4096
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": true,
+        "specprefill_draft_model": "sp-draft",
+        "specprefill_keep_pct": 0.3,
+        "specprefill_threshold": 4096,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "vlm_mtp",
+      "input": {
+        "vlm_mtp_enabled": true,
+        "vlm_mtp_draft_model": "assistant",
+        "vlm_mtp_draft_block_size": 16
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": true,
+        "vlm_mtp_draft_model": "assistant",
+        "vlm_mtp_draft_block_size": 16,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "mtp",
+      "input": {
+        "mtp_enabled": true
+      },
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": true,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    }
+  ],
+  "from_dict": [
+    {
+      "label": "roundtrip_scalars",
+      "input": {
+        "max_tokens": 256,
+        "temperature": 0.5,
+        "is_pinned": true
+      },
+      "to_dict": {
+        "max_tokens": 256,
+        "temperature": 0.5,
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": true,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "unknown_keys_dropped",
+      "input": {
+        "max_tokens": 256,
+        "bogus_field": 99,
+        "another_unknown": "x"
+      },
+      "to_dict": {
+        "max_tokens": 256,
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "empty",
+      "input": {},
+      "to_dict": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    },
+    {
+      "label": "override_defaults",
+      "input": {
+        "turboquant_kv_bits": 8,
+        "dflash_in_memory_cache": false,
+        "force_sampling": true
+      },
+      "to_dict": {
+        "force_sampling": true,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 8,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": false,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false
+      }
+    }
+  ],
+  "validate": [
+    {
+      "label": "ok_default",
+      "error": null
+    },
+    {
+      "label": "ok_mtp_alone",
+      "error": null
+    },
+    {
+      "label": "ok_vlm_mtp_alone",
+      "error": null
+    },
+    {
+      "label": "mtp_and_dflash",
+      "error": "mtp_enabled and dflash_enabled cannot both be True; choose one speculative-decoding path per model"
+    },
+    {
+      "label": "mtp_and_turboquant",
+      "error": "mtp_enabled and turboquant_kv_enabled cannot both be True; TurboQuant patches the attention path that MTP relies on"
+    },
+    {
+      "label": "vlm_mtp_and_dflash",
+      "error": "vlm_mtp_enabled and dflash_enabled cannot both be True; choose one speculative path per model"
+    },
+    {
+      "label": "vlm_mtp_and_specprefill",
+      "error": "vlm_mtp_enabled and specprefill_enabled cannot both be True; choose one speculative path per model"
+    },
+    {
+      "label": "vlm_mtp_and_mtp",
+      "error": "vlm_mtp_enabled and mtp_enabled cannot both be True; choose one speculative path per model"
+    },
+    {
+      "label": "vlm_mtp_and_turboquant",
+      "error": "vlm_mtp_enabled and turboquant_kv_enabled cannot both be True; choose one speculative path per model"
+    }
+  ]
+}
