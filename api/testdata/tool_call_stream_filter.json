@@ -1,0 +1,308 @@
+[
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "Hello, world."
+    ],
+    "emitted": [
+      "Hello, world."
+    ],
+    "finish": "",
+    "joined": "Hello, world."
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "Hel",
+      "lo,",
+      " wor",
+      "ld."
+    ],
+    "emitted": [
+      "Hel",
+      "lo,",
+      " wor",
+      "ld."
+    ],
+    "finish": "",
+    "joined": "Hello, world."
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "before <tool_call>{\"name\":\"x\"}</tool_call> after"
+    ],
+    "emitted": [
+      "before  after"
+    ],
+    "finish": "",
+    "joined": "before  after"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "before <tool_",
+      "call>{\"a\":1}</tool",
+      "_call> after"
+    ],
+    "emitted": [
+      "before ",
+      "",
+      " after"
+    ],
+    "finish": "",
+    "joined": "before  after"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "text <tool",
+      "_call>body</tool_call>tail"
+    ],
+    "emitted": [
+      "text ",
+      "tail"
+    ],
+    "finish": "",
+    "joined": "text tail"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "pre <ns:tool_call><invoke name=\"f\"/></ns:tool_call> post"
+    ],
+    "emitted": [
+      "pre  post"
+    ],
+    "finish": "",
+    "joined": "pre  post"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "pre <ns:tool_",
+      "call>X</ns:tool_call> post"
+    ],
+    "emitted": [
+      "pre ",
+      " post"
+    ],
+    "finish": "",
+    "joined": "pre  post"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "see [Calling tool: search({\"q\":\"hi\"})] done"
+    ],
+    "emitted": [
+      "see  done"
+    ],
+    "finish": "",
+    "joined": "see  done"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "see [Tool call: ping] done"
+    ],
+    "emitted": [
+      "see  done"
+    ],
+    "finish": "",
+    "joined": "see  done"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "text [Calling tool: sea"
+    ],
+    "emitted": [
+      "text "
+    ],
+    "finish": "",
+    "joined": "text "
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "a [note] b"
+    ],
+    "emitted": [
+      "a [note] b"
+    ],
+    "finish": "",
+    "joined": "a [note] b"
+  },
+  {
+    "marker": "<|tool_call|>",
+    "marker_end": "<|/tool_call|>",
+    "chunks": [
+      "x <|tool_call|>payload<|/tool_call|> y"
+    ],
+    "emitted": [
+      "x  y"
+    ],
+    "finish": "",
+    "joined": "x  y"
+  },
+  {
+    "marker": "<|tool_call|>",
+    "marker_end": "<|/tool_call|>",
+    "chunks": [
+      "x <|tool_",
+      "call|>payload<|/tool_",
+      "call|> y"
+    ],
+    "emitted": [
+      "x ",
+      "",
+      " y"
+    ],
+    "finish": "",
+    "joined": "x  y"
+  },
+  {
+    "marker": "[TOOL_CALLS]",
+    "marker_end": "",
+    "chunks": [
+      "answer [TOOL_CALLS][{\"name\":\"f\"}]"
+    ],
+    "emitted": [
+      "answer "
+    ],
+    "finish": "",
+    "joined": "answer "
+  },
+  {
+    "marker": "[TOOL_CALLS]",
+    "marker_end": "",
+    "chunks": [
+      "answer [TOOL_",
+      "CALLS] trailing dropped"
+    ],
+    "emitted": [
+      "answer ",
+      ""
+    ],
+    "finish": "",
+    "joined": "answer "
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "hi <alpha",
+      " more"
+    ],
+    "emitted": [
+      "hi ",
+      "<alpha more"
+    ],
+    "finish": "",
+    "joined": "hi <alpha more"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "hi <ns:tool",
+      "_call>z</ns:tool_call> bye"
+    ],
+    "emitted": [
+      "hi ",
+      " bye"
+    ],
+    "finish": "",
+    "joined": "hi  bye"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "a <tool_call>1</tool_call> b <tool_call>2</tool_call> c"
+    ],
+    "emitted": [
+      "a  b  c"
+    ],
+    "finish": "",
+    "joined": "a  b  c"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "body <tool_"
+    ],
+    "emitted": [
+      "body "
+    ],
+    "finish": "",
+    "joined": "body "
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "less than <"
+    ],
+    "emitted": [
+      "less than "
+    ],
+    "finish": "",
+    "joined": "less than "
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "x [Calling tool: a] <tool_call>q</tool_call> y"
+    ],
+    "emitted": [
+      "x   y"
+    ],
+    "finish": "",
+    "joined": "x   y"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "a",
+      "",
+      "b"
+    ],
+    "emitted": [
+      "a",
+      "",
+      "b"
+    ],
+    "finish": "",
+    "joined": "ab"
+  },
+  {
+    "marker": null,
+    "marker_end": null,
+    "chunks": [
+      "<tool_call>aaa</tool",
+      "_call>after"
+    ],
+    "emitted": [
+      "",
+      "after"
+    ],
+    "finish": "",
+    "joined": "after"
+  }
+]
