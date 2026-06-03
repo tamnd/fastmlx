@@ -3,6 +3,7 @@
 package mcp
 
 import (
+	"bytes"
 	"encoding/json"
 	"strings"
 )
@@ -132,6 +133,57 @@ func ExtractToolCalls(response map[string]any) []any {
 // HasToolCalls reports whether a response carries any tool calls.
 func HasToolCalls(response map[string]any) bool {
 	return len(ExtractToolCalls(response)) > 0
+}
+
+// ToMessage converts a tool result into an OpenAI tool-result message. An error
+// result renders as "Error: " followed by the error message; a string content is
+// used verbatim; any other content is re-serialized with Python json.dumps
+// formatting. The content's JSON form is the raw bytes the server returned, so a
+// bare JSON string is unwrapped to its decoded text rather than re-quoted.
+func (r ToolResult) ToMessage(toolCallID string) map[string]any {
+	var content string
+	switch {
+	case r.IsError:
+		content = "Error: " + r.ErrorMessage
+	case isJSONString(r.Content):
+		var s string
+		_ = json.Unmarshal(r.Content, &s)
+		content = s
+	default:
+		content = pyJSONDumps(r.Content)
+	}
+	return map[string]any{
+		"role":         "tool",
+		"tool_call_id": toolCallID,
+		"content":      content,
+	}
+}
+
+// FormatToolResult formats a single tool result as a conversation message.
+func FormatToolResult(result ToolResult, toolCallID string) map[string]any {
+	return result.ToMessage(toolCallID)
+}
+
+// ResultWithCallID pairs a tool result with the id of the call it answers.
+type ResultWithCallID struct {
+	Result     ToolResult
+	ToolCallID string
+}
+
+// FormatToolResults formats several tool results as messages, in order.
+func FormatToolResults(results []ResultWithCallID) []map[string]any {
+	out := make([]map[string]any, 0, len(results))
+	for _, rc := range results {
+		out = append(out, FormatToolResult(rc.Result, rc.ToolCallID))
+	}
+	return out
+}
+
+// isJSONString reports whether a raw JSON value is a string literal, the case
+// the reference detects with isinstance(content, str) to avoid re-quoting it.
+func isJSONString(raw json.RawMessage) bool {
+	trimmed := bytes.TrimSpace(raw)
+	return len(trimmed) > 0 && trimmed[0] == '"'
 }
 
 // truthy mirrors Python truthiness for a JSON-decoded value, used for the

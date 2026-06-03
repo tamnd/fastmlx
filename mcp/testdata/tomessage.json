@@ -1,0 +1,180 @@
+{
+  "cases": [
+    {
+      "content_raw": "\"plain string result\"",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_1",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_1",
+        "content": "plain string result"
+      }
+    },
+    {
+      "content_raw": "{\"b\":2,\"a\":1,\"nested\":{\"y\":true,\"x\":null}}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_2",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_2",
+        "content": "{\"b\": 2, \"a\": 1, \"nested\": {\"y\": true, \"x\": null}}"
+      }
+    },
+    {
+      "content_raw": "[1, 2, 3, \"four\"]",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_3",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_3",
+        "content": "[1, 2, 3, \"four\"]"
+      }
+    },
+    {
+      "content_raw": "42",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_4",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_4",
+        "content": "42"
+      }
+    },
+    {
+      "content_raw": "{\"msg\":\"caf\u00e9 \u2603\"}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_5",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_5",
+        "content": "{\"msg\": \"caf\\u00e9 \\u2603\"}"
+      }
+    },
+    {
+      "content_raw": "{\"k\":1.5,\"big\":1000000}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_6",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_6",
+        "content": "{\"k\": 1.5, \"big\": 1000000}"
+      }
+    },
+    {
+      "content_raw": "null",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_7",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_7",
+        "content": "null"
+      }
+    },
+    {
+      "content_raw": "true",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_8",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_8",
+        "content": "true"
+      }
+    },
+    {
+      "content_raw": "\"ignored on error\"",
+      "is_error": true,
+      "error_message": "tool blew up",
+      "tool_call_id": "call_9",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_9",
+        "content": "Error: tool blew up"
+      }
+    },
+    {
+      "content_raw": "{\"with\\ttab\":\"line\\nbreak\",\"q\":\"a\\\"b\"}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_10",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_10",
+        "content": "{\"with\\ttab\": \"line\\nbreak\", \"q\": \"a\\\"b\"}"
+      }
+    },
+    {
+      "content_raw": "{}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_11",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_11",
+        "content": "{}"
+      }
+    },
+    {
+      "content_raw": "\"\"",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_12",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_12",
+        "content": ""
+      }
+    },
+    {
+      "content_raw": "[]",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_13",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_13",
+        "content": "[]"
+      }
+    },
+    {
+      "content_raw": "{\"emoji\":\"\ud83d\ude00 hi\",\"arr\":[1.5,-2.25,0.0001]}",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_14",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_14",
+        "content": "{\"emoji\": \"\\ud83d\\ude00 hi\", \"arr\": [1.5, -2.25, 0.0001]}"
+      }
+    },
+    {
+      "content_raw": "3.14159",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_15",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_15",
+        "content": "3.14159"
+      }
+    },
+    {
+      "content_raw": "\"tab\\tand\\nnewline\"",
+      "is_error": false,
+      "error_message": "",
+      "tool_call_id": "call_16",
+      "out": {
+        "role": "tool",
+        "tool_call_id": "call_16",
+        "content": "tab\tand\nnewline"
+      }
+    }
+  ]
+}
