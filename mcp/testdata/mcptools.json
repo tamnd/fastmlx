@@ -1,0 +1,427 @@
+{
+  "tool_to_openai": [
+    {
+      "tool": {
+        "server_name": "srv",
+        "name": "search",
+        "description": "Search the web",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "q": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "q"
+          ]
+        }
+      },
+      "out": {
+        "type": "function",
+        "function": {
+          "name": "srv__search",
+          "description": "Search the web",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "q": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "q"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "tool": {
+        "server_name": "srv",
+        "name": "noschema",
+        "description": "No schema",
+        "input_schema": {}
+      },
+      "out": {
+        "type": "function",
+        "function": {
+          "name": "srv__noschema",
+          "description": "No schema",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      }
+    },
+    {
+      "tool": {
+        "server_name": "fs",
+        "name": "read",
+        "description": "Read a file",
+        "input_schema": null
+      },
+      "out": {
+        "type": "function",
+        "function": {
+          "name": "fs__read",
+          "description": "Read a file",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      }
+    },
+    {
+      "tool": {
+        "server_name": "",
+        "name": "bare",
+        "description": "Empty server",
+        "input_schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "out": {
+        "type": "function",
+        "function": {
+          "name": "__bare",
+          "description": "Empty server",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      }
+    }
+  ],
+  "openai_call_to_mcp": [
+    {
+      "tool_call": {
+        "function": {
+          "name": "srv__search",
+          "arguments": "{\"q\":\"hello\"}"
+        }
+      },
+      "server": "srv",
+      "tool": "search",
+      "arguments": {
+        "q": "hello"
+      }
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "plaintool",
+          "arguments": "{}"
+        }
+      },
+      "server": "",
+      "tool": "plaintool",
+      "arguments": {}
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "a__b__c",
+          "arguments": "{\"x\":1}"
+        }
+      },
+      "server": "a",
+      "tool": "b__c",
+      "arguments": {
+        "x": 1
+      }
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "bad",
+          "arguments": "{not json"
+        }
+      },
+      "server": "",
+      "tool": "bad",
+      "arguments": {}
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "obj__t",
+          "arguments": {
+            "already": "dict"
+          }
+        }
+      },
+      "server": "obj",
+      "tool": "t",
+      "arguments": {
+        "already": "dict"
+      }
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "empty__t"
+        }
+      },
+      "server": "empty",
+      "tool": "t",
+      "arguments": {}
+    },
+    {
+      "tool_call": {},
+      "server": "",
+      "tool": "",
+      "arguments": {}
+    },
+    {
+      "tool_call": {
+        "function": {
+          "name": "nullargs__t",
+          "arguments": null
+        }
+      },
+      "server": "nullargs",
+      "tool": "t",
+      "arguments": {}
+    }
+  ],
+  "merge_tools": [
+    {
+      "mcp": [
+        {
+          "server_name": "srv",
+          "name": "a",
+          "description": "desc a",
+          "input_schema": {}
+        }
+      ],
+      "user": null,
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__a",
+            "description": "desc a",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mcp": [
+        {
+          "server_name": "srv",
+          "name": "a",
+          "description": "desc a",
+          "input_schema": {}
+        },
+        {
+          "server_name": "srv",
+          "name": "b",
+          "description": "desc b",
+          "input_schema": {}
+        }
+      ],
+      "user": [
+        {
+          "type": "function",
+          "function": {
+            "name": "userTool",
+            "description": "u",
+            "parameters": {}
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__a",
+            "description": "desc a",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__b",
+            "description": "desc b",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "userTool",
+            "description": "u",
+            "parameters": {}
+          }
+        }
+      ]
+    },
+    {
+      "mcp": [
+        {
+          "server_name": "srv",
+          "name": "a",
+          "description": "desc a",
+          "input_schema": {}
+        }
+      ],
+      "user": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__a",
+            "description": "override",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__a",
+            "description": "override",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mcp": [],
+      "user": [
+        {
+          "type": "function",
+          "function": {
+            "name": "only",
+            "parameters": {}
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "only",
+            "parameters": {}
+          }
+        }
+      ]
+    },
+    {
+      "mcp": [
+        {
+          "server_name": "srv",
+          "name": "a",
+          "description": "desc a",
+          "input_schema": {}
+        }
+      ],
+      "user": [
+        {
+          "type": "function",
+          "function": {}
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "srv__a",
+            "description": "desc a",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "extract": [
+    {
+      "response": {
+        "choices": [
+          {
+            "message": {
+              "tool_calls": [
+                {
+                  "id": "1"
+                },
+                {
+                  "id": "2"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "tool_calls": [
+        {
+          "id": "1"
+        },
+        {
+          "id": "2"
+        }
+      ],
+      "has": true
+    },
+    {
+      "response": {
+        "choices": [
+          {
+            "message": {
+              "content": "hi"
+            }
+          }
+        ]
+      },
+      "tool_calls": [],
+      "has": false
+    },
+    {
+      "response": {
+        "choices": []
+      },
+      "tool_calls": [],
+      "has": false
+    },
+    {
+      "response": {},
+      "tool_calls": [],
+      "has": false
+    },
+    {
+      "response": {
+        "choices": [
+          {
+            "message": {}
+          }
+        ]
+      },
+      "tool_calls": [],
+      "has": false
+    }
+  ]
+}
