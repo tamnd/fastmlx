@@ -1,0 +1,62 @@
+[
+  {
+    "arguments": "{\"city\": \"Seoul\", \"unit\": \"celsius\"}",
+    "result": "<｜DSML｜parameter name=\"city\" string=\"true\">Seoul</｜DSML｜parameter>\n<｜DSML｜parameter name=\"unit\" string=\"true\">celsius</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"n\": 5, \"ratio\": 1.5, \"flag\": true, \"nope\": false, \"empty\": null}",
+    "result": "<｜DSML｜parameter name=\"n\" string=\"false\">5</｜DSML｜parameter>\n<｜DSML｜parameter name=\"ratio\" string=\"false\">1.5</｜DSML｜parameter>\n<｜DSML｜parameter name=\"flag\" string=\"false\">true</｜DSML｜parameter>\n<｜DSML｜parameter name=\"nope\" string=\"false\">false</｜DSML｜parameter>\n<｜DSML｜parameter name=\"empty\" string=\"false\">null</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"items\": [1, 2, 3], \"obj\": {\"a\": 1, \"b\": \"x\"}}",
+    "result": "<｜DSML｜parameter name=\"items\" string=\"false\">[1, 2, 3]</｜DSML｜parameter>\n<｜DSML｜parameter name=\"obj\" string=\"false\">{\"a\": 1, \"b\": \"x\"}</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{}",
+    "result": ""
+  },
+  {
+    "arguments": "{\"only_str\": \"hello world\"}",
+    "result": "<｜DSML｜parameter name=\"only_str\" string=\"true\">hello world</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"unicode\": \"\\u00e9\\u4f60\\u597d\", \"emoji\": \"\\ud83d\\ude00\"}",
+    "result": "<｜DSML｜parameter name=\"unicode\" string=\"true\">é你好</｜DSML｜parameter>\n<｜DSML｜parameter name=\"emoji\" string=\"true\">😀</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"nested\": {\"deep\": {\"k\": [true, null, \"s\"]}}}",
+    "result": "<｜DSML｜parameter name=\"nested\" string=\"false\">{\"deep\": {\"k\": [true, null, \"s\"]}}</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"with_space\": \"  padded  \", \"newline\": \"a\\nb\"}",
+    "result": "<｜DSML｜parameter name=\"with_space\" string=\"true\">  padded  </｜DSML｜parameter>\n<｜DSML｜parameter name=\"newline\" string=\"true\">a\nb</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"quote\": \"say \\\"hi\\\"\", \"back\": \"a\\\\b\"}",
+    "result": "<｜DSML｜parameter name=\"quote\" string=\"true\">say \"hi\"</｜DSML｜parameter>\n<｜DSML｜parameter name=\"back\" string=\"true\">a\\b</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"mixed\": \"str\", \"num\": 42, \"arr\": [\"x\", 1, false]}",
+    "result": "<｜DSML｜parameter name=\"mixed\" string=\"true\">str</｜DSML｜parameter>\n<｜DSML｜parameter name=\"num\" string=\"false\">42</｜DSML｜parameter>\n<｜DSML｜parameter name=\"arr\" string=\"false\">[\"x\", 1, false]</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"zero\": 0, \"neg\": -7, \"big\": 1000000}",
+    "result": "<｜DSML｜parameter name=\"zero\" string=\"false\">0</｜DSML｜parameter>\n<｜DSML｜parameter name=\"neg\" string=\"false\">-7</｜DSML｜parameter>\n<｜DSML｜parameter name=\"big\" string=\"false\">1000000</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"float_int\": 3.0, \"sci\": 1e10}",
+    "result": "<｜DSML｜parameter name=\"float_int\" string=\"false\">3.0</｜DSML｜parameter>\n<｜DSML｜parameter name=\"sci\" string=\"false\">10000000000.0</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"order_z\": 1, \"order_a\": 2, \"order_m\": 3}",
+    "result": "<｜DSML｜parameter name=\"order_z\" string=\"false\">1</｜DSML｜parameter>\n<｜DSML｜parameter name=\"order_a\" string=\"false\">2</｜DSML｜parameter>\n<｜DSML｜parameter name=\"order_m\" string=\"false\">3</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"unicode_key_\\u4f60\": \"v\", \"k\": [1, 2]}",
+    "result": "<｜DSML｜parameter name=\"unicode_key_你\" string=\"true\">v</｜DSML｜parameter>\n<｜DSML｜parameter name=\"k\" string=\"false\">[1, 2]</｜DSML｜parameter>"
+  },
+  {
+    "arguments": "{\"empty_str\": \"\", \"empty_arr\": [], \"empty_obj\": {}}",
+    "result": "<｜DSML｜parameter name=\"empty_str\" string=\"true\"></｜DSML｜parameter>\n<｜DSML｜parameter name=\"empty_arr\" string=\"false\">[]</｜DSML｜parameter>\n<｜DSML｜parameter name=\"empty_obj\" string=\"false\">{}</｜DSML｜parameter>"
+  }
+]
