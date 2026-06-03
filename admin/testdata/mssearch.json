@@ -1,0 +1,726 @@
+{
+  "corpus": [
+    {
+      "Path": "mlx-community",
+      "Name": "Llama-3-8B-4bit",
+      "Downloads": 5000,
+      "Likes": 120,
+      "StorageSize": 5368709120
+    },
+    {
+      "Path": "mlx-community",
+      "Name": "Phi-3-mini-instruct",
+      "Downloads": 40,
+      "Stars": 4,
+      "StorageSize": 2147483648
+    },
+    {
+      "Path": "mlx-community",
+      "Name": "Qwen2-72B",
+      "Downloads": 800,
+      "Likes": 60,
+      "StorageSize": 42949672960
+    },
+    {
+      "Path": "mlx-community",
+      "Name": "tiny-llama-test",
+      "Downloads": 300,
+      "Likes": 10,
+      "StorageSize": 0
+    },
+    {
+      "Path": "",
+      "Name": "solo-model",
+      "Downloads": 150,
+      "StorageSize": 1073741824
+    }
+  ],
+  "enriched": [
+    {
+      "repo_id": "mlx-community/Llama-3-8B-4bit",
+      "name": "Llama-3-8B-4bit",
+      "downloads": 5000,
+      "likes": 120,
+      "trending_score": 0,
+      "size": 5368709120,
+      "size_formatted": "5.0 GB",
+      "params": null,
+      "params_formatted": null
+    },
+    {
+      "repo_id": "mlx-community/Phi-3-mini-instruct",
+      "name": "Phi-3-mini-instruct",
+      "downloads": 40,
+      "likes": 4,
+      "trending_score": 0,
+      "size": 2147483648,
+      "size_formatted": "2.0 GB",
+      "params": null,
+      "params_formatted": null
+    },
+    {
+      "repo_id": "mlx-community/Qwen2-72B",
+      "name": "Qwen2-72B",
+      "downloads": 800,
+      "likes": 60,
+      "trending_score": 0,
+      "size": 42949672960,
+      "size_formatted": "40.0 GB",
+      "params": null,
+      "params_formatted": null
+    },
+    {
+      "repo_id": "mlx-community/tiny-llama-test",
+      "name": "tiny-llama-test",
+      "downloads": 300,
+      "likes": 10,
+      "trending_score": 0,
+      "size": 0,
+      "size_formatted": "",
+      "params": null,
+      "params_formatted": null
+    },
+    {
+      "repo_id": "solo-model",
+      "name": "solo-model",
+      "downloads": 150,
+      "likes": 0,
+      "trending_score": 0,
+      "size": 1073741824,
+      "size_formatted": "1.0 GB",
+      "params": null,
+      "params_formatted": null
+    }
+  ],
+  "search": [
+    {
+      "query": "",
+      "sort": "trending",
+      "limit": 100,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 0,
+            "size": 42949672960,
+            "size_formatted": "40.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "query": "llama",
+      "sort": "trending",
+      "limit": 100,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 2
+      }
+    },
+    {
+      "query": "",
+      "sort": "downloads",
+      "limit": 100,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 0,
+            "size": 42949672960,
+            "size_formatted": "40.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "query": "",
+      "sort": "downloads",
+      "limit": 2,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 0,
+            "size": 42949672960,
+            "size_formatted": "40.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    },
+    {
+      "query": "Qwen",
+      "sort": "downloads",
+      "limit": 100,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 0,
+            "size": 42949672960,
+            "size_formatted": "40.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 1
+      }
+    },
+    {
+      "query": "",
+      "sort": "created",
+      "limit": 100,
+      "out": {
+        "models": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Qwen2-72B",
+            "name": "Qwen2-72B",
+            "downloads": 800,
+            "likes": 60,
+            "trending_score": 0,
+            "size": 42949672960,
+            "size_formatted": "40.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "total": 5
+      }
+    }
+  ],
+  "prefilter": [
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 50,
+      "out": [
+        {
+          "repo_id": "mlx-community/Llama-3-8B-4bit",
+          "name": "Llama-3-8B-4bit",
+          "downloads": 5000,
+          "likes": 120,
+          "trending_score": 0,
+          "size": 5368709120,
+          "size_formatted": "5.0 GB",
+          "params": null,
+          "params_formatted": null
+        },
+        {
+          "repo_id": "mlx-community/tiny-llama-test",
+          "name": "tiny-llama-test",
+          "downloads": 300,
+          "likes": 10,
+          "trending_score": 0,
+          "size": 0,
+          "size_formatted": "",
+          "params": null,
+          "params_formatted": null
+        },
+        {
+          "repo_id": "solo-model",
+          "name": "solo-model",
+          "downloads": 150,
+          "likes": 0,
+          "trending_score": 0,
+          "size": 1073741824,
+          "size_formatted": "1.0 GB",
+          "params": null,
+          "params_formatted": null
+        }
+      ]
+    },
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 1,
+      "out": [
+        {
+          "repo_id": "mlx-community/Llama-3-8B-4bit",
+          "name": "Llama-3-8B-4bit",
+          "downloads": 5000,
+          "likes": 120,
+          "trending_score": 0,
+          "size": 5368709120,
+          "size_formatted": "5.0 GB",
+          "params": null,
+          "params_formatted": null
+        },
+        {
+          "repo_id": "mlx-community/tiny-llama-test",
+          "name": "tiny-llama-test",
+          "downloads": 300,
+          "likes": 10,
+          "trending_score": 0,
+          "size": 0,
+          "size_formatted": "",
+          "params": null,
+          "params_formatted": null
+        }
+      ]
+    },
+    {
+      "max_memory_bytes": 3221225472,
+      "result_limit": 50,
+      "out": [
+        {
+          "repo_id": "mlx-community/tiny-llama-test",
+          "name": "tiny-llama-test",
+          "downloads": 300,
+          "likes": 10,
+          "trending_score": 0,
+          "size": 0,
+          "size_formatted": "",
+          "params": null,
+          "params_formatted": null
+        },
+        {
+          "repo_id": "solo-model",
+          "name": "solo-model",
+          "downloads": 150,
+          "likes": 0,
+          "trending_score": 0,
+          "size": 1073741824,
+          "size_formatted": "1.0 GB",
+          "params": null,
+          "params_formatted": null
+        }
+      ]
+    }
+  ],
+  "split": [
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 50,
+      "out": {
+        "trending": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "popular": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ]
+      }
+    },
+    {
+      "max_memory_bytes": 25769803776,
+      "result_limit": 2,
+      "out": {
+        "trending": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "popular": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          }
+        ]
+      }
+    },
+    {
+      "max_memory_bytes": 6442450944,
+      "result_limit": 50,
+      "out": {
+        "trending": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ],
+        "popular": [
+          {
+            "repo_id": "mlx-community/Llama-3-8B-4bit",
+            "name": "Llama-3-8B-4bit",
+            "downloads": 5000,
+            "likes": 120,
+            "trending_score": 0,
+            "size": 5368709120,
+            "size_formatted": "5.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/tiny-llama-test",
+            "name": "tiny-llama-test",
+            "downloads": 300,
+            "likes": 10,
+            "trending_score": 0,
+            "size": 0,
+            "size_formatted": "",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "solo-model",
+            "name": "solo-model",
+            "downloads": 150,
+            "likes": 0,
+            "trending_score": 0,
+            "size": 1073741824,
+            "size_formatted": "1.0 GB",
+            "params": null,
+            "params_formatted": null
+          },
+          {
+            "repo_id": "mlx-community/Phi-3-mini-instruct",
+            "name": "Phi-3-mini-instruct",
+            "downloads": 40,
+            "likes": 4,
+            "trending_score": 0,
+            "size": 2147483648,
+            "size_formatted": "2.0 GB",
+            "params": null,
+            "params_formatted": null
+          }
+        ]
+      }
+    }
+  ]
+}
