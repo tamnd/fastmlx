@@ -1,0 +1,89 @@
+[
+  {
+    "tool": {
+      "name": "calc",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "calc",
+      "input_schema": {}
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "ws",
+      "type": "web_search_20250305"
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "both",
+      "input_schema": {
+        "type": "object"
+      },
+      "type": "x"
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "neither"
+    },
+    "valid": false
+  },
+  {
+    "tool": {
+      "name": "null_schema",
+      "input_schema": null
+    },
+    "valid": false
+  },
+  {
+    "tool": {
+      "name": "null_type",
+      "type": null
+    },
+    "valid": false
+  },
+  {
+    "tool": {
+      "name": "both_null",
+      "input_schema": null,
+      "type": null
+    },
+    "valid": false
+  },
+  {
+    "tool": {
+      "name": "empty_type",
+      "type": ""
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "null_schema_with_type",
+      "input_schema": null,
+      "type": "bash_20250124"
+    },
+    "valid": true
+  },
+  {
+    "tool": {
+      "name": "schema_null_type",
+      "input_schema": {
+        "a": 1
+      },
+      "type": null
+    },
+    "valid": true
+  }
+]
