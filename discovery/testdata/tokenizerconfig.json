@@ -1,0 +1,88 @@
+{
+  "get_tokenizer_config": [
+    {
+      "model_name": "Qwen3-8B",
+      "trust_remote_code": false,
+      "out": {
+        "trust_remote_code": false,
+        "eos_token": "<|im_end|>"
+      }
+    },
+    {
+      "model_name": "qwen3-30b-a3b",
+      "trust_remote_code": true,
+      "out": {
+        "trust_remote_code": true,
+        "eos_token": "<|im_end|>"
+      }
+    },
+    {
+      "model_name": "mlx-community/Qwen3.5-MoE",
+      "trust_remote_code": false,
+      "out": {
+        "trust_remote_code": false,
+        "eos_token": "<|im_end|>"
+      }
+    },
+    {
+      "model_name": "meta-llama/Llama-3-8B",
+      "trust_remote_code": false,
+      "out": {
+        "trust_remote_code": false
+      }
+    },
+    {
+      "model_name": "google/gemma-4-9b",
+      "trust_remote_code": true,
+      "out": {
+        "trust_remote_code": true
+      }
+    },
+    {
+      "model_name": "",
+      "trust_remote_code": false,
+      "out": {
+        "trust_remote_code": false
+      }
+    }
+  ],
+  "apply_qwen3_fix": [
+    {
+      "config": {
+        "trust_remote_code": true,
+        "use_fast": true
+      },
+      "model_name": "Qwen3-8B",
+      "out": {
+        "trust_remote_code": true,
+        "use_fast": true,
+        "eos_token": "<|im_end|>"
+      }
+    },
+    {
+      "config": {
+        "trust_remote_code": false
+      },
+      "model_name": "llama-3",
+      "out": {
+        "trust_remote_code": false
+      }
+    },
+    {
+      "config": {
+        "eos_token": "<|endoftext|>"
+      },
+      "model_name": "Qwen3-32B",
+      "out": {
+        "eos_token": "<|im_end|>"
+      }
+    },
+    {
+      "config": {},
+      "model_name": "qwen3",
+      "out": {
+        "eos_token": "<|im_end|>"
+      }
+    }
+  ]
+}
