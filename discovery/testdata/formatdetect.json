@@ -1,0 +1,145 @@
+{
+  "harmony": [
+    {
+      "name": "gpt-oss-20b",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "GPT-OSS-120B",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "model",
+      "model_type": "gpt_oss",
+      "out": true
+    },
+    {
+      "name": "gptoss-foo",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "llama-3",
+      "model_type": null,
+      "out": false
+    },
+    {
+      "name": "llama-3",
+      "model_type": "llama",
+      "out": false
+    },
+    {
+      "name": "",
+      "model_type": "gpt_oss",
+      "out": true
+    },
+    {
+      "name": "",
+      "model_type": null,
+      "out": false
+    },
+    {
+      "name": "gpt-oss",
+      "model_type": "gpt_oss",
+      "out": true
+    },
+    {
+      "name": "some-gpt-oss-model",
+      "model_type": "other",
+      "out": true
+    },
+    {
+      "name": "model",
+      "model_type": "",
+      "out": false
+    },
+    {
+      "name": "gpt_oss-name",
+      "model_type": null,
+      "out": false
+    }
+  ],
+  "gemma4": [
+    {
+      "name": "gemma-4-9b",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "gemma4-it",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "model",
+      "model_type": "gemma4",
+      "out": true
+    },
+    {
+      "name": "Gemma-4-2B",
+      "model_type": null,
+      "out": true
+    },
+    {
+      "name": "gemma-3-9b",
+      "model_type": null,
+      "out": false
+    },
+    {
+      "name": "",
+      "model_type": "gemma4",
+      "out": true
+    },
+    {
+      "name": "gemma3",
+      "model_type": "gemma3",
+      "out": false
+    },
+    {
+      "name": "",
+      "model_type": null,
+      "out": false
+    },
+    {
+      "name": "mygemma4model",
+      "model_type": "other",
+      "out": true
+    }
+  ],
+  "qwen3": [
+    {
+      "name": "Qwen3-8B",
+      "out": true
+    },
+    {
+      "name": "qwen3-30b-a3b",
+      "out": true
+    },
+    {
+      "name": "QWEN3",
+      "out": true
+    },
+    {
+      "name": "qwen2.5",
+      "out": false
+    },
+    {
+      "name": "llama",
+      "out": false
+    },
+    {
+      "name": "",
+      "out": false
+    },
+    {
+      "name": "Qwen2-7B",
+      "out": false
+    },
+    {
+      "name": "my-qwen3-finetune",
+      "out": true
+    }
+  ]
+}
