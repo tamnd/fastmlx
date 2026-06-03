@@ -1,0 +1,151 @@
+[
+  {
+    "in": {
+      "type": "function_call_output",
+      "call_id": "c1",
+      "output": "plain string"
+    },
+    "out": {
+      "type": "function_call_output",
+      "call_id": "c1",
+      "output": "plain string"
+    }
+  },
+  {
+    "in": {
+      "type": "function_call_output",
+      "call_id": "c1",
+      "output": [
+        "a",
+        "b"
+      ]
+    },
+    "out": {
+      "type": "function_call_output",
+      "call_id": "c1",
+      "output": "[\"a\", \"b\"]"
+    }
+  },
+  {
+    "in": {
+      "type": "function_call_output",
+      "output": {
+        "result": "ok",
+        "count": 3
+      }
+    },
+    "out": {
+      "type": "function_call_output",
+      "output": "{\"result\": \"ok\", \"count\": 3}"
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "output": {
+        "img": {
+          "url": "caf\u00e9"
+        },
+        "n": 1.5,
+        "e": 1000.0
+      }
+    },
+    "out": {
+      "type": "x",
+      "output": "{\"img\": {\"url\": \"caf\\u00e9\"}, \"n\": 1.5, \"e\": 1000.0}"
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "output": [
+        1,
+        2,
+        {
+          "nested": [
+            true,
+            null
+          ]
+        }
+      ]
+    },
+    "out": {
+      "type": "x",
+      "output": "[1, 2, {\"nested\": [true, null]}]"
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "output": null
+    },
+    "out": {
+      "type": "x",
+      "output": null
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "output": 42
+    },
+    "out": {
+      "type": "x",
+      "output": 42
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "output": true
+    },
+    "out": {
+      "type": "x",
+      "output": true
+    }
+  },
+  {
+    "in": {
+      "type": "x",
+      "call_id": "only"
+    },
+    "out": {
+      "type": "x",
+      "call_id": "only"
+    }
+  },
+  {
+    "in": {
+      "output": [],
+      "after": "kept"
+    },
+    "out": {
+      "output": "[]",
+      "after": "kept"
+    }
+  },
+  {
+    "in": {
+      "output": {},
+      "z": 1
+    },
+    "out": {
+      "output": "{}",
+      "z": 1
+    }
+  },
+  {
+    "in": {
+      "a": 1,
+      "output": [
+        "x"
+      ],
+      "b": 2
+    },
+    "out": {
+      "a": 1,
+      "output": "[\"x\"]",
+      "b": 2
+    }
+  }
+]
