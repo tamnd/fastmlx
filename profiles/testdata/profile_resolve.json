@@ -1,0 +1,200 @@
+{
+  "now": "2024-01-15T12:00:00+00:00",
+  "apply": [
+    {
+      "label": "onto_defaults",
+      "current": null,
+      "profile_settings": {
+        "temperature": 0.5,
+        "top_p": 0.8
+      },
+      "name": "creative",
+      "result": {
+        "temperature": 0.5,
+        "top_p": 0.8,
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false,
+        "active_profile_name": "creative"
+      }
+    },
+    {
+      "label": "overlay_existing",
+      "current": {
+        "temperature": 1.0,
+        "max_tokens": 100,
+        "is_pinned": true
+      },
+      "profile_settings": {
+        "temperature": 0.2,
+        "top_k": 50
+      },
+      "name": "precise",
+      "result": {
+        "max_tokens": 100,
+        "temperature": 0.2,
+        "top_k": 50,
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": true,
+        "is_default": false,
+        "trust_remote_code": false,
+        "active_profile_name": "precise"
+      }
+    },
+    {
+      "label": "empty_profile",
+      "current": {
+        "max_tokens": 64
+      },
+      "profile_settings": {},
+      "name": "noop",
+      "result": {
+        "max_tokens": 64,
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": false,
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false,
+        "active_profile_name": "noop"
+      }
+    },
+    {
+      "label": "profile_sets_speculative",
+      "current": null,
+      "profile_settings": {
+        "dflash_enabled": true,
+        "dflash_draft_model": "draft"
+      },
+      "name": "spec",
+      "result": {
+        "force_sampling": false,
+        "thinking_budget_enabled": false,
+        "guided_grammar_enabled": false,
+        "turboquant_kv_enabled": false,
+        "turboquant_kv_bits": 4,
+        "turboquant_skip_last": true,
+        "specprefill_enabled": false,
+        "dflash_enabled": true,
+        "dflash_draft_model": "draft",
+        "dflash_in_memory_cache": true,
+        "dflash_in_memory_cache_max_entries": 4,
+        "dflash_in_memory_cache_max_bytes": 8589934592,
+        "dflash_ssd_cache": false,
+        "dflash_ssd_cache_max_bytes": 21474836480,
+        "mtp_enabled": false,
+        "vlm_mtp_enabled": false,
+        "is_pinned": false,
+        "is_default": false,
+        "trust_remote_code": false,
+        "active_profile_name": "spec"
+      }
+    }
+  ],
+  "record": [
+    {
+      "label": "basic",
+      "error": null,
+      "record": {
+        "name": "fast",
+        "display_name": "Fast",
+        "description": "quick replies",
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.3,
+          "top_p": 0.9
+        },
+        "source_template": null
+      }
+    },
+    {
+      "label": "filters_non_profile_keys",
+      "error": null,
+      "record": {
+        "name": "p1",
+        "display_name": "p1",
+        "description": null,
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {
+          "temperature": 0.5,
+          "turboquant_kv_bits": 3
+        },
+        "source_template": "tmpl-a"
+      }
+    },
+    {
+      "label": "display_name_defaults_to_name",
+      "error": null,
+      "record": {
+        "name": "named",
+        "display_name": "named",
+        "description": null,
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {},
+        "source_template": null
+      }
+    },
+    {
+      "label": "invalid_name",
+      "error": "Invalid profile/template name: 'Bad Name!'. Must match ^[a-z0-9][a-z0-9_-]{0,31}$",
+      "record": null
+    },
+    {
+      "label": "empty_settings",
+      "error": null,
+      "record": {
+        "name": "empty",
+        "display_name": "Empty",
+        "description": "desc",
+        "created_at": "2024-01-15T12:00:00+00:00",
+        "updated_at": "2024-01-15T12:00:00+00:00",
+        "settings": {},
+        "source_template": null
+      }
+    }
+  ]
+}
