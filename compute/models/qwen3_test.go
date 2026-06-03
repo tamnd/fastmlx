@@ -8,6 +8,8 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/tamnd/fastmlx/mlxgo"
 )
 
 // The fixture is produced from the reference Qwen3 model: the args records come
@@ -139,8 +141,12 @@ func TestQwen3MakeCacheParity(t *testing.T) {
 }
 
 func TestQwen3SanitizeDropsTiedHead(t *testing.T) {
+	arr := func() *mlxgo.Array {
+		a, _ := mlxgo.NewFloat32([]float32{0}, 1)
+		return a
+	}
 	tied := &Qwen3Args{TieWordEmbeddings: true}
-	w := map[string]any{"lm_head.weight": 1, "model.norm.weight": 2}
+	w := map[string]*mlxgo.Array{"lm_head.weight": arr(), "model.norm.weight": arr()}
 	tied.Sanitize(w)
 	if _, ok := w["lm_head.weight"]; ok {
 		t.Error("tied Sanitize should drop lm_head.weight")
@@ -150,7 +156,7 @@ func TestQwen3SanitizeDropsTiedHead(t *testing.T) {
 	}
 
 	untied := &Qwen3Args{TieWordEmbeddings: false}
-	w2 := map[string]any{"lm_head.weight": 1}
+	w2 := map[string]*mlxgo.Array{"lm_head.weight": arr()}
 	untied.Sanitize(w2)
 	if _, ok := w2["lm_head.weight"]; !ok {
 		t.Error("untied Sanitize must keep lm_head.weight")

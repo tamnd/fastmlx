@@ -21,6 +21,7 @@ import (
 	"sort"
 
 	"github.com/tamnd/fastmlx/compute"
+	"github.com/tamnd/fastmlx/mlxgo"
 )
 
 // Qwen3Args decodes the subset of config.json the Qwen3 model needs. Unknown
@@ -147,9 +148,26 @@ func (a *Qwen3Args) WeightNames() []string {
 // Sanitize drops the weights the loader must not feed to the model. Mirroring
 // the reference, a tied checkpoint that still ships an explicit lm_head.weight
 // has that key removed so the head falls back to the embedding table.
-func (a *Qwen3Args) Sanitize(weights map[string]any) map[string]any {
+func (a *Qwen3Args) Sanitize(weights map[string]*mlxgo.Array) map[string]*mlxgo.Array {
 	if a.TieWordEmbeddings {
 		delete(weights, "lm_head.weight")
 	}
 	return weights
+}
+
+// LoadQwen3 assembles a runnable model from a checkpoint: it decodes the
+// config, loads the safetensors weights, drops the tied head, and wires the
+// result. configJSON is the config.json body; blob is a safetensors container
+// (one file, or a shard merged with MergeTensors). The numeric Forward needs
+// the mlx backend, but the assembly here runs on any host.
+func LoadQwen3(configJSON, blob []byte) (*Qwen3Model, error) {
+	args, err := ParseQwen3Args(configJSON)
+	if err != nil {
+		return nil, err
+	}
+	weights, err := compute.LoadTensors(blob)
+	if err != nil {
+		return nil, err
+	}
+	return NewQwen3Model(args, args.Sanitize(weights))
 }
