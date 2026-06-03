@@ -1,0 +1,47 @@
+[
+  {
+    "text": "short text",
+    "max_tokens": 50,
+    "result": "short text"
+  },
+  {
+    "text": "abcde",
+    "max_tokens": 5,
+    "result": "abcde"
+  },
+  {
+    "text": "line one is here\nline two is also here and longer",
+    "max_tokens": 30,
+    "result": "line one is here\n\n<truncated total_tokens=\"49\" shown_tokens=\"16\" />"
+  },
+  {
+    "text": "ab\ncdefghijklmnopqrstuvwxyz0123456789",
+    "max_tokens": 20,
+    "result": "ab\ncdefghijklmnopqrs\n\n<truncated total_tokens=\"37\" shown_tokens=\"20\" />"
+  },
+  {
+    "text": "abcdefghijklmnopqrstuvwxyz0123456789",
+    "max_tokens": 10,
+    "result": "abcdefghij\n\n<truncated total_tokens=\"36\" shown_tokens=\"10\" />"
+  },
+  {
+    "text": "\nabcdefghijklmnopqrstuvwxyz",
+    "max_tokens": 8,
+    "result": "\nabcdefg\n\n<truncated total_tokens=\"27\" shown_tokens=\"8\" />"
+  },
+  {
+    "text": "héllo wörld\nsécond lïne thät is lönger thän half",
+    "max_tokens": 28,
+    "result": "héllo wörld\nsécond lïne thät\n\n<truncated total_tokens=\"48\" shown_tokens=\"28\" />"
+  },
+  {
+    "text": "aaaa\nbbbb\ncccc\ndddd\neeee\nffff",
+    "max_tokens": 22,
+    "result": "aaaa\nbbbb\ncccc\ndddd\n\n<truncated total_tokens=\"29\" shown_tokens=\"19\" />"
+  },
+  {
+    "text": "hello world this is long",
+    "max_tokens": 1,
+    "result": "h\n\n<truncated total_tokens=\"24\" shown_tokens=\"1\" />"
+  }
+]
