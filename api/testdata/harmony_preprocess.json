@@ -1,0 +1,240 @@
+[
+  {
+    "in": [],
+    "out": []
+  },
+  {
+    "in": [
+      {
+        "role": "user",
+        "content": "hello"
+      }
+    ],
+    "out": [
+      {
+        "role": "user",
+        "content": "hello"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "<think>reasoning here</think>visible answer"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "visible answer"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "<think>a</think>\n\nThe final answer."
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "The final answer."
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "intro <think>mid</think> outro"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "intro outro"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "<think>one</think> <think>two</think> done"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "done"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "plain answer with no tags"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "plain answer with no tags"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "<think>only a thought block</think>"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "<think>multi\nline\nDOTALL</think>after"
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": "after"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "user",
+        "content": "<think>user thought</think> kept as is"
+      }
+    ],
+    "out": [
+      {
+        "role": "user",
+        "content": "<think>user thought</think> kept as is"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": "<think>tool</think> result"
+      }
+    ],
+    "out": [
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": "<think>tool</think> result"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "list content"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "list content"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "system",
+        "content": "be helpful"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "<think>plan</think>Hello!",
+        "extra": "kept"
+      },
+      {
+        "role": "tool",
+        "content": "tool out"
+      }
+    ],
+    "out": [
+      {
+        "role": "system",
+        "content": "be helpful"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello!",
+        "extra": "kept"
+      },
+      {
+        "role": "tool",
+        "content": "tool out"
+      }
+    ]
+  },
+  {
+    "in": [
+      {
+        "role": "assistant",
+        "content": "  <think>x</think>   "
+      }
+    ],
+    "out": [
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ]
+  }
+]
