@@ -1,0 +1,316 @@
+[
+  {
+    "response_id": "resp_1",
+    "response_data": {
+      "id": "resp_1",
+      "created_at": 100,
+      "output": [
+        {
+          "type": "reasoning",
+          "summary": [
+            {
+              "text": "think"
+            }
+          ]
+        },
+        {
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "output_text",
+              "text": "hi"
+            }
+          ]
+        }
+      ]
+    },
+    "result": {
+      "response_id": "resp_1",
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": [
+        {
+          "role": "assistant",
+          "content": "hi",
+          "reasoning_content": "think"
+        }
+      ],
+      "public_response": {
+        "id": "resp_1",
+        "created_at": 100,
+        "output": [
+          {
+            "type": "reasoning",
+            "summary": [
+              {
+                "text": "think"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "hi"
+              }
+            ]
+          }
+        ]
+      },
+      "created_at": 100
+    }
+  },
+  {
+    "response_id": "resp_2",
+    "response_data": {
+      "created_at": 5,
+      "output": []
+    },
+    "result": {
+      "response_id": "resp_2",
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": [],
+      "public_response": {
+        "created_at": 5,
+        "output": [],
+        "id": "resp_2"
+      },
+      "created_at": 5
+    }
+  },
+  {
+    "response_id": "resp_3",
+    "response_data": {
+      "id": "resp_3"
+    },
+    "result": {
+      "response_id": "resp_3",
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": [],
+      "public_response": {
+        "id": "resp_3"
+      },
+      "created_at": 0
+    }
+  },
+  {
+    "response_id": "resp_4",
+    "response_data": {
+      "id": "resp_4",
+      "previous_response_id": "resp_0",
+      "created_at": 7,
+      "output": [
+        {
+          "type": "function_call",
+          "call_id": "call_abc",
+          "name": "get_weather",
+          "arguments": "{\"city\": \"Seoul\"}"
+        }
+      ]
+    },
+    "result": {
+      "response_id": "resp_4",
+      "previous_response_id": "resp_0",
+      "input_messages": [],
+      "output_messages": [
+        {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_abc",
+              "type": "function",
+              "function": {
+                "name": "get_weather",
+                "arguments": {
+                  "city": "Seoul"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "public_response": {
+        "id": "resp_4",
+        "previous_response_id": "resp_0",
+        "created_at": 7,
+        "output": [
+          {
+            "type": "function_call",
+            "call_id": "call_abc",
+            "name": "get_weather",
+            "arguments": "{\"city\": \"Seoul\"}"
+          }
+        ]
+      },
+      "created_at": 7
+    }
+  },
+  {
+    "response_id": "resp_5",
+    "response_data": {
+      "response_id": "resp_5",
+      "created_at": 9,
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": [
+        {
+          "role": "assistant",
+          "content": "kept"
+        }
+      ],
+      "public_response": {
+        "id": "resp_5",
+        "created_at": 9,
+        "output": []
+      }
+    },
+    "result": {
+      "response_id": "resp_5",
+      "created_at": 9,
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": [
+        {
+          "role": "assistant",
+          "content": "kept"
+        }
+      ],
+      "public_response": {
+        "id": "resp_5",
+        "created_at": 9,
+        "output": []
+      }
+    }
+  },
+  {
+    "response_id": "resp_6",
+    "response_data": {
+      "public_response": {
+        "id": "resp_6",
+        "created_at": 11,
+        "previous_response_id": "resp_5",
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "out"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "result": {
+      "public_response": {
+        "id": "resp_6",
+        "created_at": 11,
+        "previous_response_id": "resp_5",
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "out"
+              }
+            ]
+          }
+        ]
+      },
+      "response_id": "resp_6",
+      "created_at": 11,
+      "previous_response_id": "resp_5",
+      "input_messages": [],
+      "output_messages": [
+        {
+          "role": "assistant",
+          "content": "out"
+        }
+      ]
+    }
+  },
+  {
+    "response_id": "resp_7",
+    "response_data": {
+      "public_response": {
+        "id": "resp_7",
+        "output": []
+      }
+    },
+    "result": {
+      "public_response": {
+        "id": "resp_7",
+        "output": []
+      },
+      "response_id": "resp_7",
+      "created_at": 0,
+      "previous_response_id": null,
+      "input_messages": [],
+      "output_messages": []
+    }
+  },
+  {
+    "response_id": "resp_8",
+    "response_data": {
+      "output_messages": [
+        {
+          "role": "system",
+          "content": "preserved"
+        }
+      ],
+      "public_response": {
+        "id": "resp_8",
+        "created_at": 3,
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "ignored"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "result": {
+      "output_messages": [
+        {
+          "role": "system",
+          "content": "preserved"
+        }
+      ],
+      "public_response": {
+        "id": "resp_8",
+        "created_at": 3,
+        "output": [
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "ignored"
+              }
+            ]
+          }
+        ]
+      },
+      "response_id": "resp_8",
+      "created_at": 3,
+      "previous_response_id": null,
+      "input_messages": []
+    }
+  }
+]
