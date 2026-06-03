@@ -1,0 +1,39 @@
+{
+  "names": [
+    "mmlu",
+    "mmlu_pro",
+    "kmmlu",
+    "cmmlu",
+    "jmmlu",
+    "hellaswag",
+    "truthfulqa",
+    "arc_challenge",
+    "winogrande",
+    "gsm8k",
+    "mathqa",
+    "humaneval",
+    "mbpp",
+    "livecodebench",
+    "bbq",
+    "safetybench"
+  ],
+  "names_sorted": [
+    "arc_challenge",
+    "bbq",
+    "cmmlu",
+    "gsm8k",
+    "hellaswag",
+    "humaneval",
+    "jmmlu",
+    "kmmlu",
+    "livecodebench",
+    "mathqa",
+    "mbpp",
+    "mmlu",
+    "mmlu_pro",
+    "safetybench",
+    "truthfulqa",
+    "winogrande"
+  ],
+  "count": 16
+}
