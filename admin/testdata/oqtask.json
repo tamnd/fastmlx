@@ -1,0 +1,191 @@
+{
+  "sizes": [
+    {
+      "bytes": 0,
+      "out": "0 B"
+    },
+    {
+      "bytes": 512,
+      "out": "512 B"
+    },
+    {
+      "bytes": 1023,
+      "out": "1023 B"
+    },
+    {
+      "bytes": 1024,
+      "out": "1.0 KB"
+    },
+    {
+      "bytes": 1536,
+      "out": "1.5 KB"
+    },
+    {
+      "bytes": 1048576,
+      "out": "1.0 MB"
+    },
+    {
+      "bytes": 1572864,
+      "out": "1.5 MB"
+    },
+    {
+      "bytes": 1073741824,
+      "out": "1.0 GB"
+    },
+    {
+      "bytes": 8589934592,
+      "out": "8.0 GB"
+    },
+    {
+      "bytes": 7516192768,
+      "out": "7.0 GB"
+    }
+  ],
+  "phases": [
+    {
+      "phase": "loading",
+      "oq_level": 2.0,
+      "out": "Loading model..."
+    },
+    {
+      "phase": "quantizing",
+      "oq_level": 2.5,
+      "out": "Quantizing to oQ2.5..."
+    },
+    {
+      "phase": "saving",
+      "oq_level": 4.0,
+      "out": "Saving quantized model..."
+    },
+    {
+      "phase": "unknown_phase",
+      "oq_level": 3.0,
+      "out": "unknown_phase"
+    },
+    {
+      "phase": "",
+      "oq_level": 2.0,
+      "out": ""
+    },
+    {
+      "phase": "quantizing_eta|792|879|0:02",
+      "oq_level": 2.0,
+      "out": "oQ2: 90% (0:02 remaining)"
+    },
+    {
+      "phase": "quantizing_eta|792|879|",
+      "oq_level": 2.5,
+      "out": "oQ2.5: 90%"
+    },
+    {
+      "phase": "quantizing_eta|0|879|1:00",
+      "oq_level": 3.0,
+      "out": "oQ3: 0% (1:00 remaining)"
+    },
+    {
+      "phase": "quantizing_eta|879|879|0:00",
+      "oq_level": 4.0,
+      "out": "oQ4: 100% (0:00 remaining)"
+    },
+    {
+      "phase": "quantizing_eta|abc|879|0:02",
+      "oq_level": 2.0,
+      "out": "oQ2: 0% (0:02 remaining)"
+    },
+    {
+      "phase": "quantizing_eta|100",
+      "oq_level": 6.0,
+      "out": "oQ6: 0%"
+    },
+    {
+      "phase": "quantizing_eta|",
+      "oq_level": 8.0,
+      "out": "oQ8: 0%"
+    },
+    {
+      "phase": "quantizing_eta|500|0|0:05",
+      "oq_level": 2.25,
+      "out": "oQ2.25: 50000% (0:05 remaining)"
+    }
+  ],
+  "tasks": [
+    {
+      "task": {
+        "task_id": "t1",
+        "model_name": "Qwen3-4B",
+        "model_path": "/m/q",
+        "oq_level": 2.5,
+        "output_name": "Qwen3-4B-oQ2.5",
+        "output_path": "/m/q-oq",
+        "status": "quantizing",
+        "progress": 47.36,
+        "phase": "quantizing",
+        "error": "",
+        "created_at": 1700.5,
+        "started_at": 1701.0,
+        "completed_at": 0.0,
+        "source_size": 8589934592,
+        "output_size": 0,
+        "dtype": "bfloat16",
+        "group_size": 64,
+        "text_only": false
+      },
+      "out": {
+        "task_id": "t1",
+        "model_name": "Qwen3-4B",
+        "model_path": "/m/q",
+        "oq_level": 2.5,
+        "output_name": "Qwen3-4B-oQ2.5",
+        "output_path": "/m/q-oq",
+        "status": "quantizing",
+        "progress": 47.4,
+        "phase": "quantizing",
+        "error": "",
+        "created_at": 1700.5,
+        "started_at": 1701.0,
+        "completed_at": 0.0,
+        "source_size": 8589934592,
+        "output_size": 0,
+        "dtype": "bfloat16"
+      }
+    },
+    {
+      "task": {
+        "task_id": "t2",
+        "model_name": "M",
+        "model_path": "/p",
+        "oq_level": 4.0,
+        "output_name": "out",
+        "output_path": "/o",
+        "status": "completed",
+        "progress": 100.0,
+        "phase": "",
+        "error": "",
+        "created_at": 1.0,
+        "started_at": 2.0,
+        "completed_at": 3.0,
+        "source_size": 1000,
+        "output_size": 500,
+        "dtype": "float16"
+      },
+      "out": {
+        "task_id": "t2",
+        "model_name": "M",
+        "model_path": "/p",
+        "oq_level": 4.0,
+        "output_name": "out",
+        "output_path": "/o",
+        "status": "completed",
+        "progress": 100.0,
+        "phase": "",
+        "error": "",
+        "created_at": 1.0,
+        "started_at": 2.0,
+        "completed_at": 3.0,
+        "source_size": 1000,
+        "output_size": 500,
+        "dtype": "float16"
+      }
+    }
+  ]
+}
