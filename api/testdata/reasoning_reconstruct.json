@@ -1,0 +1,131 @@
+{
+  "reconstruct": [
+    {
+      "role": "user",
+      "content": "hi",
+      "reasoning": "secret",
+      "native": false,
+      "new_content": "hi",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": "answer",
+      "reasoning": "",
+      "native": false,
+      "new_content": "answer",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": "answer",
+      "reasoning": null,
+      "native": true,
+      "new_content": "answer",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": "the answer",
+      "reasoning": "I thought hard",
+      "native": true,
+      "new_content": "the answer",
+      "reasoning_out": "I thought hard"
+    },
+    {
+      "role": "assistant",
+      "content": "the answer",
+      "reasoning": "I thought hard",
+      "native": false,
+      "new_content": "<think>\nI thought hard\n</think>\n\nthe answer",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "part one"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "x"
+          }
+        },
+        {
+          "type": "text",
+          "text": "part two"
+        }
+      ],
+      "reasoning": "ponder",
+      "native": true,
+      "new_content": "part one\npart two",
+      "reasoning_out": "ponder"
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "alpha"
+        },
+        {
+          "type": "text",
+          "text": "beta"
+        }
+      ],
+      "reasoning": "ponder",
+      "native": false,
+      "new_content": "<think>\nponder\n</think>\n\nalpha\nbeta",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning": "still reasoning",
+      "native": true,
+      "new_content": "",
+      "reasoning_out": "still reasoning"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning": "still reasoning",
+      "native": false,
+      "new_content": "<think>\nstill reasoning\n</think>\n\n",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": 42,
+      "reasoning": "weird",
+      "native": false,
+      "new_content": "<think>\nweird\n</think>\n\n",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "x"
+          }
+        }
+      ],
+      "reasoning": "look",
+      "native": false,
+      "new_content": "<think>\nlook\n</think>\n\n",
+      "reasoning_out": null
+    },
+    {
+      "role": "assistant",
+      "content": "done",
+      "reasoning": "line1\nline2",
+      "native": false,
+      "new_content": "<think>\nline1\nline2\n</think>\n\ndone",
+      "reasoning_out": null
+    }
+  ]
+}
