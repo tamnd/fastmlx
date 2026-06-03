@@ -1,0 +1,122 @@
+[
+  {
+    "message": "Unauthorized",
+    "status_code": 401,
+    "param": null,
+    "code": null,
+    "type": "authentication_error",
+    "result": {
+      "error": {
+        "message": "Unauthorized",
+        "type": "authentication_error",
+        "param": null,
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Missing model",
+    "status_code": 404,
+    "param": null,
+    "code": null,
+    "type": "not_found_error",
+    "result": {
+      "error": {
+        "message": "Missing model",
+        "type": "not_found_error",
+        "param": null,
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Slow down",
+    "status_code": 429,
+    "param": null,
+    "code": null,
+    "type": "rate_limit_error",
+    "result": {
+      "error": {
+        "message": "Slow down",
+        "type": "rate_limit_error",
+        "param": null,
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Boom",
+    "status_code": 500,
+    "param": null,
+    "code": null,
+    "type": "server_error",
+    "result": {
+      "error": {
+        "message": "Boom",
+        "type": "server_error",
+        "param": null,
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Gateway",
+    "status_code": 503,
+    "param": null,
+    "code": null,
+    "type": "server_error",
+    "result": {
+      "error": {
+        "message": "Gateway",
+        "type": "server_error",
+        "param": null,
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Bad field",
+    "status_code": 400,
+    "param": "model",
+    "code": "invalid_value",
+    "type": "invalid_request_error",
+    "result": {
+      "error": {
+        "message": "Bad field",
+        "type": "invalid_request_error",
+        "param": "model",
+        "code": "invalid_value"
+      }
+    }
+  },
+  {
+    "message": "Bad field",
+    "status_code": 422,
+    "param": "messages",
+    "code": null,
+    "type": "invalid_request_error",
+    "result": {
+      "error": {
+        "message": "Bad field",
+        "type": "invalid_request_error",
+        "param": "messages",
+        "code": null
+      }
+    }
+  },
+  {
+    "message": "Teapot",
+    "status_code": 418,
+    "param": null,
+    "code": null,
+    "type": "invalid_request_error",
+    "result": {
+      "error": {
+        "message": "Teapot",
+        "type": "invalid_request_error",
+        "param": null,
+        "code": null
+      }
+    }
+  }
+]
