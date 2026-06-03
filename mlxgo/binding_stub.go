@@ -193,6 +193,21 @@ func SplitSections(a *Array, indices []int, axis int, s *Stream) ([]*Array, erro
 func Take(a, indices *Array, axis int, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
 func Argmax(a *Array, axis int, s *Stream) (*Array, error)        { return nil, ErrMLXUnavailable }
 
+// Where selects elementwise from x where cond is true, else from y, broadcasting
+// the three operands together. It is the masking and gating primitive the
+// deferred forwards need: a sliding-window attention mask and a mixture-of-experts
+// router both build their output by selecting between two tensors on a boolean
+// condition.
+func Where(cond, x, y *Array, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
+
+// Cumsum is the cumulative sum of a along axis. reverse accumulates from the end,
+// inclusive includes each position's own value in its running total. It is the
+// scan primitive the gated-delta recurrence (Qwen3-Next) and the router
+// normalization paths build on.
+func Cumsum(a *Array, axis int, reverse, inclusive bool, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // RoPE applies rotary position embedding.
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable

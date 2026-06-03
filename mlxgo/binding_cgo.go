@@ -479,6 +479,24 @@ func Argmax(a *Array, axis int, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func Where(cond, x, y *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_where(&out, cond.c, x.c, y.c, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Cumsum(a *Array, axis int, reverse, inclusive bool, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_cumsum(&out, a.c, C.int(axis), C._Bool(reverse), C._Bool(inclusive), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	freq := C.mlx_array_new()
