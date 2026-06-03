@@ -1,0 +1,439 @@
+{
+  "text": [
+    {
+      "in": [],
+      "out": ""
+    },
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": "a"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "u"
+          }
+        }
+      ],
+      "out": "a"
+    },
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": "a"
+        },
+        {
+          "type": "text",
+          "text": "b"
+        }
+      ],
+      "out": "a\nb"
+    },
+    {
+      "in": [
+        "raw string",
+        {
+          "type": "text",
+          "text": "x"
+        }
+      ],
+      "out": "raw string\nx"
+    },
+    {
+      "in": [
+        {
+          "type": "text"
+        }
+      ],
+      "out": ""
+    },
+    {
+      "in": [
+        {
+          "type": "tool_use",
+          "id": "1"
+        }
+      ],
+      "out": ""
+    },
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": ""
+        }
+      ],
+      "out": ""
+    }
+  ],
+  "multimodal": [
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": "hi"
+        }
+      ],
+      "out": [
+        {
+          "type": "text",
+          "text": "hi"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "input_text",
+          "content": "yo"
+        }
+      ],
+      "out": [
+        {
+          "type": "text",
+          "text": "yo"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": "",
+          "content": "fallback"
+        }
+      ],
+      "out": [
+        {
+          "type": "text",
+          "text": "fallback"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image_url",
+          "image_url": "http://x"
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "http://x"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "http://y"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "http://y"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": ""
+          }
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "type": "input_image",
+          "input_image": {
+            "url": "http://z"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "http://z"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "input_image",
+          "image_url": "http://q"
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "http://q"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image",
+          "source": {
+            "type": "base64",
+            "media_type": "image/png",
+            "data": "ABC"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/png;base64,ABC"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image",
+          "source": {
+            "type": "base64",
+            "data": "XY"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,XY"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "image",
+          "source": {
+            "type": "url",
+            "url": "no"
+          }
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "type": "thinking",
+          "thinking": "x"
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "type": "text",
+          "text": "a"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "u"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "text",
+          "text": "a"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "u"
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "input_text",
+          "text": "p"
+        }
+      ],
+      "out": [
+        {
+          "type": "text",
+          "text": "p"
+        }
+      ]
+    }
+  ],
+  "drop_void": [
+    {
+      "in": [],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "hi"
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "1"
+            }
+          ]
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_responses": [
+            {
+              "x": 1
+            }
+          ]
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_responses": [
+            {
+              "x": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": "r"
+        }
+      ],
+      "out": [
+        {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": "r"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant"
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "out": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": [],
+          "tool_calls": []
+        }
+      ],
+      "out": []
+    }
+  ]
+}
