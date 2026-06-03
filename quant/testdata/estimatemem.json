@@ -1,0 +1,39 @@
+{
+  "mem": [
+    {
+      "size": 0,
+      "out": {
+        "peak_bytes": 6442450944,
+        "peak_formatted": "6.0 GB"
+      }
+    },
+    {
+      "size": 1024,
+      "out": {
+        "peak_bytes": 6442451968,
+        "peak_formatted": "6.0 GB"
+      }
+    },
+    {
+      "size": 4294967296,
+      "out": {
+        "peak_bytes": 10737418240,
+        "peak_formatted": "10.0 GB"
+      }
+    },
+    {
+      "size": 8589934592,
+      "out": {
+        "peak_bytes": 15032385536,
+        "peak_formatted": "14.0 GB"
+      }
+    },
+    {
+      "size": 17179869184,
+      "out": {
+        "peak_bytes": 23622320128,
+        "peak_formatted": "22.0 GB"
+      }
+    }
+  ]
+}

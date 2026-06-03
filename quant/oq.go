@@ -355,6 +355,32 @@ func SensitivityTier(layerScore, maxScore float64) int {
 	return 1
 }
 
+// EstimateMemory gives a rough peak-memory estimate for a streaming
+// quantization run: the source mmap plus a fixed 6 GB headroom for the output
+// buffer and sanitize overhead. The per-tensor estimate endpoint refines this.
+func EstimateMemory(sourceSizeBytes int) map[string]any {
+	peak := sourceSizeBytes + 6*1024*1024*1024
+	return map[string]any{
+		"peak_bytes":     peak,
+		"peak_formatted": formatSize(peak),
+	}
+}
+
+// formatSize renders a byte count as a human-readable string with a raw-bytes
+// tier below 1 KB, then KB/MB/GB by magnitude with one decimal.
+func formatSize(sizeBytes int) string {
+	switch {
+	case sizeBytes < 1024:
+		return strconv.Itoa(sizeBytes) + " B"
+	case sizeBytes < 1024*1024:
+		return strconv.FormatFloat(float64(sizeBytes)/1024, 'f', 1, 64) + " KB"
+	case sizeBytes < 1024*1024*1024:
+		return strconv.FormatFloat(float64(sizeBytes)/(1024*1024), 'f', 1, 64) + " MB"
+	default:
+		return strconv.FormatFloat(float64(sizeBytes)/(1024*1024*1024), 'f', 1, 64) + " GB"
+	}
+}
+
 // ValidateQuantizable reports whether a config indicates a quantizable model.
 // Already-quantized models are excluded, except native FP8 which is full
 // precision stored in FP8.

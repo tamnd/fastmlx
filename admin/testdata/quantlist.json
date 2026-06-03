@@ -1,0 +1,179 @@
+{
+  "mtp": [
+    {
+      "config": {},
+      "out": false
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 0
+      },
+      "out": false
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "out": true
+    },
+    {
+      "config": {
+        "num_nextn_predict_layers": 2
+      },
+      "out": true
+    },
+    {
+      "config": {
+        "text_config": {
+          "mtp_num_hidden_layers": 3
+        }
+      },
+      "out": true
+    },
+    {
+      "config": {
+        "text_config": {
+          "num_nextn_predict_layers": 1
+        }
+      },
+      "out": true
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": null,
+        "text_config": {
+          "num_nextn_predict_layers": 0
+        }
+      },
+      "out": false
+    },
+    {
+      "config": {
+        "text_config": "not-a-dict",
+        "num_nextn_predict_layers": 5
+      },
+      "out": true
+    }
+  ],
+  "info": [
+    {
+      "config": {
+        "model_type": "qwen3",
+        "num_hidden_layers": 36,
+        "num_local_experts": 0
+      },
+      "name": "Qwen3-4B",
+      "path": "/m/Qwen3-4B",
+      "size": 8589934592,
+      "has_mtp": false,
+      "info": {
+        "name": "Qwen3-4B",
+        "path": "/m/Qwen3-4B",
+        "size": 8589934592,
+        "size_formatted": "8.0 GB",
+        "model_type": "qwen3",
+        "is_quantized": false,
+        "is_vlm": false,
+        "has_mtp_heads": false
+      },
+      "source": {
+        "name": "Qwen3-4B",
+        "path": "/m/Qwen3-4B",
+        "size": 8589934592,
+        "size_formatted": "8.0 GB",
+        "model_type": "qwen3",
+        "is_quantized": false,
+        "is_vlm": false,
+        "has_mtp_heads": false,
+        "num_layers": 36,
+        "num_experts": 0,
+        "memory_streaming": {
+          "peak_bytes": 15032385536,
+          "peak_formatted": "14.0 GB"
+        }
+      }
+    },
+    {
+      "config": {
+        "text_config": {
+          "model_type": "llama"
+        },
+        "quantization": {
+          "bits": 4
+        },
+        "vision_config": {
+          "x": 1
+        }
+      },
+      "name": "VLM-q",
+      "path": "/m/VLM-q",
+      "size": 4294967296,
+      "has_mtp": true,
+      "info": {
+        "name": "VLM-q",
+        "path": "/m/VLM-q",
+        "size": 4294967296,
+        "size_formatted": "4.0 GB",
+        "model_type": "llama",
+        "is_quantized": true,
+        "is_vlm": true,
+        "has_mtp_heads": true
+      },
+      "source": {
+        "name": "VLM-q",
+        "path": "/m/VLM-q",
+        "size": 4294967296,
+        "size_formatted": "4.0 GB",
+        "model_type": "llama",
+        "is_quantized": true,
+        "is_vlm": true,
+        "has_mtp_heads": true,
+        "num_layers": 0,
+        "num_experts": 0,
+        "memory_streaming": {
+          "peak_bytes": 10737418240,
+          "peak_formatted": "10.0 GB"
+        }
+      }
+    },
+    {
+      "config": {
+        "num_local_experts": 8,
+        "text_config": {
+          "num_hidden_layers": 48
+        },
+        "vit_config": {}
+      },
+      "name": "MoE",
+      "path": "/m/MoE",
+      "size": 1073741824,
+      "has_mtp": false,
+      "info": {
+        "name": "MoE",
+        "path": "/m/MoE",
+        "size": 1073741824,
+        "size_formatted": "1.0 GB",
+        "model_type": "",
+        "is_quantized": false,
+        "is_vlm": true,
+        "has_mtp_heads": false
+      },
+      "source": {
+        "name": "MoE",
+        "path": "/m/MoE",
+        "size": 1073741824,
+        "size_formatted": "1.0 GB",
+        "model_type": "",
+        "is_quantized": false,
+        "is_vlm": true,
+        "has_mtp_heads": false,
+        "num_layers": 48,
+        "num_experts": 8,
+        "memory_streaming": {
+          "peak_bytes": 7516192768,
+          "peak_formatted": "7.0 GB"
+        }
+      }
+    }
+  ]
+}
