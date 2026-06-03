@@ -1,0 +1,88 @@
+{
+  "static": [
+    {
+      "path": "app.js",
+      "mtime": 1700000000.9,
+      "is_file": true,
+      "out": "/admin/static/app.js?v=1700000000"
+    },
+    {
+      "path": "css/admin.css",
+      "mtime": 1699999999.0,
+      "is_file": true,
+      "out": "/admin/static/css/admin.css?v=1699999999"
+    },
+    {
+      "path": "missing.js",
+      "mtime": 0.0,
+      "is_file": false,
+      "out": "/admin/static/missing.js"
+    },
+    {
+      "path": "a/b/c.png",
+      "mtime": -3.7,
+      "is_file": true,
+      "out": "/admin/static/a/b/c.png?v=-3"
+    },
+    {
+      "path": "x.js",
+      "mtime": 42.999,
+      "is_file": true,
+      "out": "/admin/static/x.js?v=42"
+    }
+  ],
+  "translate": [
+    {
+      "key": "hello",
+      "out": "Xin chao"
+    },
+    {
+      "key": "bye",
+      "out": "Tam biet"
+    },
+    {
+      "key": "missing",
+      "out": "missing"
+    },
+    {
+      "key": "count",
+      "out": "So luong"
+    },
+    {
+      "key": "",
+      "out": ""
+    }
+  ],
+  "load": [
+    {
+      "primary": "{\"a\": \"1\", \"b\": \"2\"}",
+      "fallback": "{\"x\": \"y\"}",
+      "out": {
+        "a": "1",
+        "b": "2"
+      }
+    },
+    {
+      "primary": "not json",
+      "fallback": "{\"x\": \"y\"}",
+      "out": {
+        "x": "y"
+      }
+    },
+    {
+      "primary": "not json",
+      "fallback": "also not json",
+      "out": {}
+    },
+    {
+      "primary": "{}",
+      "fallback": "{\"x\": \"y\"}",
+      "out": {}
+    },
+    {
+      "primary": "  ",
+      "fallback": "  ",
+      "out": {}
+    }
+  ]
+}
