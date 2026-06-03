@@ -1,0 +1,146 @@
+{
+  "generate_language": [
+    {
+      "in": "en",
+      "out": "english"
+    },
+    {
+      "in": "EN",
+      "out": "english"
+    },
+    {
+      "in": " en ",
+      "out": "english"
+    },
+    {
+      "in": "zh",
+      "out": "chinese"
+    },
+    {
+      "in": "yue",
+      "out": "cantonese"
+    },
+    {
+      "in": "fr",
+      "out": "french"
+    },
+    {
+      "in": "es",
+      "out": "spanish"
+    },
+    {
+      "in": "it",
+      "out": "italian"
+    },
+    {
+      "in": "pt",
+      "out": "portuguese"
+    },
+    {
+      "in": "ru",
+      "out": "russian"
+    },
+    {
+      "in": "ko",
+      "out": "korean"
+    },
+    {
+      "in": "ja",
+      "out": "japanese"
+    },
+    {
+      "in": "unknownlang",
+      "out": "unknownlang"
+    },
+    {
+      "in": "",
+      "out": null
+    },
+    {
+      "in": "  ",
+      "out": null
+    },
+    {
+      "in": "Klingon",
+      "out": "Klingon"
+    },
+    {
+      "in": "JA",
+      "out": "japanese"
+    },
+    {
+      "in": "DE",
+      "out": "german"
+    }
+  ],
+  "looks_missing": [
+    {
+      "in": "model lacks preprocessor_config.json",
+      "out": true
+    },
+    {
+      "in": "Missing FEATURE EXTRACTOR",
+      "out": true
+    },
+    {
+      "in": "no featureextractor here",
+      "out": true
+    },
+    {
+      "in": "some random error",
+      "out": false
+    },
+    {
+      "in": "FeatureExtractor not found",
+      "out": true
+    },
+    {
+      "in": "plain failure",
+      "out": false
+    },
+    {
+      "in": "preprocessor_CONFIG.JSON",
+      "out": true
+    },
+    {
+      "in": "",
+      "out": false
+    }
+  ],
+  "hint": [
+    {
+      "model": "org/whisper-x",
+      "out": "STT model 'org/whisper-x' is missing the HuggingFace processor / feature-extractor configuration (preprocessor_config.json and/or tokenizer files). MLX-converted repositories sometimes omit these. Fix: either use an HF-compatible variant of the model or copy preprocessor_config.json, tokenizer.json and special_tokens_map.json from the upstream HuggingFace repo into the local model directory."
+    },
+    {
+      "model": "m",
+      "out": "STT model 'm' is missing the HuggingFace processor / feature-extractor configuration (preprocessor_config.json and/or tokenizer files). MLX-converted repositories sometimes omit these. Fix: either use an HF-compatible variant of the model or copy preprocessor_config.json, tokenizer.json and special_tokens_map.json from the upstream HuggingFace repo into the local model directory."
+    }
+  ],
+  "wrap": [
+    {
+      "model": "org/whisper-x",
+      "message": "load failed: preprocessor_config.json",
+      "out": [
+        "STT model 'org/whisper-x' is missing the HuggingFace processor / feature-extractor configuration (preprocessor_config.json and/or tokenizer files). MLX-converted repositories sometimes omit these. Fix: either use an HF-compatible variant of the model or copy preprocessor_config.json, tokenizer.json and special_tokens_map.json from the upstream HuggingFace repo into the local model directory. Original error: load failed: preprocessor_config.json",
+        true
+      ]
+    },
+    {
+      "model": "m",
+      "message": "connection reset",
+      "out": [
+        "connection reset",
+        false
+      ]
+    },
+    {
+      "model": "acme/stt",
+      "message": "no featureextractor in repo",
+      "out": [
+        "STT model 'acme/stt' is missing the HuggingFace processor / feature-extractor configuration (preprocessor_config.json and/or tokenizer files). MLX-converted repositories sometimes omit these. Fix: either use an HF-compatible variant of the model or copy preprocessor_config.json, tokenizer.json and special_tokens_map.json from the upstream HuggingFace repo into the local model directory. Original error: no featureextractor in repo",
+        true
+      ]
+    }
+  ]
+}
