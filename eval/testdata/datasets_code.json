@@ -1,0 +1,378 @@
+{
+  "humaneval": {
+    "normalize": [
+      {
+        "raw": {
+          "task_id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below"
+        },
+        "out": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        }
+      },
+      {
+        "raw": {
+          "task_id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add"
+        },
+        "out": {
+          "id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add",
+          "question": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+        }
+      }
+    ],
+    "prompt": [
+      {
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Complete the following Python function. Provide only the complete function implementation, no explanations.\n\nfrom typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add",
+          "question": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Complete the following Python function. Provide only the complete function implementation, no explanations.\n\ndef add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "Here:\n```python\ndef below(numbers, t):\n    return False\n```",
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": "from typing import List\n\ndef below(numbers, t):\n    return False"
+      },
+      {
+        "resp": "```python\nfrom typing import List\ndef below(numbers, t):\n    return False\n```",
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": "from typing import List\ndef below(numbers, t):\n    return False"
+      },
+      {
+        "resp": "```python\n    return a + b\n```",
+        "item": {
+          "id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add",
+          "question": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+        },
+        "out": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\nreturn a + b"
+      },
+      {
+        "resp": "def add(a, b):\n    return a + b",
+        "item": {
+          "id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add",
+          "question": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+        },
+        "out": "def add(a, b):\n    return a + b"
+      }
+    ],
+    "script": [
+      {
+        "code": "def add(a, b):\n    return a + b",
+        "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+        "entry_point": "add",
+        "out": "def add(a, b):\n    return a + b\n\ndef check(candidate):\n    assert candidate(1, 2) == 3\n\n\ncheck(add)\n"
+      }
+    ],
+    "check": [
+      {
+        "pred": "",
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": false
+      },
+      {
+        "pred": "   \n  ",
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "id": "HumanEval/0",
+          "prompt": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate([1.0, 2.0], 0.5) == False\n",
+          "entry_point": "below",
+          "question": "from typing import List\n\n\ndef below(numbers: List[float], t: float) -> bool:\n    \"\"\"Check.\"\"\"\n"
+        },
+        "out": null
+      },
+      {
+        "item": {
+          "id": "HumanEval/1",
+          "prompt": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n",
+          "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+          "entry_point": "add",
+          "question": "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n"
+        },
+        "out": null
+      }
+    ]
+  },
+  "mbpp": {
+    "normalize": [
+      {
+        "raw": {
+          "task_id": 11,
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": ""
+        },
+        "out": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        }
+      },
+      {
+        "raw": {
+          "task_id": 12,
+          "prompt": "Write a function to sort a matrix by row sum.",
+          "test_list": [
+            "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+          ],
+          "test_setup_code": "import math"
+        },
+        "out": {
+          "id": "12",
+          "prompt": "Write a function to sort a matrix by row sum.",
+          "test_list": [
+            "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+          ],
+          "test_setup_code": "import math",
+          "question": "Write a function to sort a matrix by row sum."
+        }
+      },
+      {
+        "raw": {
+          "task_id": 99,
+          "prompt": "No tests here.",
+          "test_list": []
+        },
+        "out": null
+      }
+    ],
+    "prompt": [
+      {
+        "item": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Write a Python function to solve the following problem. Provide only the complete function implementation, no explanations.\n\nProblem: Write a function to remove first and last occurrence of a character.\n\nTest cases:\nassert remove_Occ(\"hello\",\"l\") == \"heo\"\nassert remove_Occ(\"abcda\",\"a\") == \"bcd\"\nassert remove_Occ(\"PHP\",\"P\") == \"H\"\n\nSolution:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "12",
+          "prompt": "Write a function to sort a matrix by row sum.",
+          "test_list": [
+            "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+          ],
+          "test_setup_code": "import math",
+          "question": "Write a function to sort a matrix by row sum."
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Write a Python function to solve the following problem. Provide only the complete function implementation, no explanations.\n\nProblem: Write a function to sort a matrix by row sum.\n\nTest cases:\nassert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]\n\nSolution:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "```python\ndef remove_Occ(s, ch):\n    return s\n```",
+        "item": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        },
+        "out": "def remove_Occ(s, ch):\n    return s"
+      },
+      {
+        "resp": "def sort_matrix(m):\n    return m",
+        "item": {
+          "id": "12",
+          "prompt": "Write a function to sort a matrix by row sum.",
+          "test_list": [
+            "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+          ],
+          "test_setup_code": "import math",
+          "question": "Write a function to sort a matrix by row sum."
+        },
+        "out": "def sort_matrix(m):\n    return m"
+      }
+    ],
+    "script": [
+      {
+        "code": "def f():\n    return 1",
+        "test_list": [
+          "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+          "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+          "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+          "assert remove_Occ(\"\",\"x\") == \"\""
+        ],
+        "setup": "",
+        "out": "\ndef f():\n    return 1\nassert remove_Occ(\"hello\",\"l\") == \"heo\"\nassert remove_Occ(\"abcda\",\"a\") == \"bcd\"\nassert remove_Occ(\"PHP\",\"P\") == \"H\"\nassert remove_Occ(\"\",\"x\") == \"\"\n"
+      },
+      {
+        "code": "def g():\n    return 2",
+        "test_list": [
+          "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+        ],
+        "setup": "import math",
+        "out": "import math\ndef g():\n    return 2\nassert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]\n"
+      }
+    ],
+    "check": [
+      {
+        "pred": "",
+        "item": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        },
+        "out": false
+      },
+      {
+        "pred": "  ",
+        "item": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "id": "11",
+          "prompt": "Write a function to remove first and last occurrence of a character.",
+          "test_list": [
+            "assert remove_Occ(\"hello\",\"l\") == \"heo\"",
+            "assert remove_Occ(\"abcda\",\"a\") == \"bcd\"",
+            "assert remove_Occ(\"PHP\",\"P\") == \"H\"",
+            "assert remove_Occ(\"\",\"x\") == \"\""
+          ],
+          "test_setup_code": "",
+          "question": "Write a function to remove first and last occurrence of a character."
+        },
+        "out": null
+      },
+      {
+        "item": {
+          "id": "12",
+          "prompt": "Write a function to sort a matrix by row sum.",
+          "test_list": [
+            "assert sort_matrix([[1,2],[2,2]]) == [[1,2],[2,2]]"
+          ],
+          "test_setup_code": "import math",
+          "question": "Write a function to sort a matrix by row sum."
+        },
+        "out": null
+      }
+    ]
+  }
+}
