@@ -1,0 +1,201 @@
+{
+  "valid_benchmarks": [
+    "mmlu",
+    "mmlu_pro",
+    "kmmlu",
+    "cmmlu",
+    "jmmlu",
+    "hellaswag",
+    "truthfulqa",
+    "arc_challenge",
+    "winogrande",
+    "gsm8k",
+    "mathqa",
+    "humaneval",
+    "mbpp",
+    "livecodebench",
+    "bbq",
+    "safetybench"
+  ],
+  "batch": [
+    {
+      "v": 1,
+      "ok": true
+    },
+    {
+      "v": 2,
+      "ok": true
+    },
+    {
+      "v": 3,
+      "ok": false
+    },
+    {
+      "v": 4,
+      "ok": true
+    },
+    {
+      "v": 8,
+      "ok": true
+    },
+    {
+      "v": 16,
+      "ok": true
+    },
+    {
+      "v": 32,
+      "ok": true
+    },
+    {
+      "v": 0,
+      "ok": false
+    },
+    {
+      "v": 5,
+      "ok": false
+    },
+    {
+      "v": 64,
+      "ok": false
+    },
+    {
+      "v": -1,
+      "ok": false
+    }
+  ],
+  "benchmarks": [
+    {
+      "set": {},
+      "ok": false
+    },
+    {
+      "set": {
+        "mmlu": 100
+      },
+      "ok": true
+    },
+    {
+      "set": {
+        "mmlu": 0,
+        "gsm8k": 50
+      },
+      "ok": true
+    },
+    {
+      "set": {
+        "nope": 10
+      },
+      "ok": false
+    },
+    {
+      "set": {
+        "mmlu": -1
+      },
+      "ok": false
+    },
+    {
+      "set": {
+        "humaneval": 100,
+        "bogus": 1
+      },
+      "ok": false
+    }
+  ],
+  "results_in": [
+    {
+      "model_id": "qwen3-4b",
+      "benchmark_name": "mmlu",
+      "accuracy": 0.736842105,
+      "thinking_used": false,
+      "total_questions": 57,
+      "correct_count": 42,
+      "time_seconds": 123.4567,
+      "question_results": [
+        {
+          "question_id": "0",
+          "correct": true,
+          "expected": "A",
+          "predicted": "A",
+          "question_text": "Q one?",
+          "raw_response": "A",
+          "category": "math",
+          "time_seconds": 1.23456
+        },
+        {
+          "question_id": "1",
+          "correct": false,
+          "expected": "B",
+          "predicted": "C",
+          "question_text": "Q two?",
+          "raw_response": "C because",
+          "category": "law",
+          "time_seconds": 0.98765
+        }
+      ],
+      "category_scores": {
+        "math": 1.0,
+        "law": 0.0,
+        "bio": 0.66665
+      }
+    },
+    {
+      "model_id": "m2",
+      "benchmark_name": "gsm8k",
+      "accuracy": 1.0,
+      "thinking_used": true,
+      "total_questions": 8,
+      "correct_count": 8,
+      "time_seconds": 9.95,
+      "question_results": [],
+      "category_scores": {}
+    }
+  ],
+  "result_data": [
+    {
+      "model_id": "qwen3-4b",
+      "benchmark": "mmlu",
+      "accuracy": 0.7368,
+      "thinking_used": false,
+      "total": 57,
+      "correct": 42,
+      "time_s": 123.5,
+      "question_results": [
+        {
+          "id": "0",
+          "correct": true,
+          "expected": "A",
+          "predicted": "A",
+          "question": "Q one?",
+          "raw_response": "A",
+          "category": "math",
+          "time_s": 1.235
+        },
+        {
+          "id": "1",
+          "correct": false,
+          "expected": "B",
+          "predicted": "C",
+          "question": "Q two?",
+          "raw_response": "C because",
+          "category": "law",
+          "time_s": 0.988
+        }
+      ],
+      "category_scores": {
+        "math": 1.0,
+        "law": 0.0,
+        "bio": 0.6666
+      }
+    },
+    {
+      "model_id": "m2",
+      "benchmark": "gsm8k",
+      "accuracy": 1.0,
+      "thinking_used": true,
+      "total": 8,
+      "correct": 8,
+      "time_s": 9.9,
+      "question_results": []
+    }
+  ]
+}
