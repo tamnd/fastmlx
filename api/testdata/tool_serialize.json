@@ -1,0 +1,291 @@
+{
+  "serialize": [
+    {
+      "kind": "dict",
+      "in": {},
+      "out": "{}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "location": "Tokyo"
+      },
+      "out": "{\"location\": \"Tokyo\"}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "a": 1,
+        "b": 2.5,
+        "c": true,
+        "d": null
+      },
+      "out": "{\"a\": 1, \"b\": 2.5, \"c\": true, \"d\": null}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "nested": {
+          "x": [
+            1,
+            2,
+            3
+          ],
+          "y": "text"
+        }
+      },
+      "out": "{\"nested\": {\"x\": [1, 2, 3], \"y\": \"text\"}}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "unicode": "caf\u00e9 \u2014 tea"
+      },
+      "out": "{\"unicode\": \"caf\u00e9 \u2014 tea\"}"
+    },
+    {
+      "kind": "dict",
+      "in": {
+        "b": 2,
+        "a": 1
+      },
+      "out": "{\"b\": 2, \"a\": 1}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"location\": \"Paris\"}",
+      "out": "{\"location\": \"Paris\"}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"count\": 5}",
+      "out": "{\"count\": 5}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"v\": 1.50}",
+      "out": "{\"v\": 1.5}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"e\": 1e3}",
+      "out": "{\"e\": 1000.0}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"big\": 10000000000000000000}",
+      "out": "{\"big\": 10000000000000000000}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"neg\": -0}",
+      "out": "{\"neg\": 0}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"x\": 1.0}",
+      "out": "{\"x\": 1.0}"
+    },
+    {
+      "kind": "str",
+      "in": "not json",
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "[1, 2, 3]",
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "\"just a string\"",
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "42",
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "{\"trailing\": \"comma\",}",
+      "out": "{}"
+    },
+    {
+      "kind": "str",
+      "in": "   {\"spaced\": true}   ",
+      "out": "{\"spaced\": true}"
+    },
+    {
+      "kind": "other",
+      "in": 42,
+      "out": "{}"
+    },
+    {
+      "kind": "other",
+      "in": null,
+      "out": "{}"
+    },
+    {
+      "kind": "other",
+      "in": [
+        1,
+        2
+      ],
+      "out": "{}"
+    },
+    {
+      "kind": "other",
+      "in": true,
+      "out": "{}"
+    }
+  ],
+  "names": [
+    {
+      "in": [],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": "get_weather"
+          }
+        }
+      ],
+      "out": [
+        "get_weather"
+      ]
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": "a"
+          }
+        },
+        {
+          "function": {
+            "name": "b"
+          }
+        }
+      ],
+      "out": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": "dup"
+          }
+        },
+        {
+          "function": {
+            "name": "dup"
+          }
+        }
+      ],
+      "out": [
+        "dup"
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "f1",
+            "parameters": {}
+          }
+        }
+      ],
+      "out": [
+        "f1"
+      ]
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": ""
+          }
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "function": {}
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "function": "not a dict"
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "no_function_key": 1
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        "not a dict",
+        {
+          "function": {
+            "name": "ok"
+          }
+        }
+      ],
+      "out": [
+        "ok"
+      ]
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": null
+          }
+        }
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "function": {
+            "name": "x"
+          }
+        },
+        "skip",
+        {
+          "function": {
+            "name": "y"
+          }
+        },
+        {
+          "function": {
+            "name": "x"
+          }
+        }
+      ],
+      "out": [
+        "x",
+        "y"
+      ]
+    }
+  ]
+}
