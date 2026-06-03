@@ -1,0 +1,98 @@
+{
+  "keys": [
+    {
+      "vlm_image_hash": "",
+      "out": null
+    },
+    {
+      "vlm_image_hash": "abc123",
+      "out": [
+        "abc123"
+      ]
+    }
+  ],
+  "start": [
+    {
+      "vlm_image_hash": "",
+      "vlm_cache_key_start": 0,
+      "out": null
+    },
+    {
+      "vlm_image_hash": "",
+      "vlm_cache_key_start": 42,
+      "out": null
+    },
+    {
+      "vlm_image_hash": "deadbeef",
+      "vlm_cache_key_start": 0,
+      "out": 0
+    },
+    {
+      "vlm_image_hash": "deadbeef",
+      "vlm_cache_key_start": 128,
+      "out": 128
+    }
+  ],
+  "ranges": [
+    {
+      "vlm_cache_key_ranges": null,
+      "out": null
+    },
+    {
+      "vlm_cache_key_ranges": [],
+      "out": null
+    },
+    {
+      "vlm_cache_key_ranges": [
+        [
+          0,
+          "h0"
+        ]
+      ],
+      "out": [
+        [
+          0,
+          [
+            "h0"
+          ]
+        ]
+      ]
+    },
+    {
+      "vlm_cache_key_ranges": [
+        [
+          0,
+          "h0"
+        ],
+        [
+          256,
+          "h1"
+        ],
+        [
+          512,
+          "h2"
+        ]
+      ],
+      "out": [
+        [
+          0,
+          [
+            "h0"
+          ]
+        ],
+        [
+          256,
+          [
+            "h1"
+          ]
+        ],
+        [
+          512,
+          [
+            "h2"
+          ]
+        ]
+      ]
+    }
+  ]
+}
