@@ -1,0 +1,109 @@
+{
+  "finish_reason": {
+    "WAITING": null,
+    "RUNNING": null,
+    "PREEMPTED": null,
+    "FINISHED_STOPPED": "stop",
+    "FINISHED_LENGTH_CAPPED": "length",
+    "FINISHED_ABORTED": "abort"
+  },
+  "is_finished": {
+    "WAITING": false,
+    "RUNNING": false,
+    "PREEMPTED": false,
+    "FINISHED_STOPPED": true,
+    "FINISHED_LENGTH_CAPPED": true,
+    "FINISHED_ABORTED": true
+  },
+  "less": [
+    {
+      "a_priority": 0,
+      "a_arrival": 1.0,
+      "b_priority": 0,
+      "b_arrival": 2.0,
+      "less": true
+    },
+    {
+      "a_priority": 0,
+      "a_arrival": 2.0,
+      "b_priority": 0,
+      "b_arrival": 1.0,
+      "less": false
+    },
+    {
+      "a_priority": 0,
+      "a_arrival": 1.0,
+      "b_priority": 1,
+      "b_arrival": 1.0,
+      "less": true
+    },
+    {
+      "a_priority": 1,
+      "a_arrival": 1.0,
+      "b_priority": 0,
+      "b_arrival": 1.0,
+      "less": false
+    },
+    {
+      "a_priority": 5,
+      "a_arrival": 3.0,
+      "b_priority": 5,
+      "b_arrival": 3.0,
+      "less": false
+    },
+    {
+      "a_priority": -1,
+      "a_arrival": 10.0,
+      "b_priority": 0,
+      "b_arrival": 0.0,
+      "less": true
+    }
+  ],
+  "usage": [
+    {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      }
+    },
+    {
+      "prompt_tokens": 10,
+      "completion_tokens": 5,
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 5,
+        "total_tokens": 15
+      }
+    },
+    {
+      "prompt_tokens": 100,
+      "completion_tokens": 0,
+      "usage": {
+        "prompt_tokens": 100,
+        "completion_tokens": 0,
+        "total_tokens": 100
+      }
+    },
+    {
+      "prompt_tokens": 0,
+      "completion_tokens": 7,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 7,
+        "total_tokens": 7
+      }
+    },
+    {
+      "prompt_tokens": 123,
+      "completion_tokens": 456,
+      "usage": {
+        "prompt_tokens": 123,
+        "completion_tokens": 456,
+        "total_tokens": 579
+      }
+    }
+  ]
+}

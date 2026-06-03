@@ -49,6 +49,7 @@ type Request struct {
 	NumPromptTokens int
 	Sampling        SamplingParams
 	Arrival         time.Time
+	Priority        int // lower is higher priority; ties break on Arrival
 	Status          RequestStatus
 	NumComputed     int
 	OutputTokenIDs  []int
