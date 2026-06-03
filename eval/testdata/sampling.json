@@ -1,0 +1,204 @@
+{
+  "resolve": [
+    {
+      "base": 512,
+      "model_type": "",
+      "enable_thinking": false,
+      "out": 512
+    },
+    {
+      "base": 512,
+      "model_type": "gpt_oss",
+      "enable_thinking": false,
+      "out": 8192
+    },
+    {
+      "base": 4096,
+      "model_type": "gpt_oss",
+      "enable_thinking": false,
+      "out": 16384
+    },
+    {
+      "base": 512,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": 8192
+    },
+    {
+      "base": 16384,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": 16384
+    },
+    {
+      "base": 40000,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": 32768
+    },
+    {
+      "base": 40000,
+      "model_type": "gpt_oss",
+      "enable_thinking": true,
+      "out": 160000
+    },
+    {
+      "base": 8192,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": 8192
+    }
+  ],
+  "prompt": [
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello"
+        }
+      ],
+      "out": "Hello"
+    },
+    {
+      "messages": [
+        {
+          "role": "system",
+          "content": "Sys"
+        },
+        {
+          "role": "user",
+          "content": "Q?"
+        }
+      ],
+      "out": "Sys\nQ?"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "out": ""
+    }
+  ],
+  "think": [
+    {
+      "raws": [
+        "plain answer",
+        "another"
+      ],
+      "out": false
+    },
+    {
+      "raws": [
+        "<think>reasoning</think> answer",
+        "plain"
+      ],
+      "out": true
+    },
+    {
+      "raws": [],
+      "out": false
+    },
+    {
+      "raws": [
+        "no tags here"
+      ],
+      "out": false
+    }
+  ],
+  "sampling": [
+    {
+      "sampling": {},
+      "base_max_tokens": 512,
+      "model_type": "",
+      "enable_thinking": false,
+      "out": {
+        "max_tokens": 512,
+        "temperature": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      }
+    },
+    {
+      "sampling": {
+        "top_p": 0.9
+      },
+      "base_max_tokens": 512,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": {
+        "top_p": 0.9,
+        "max_tokens": 8192,
+        "temperature": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "chat_template_kwargs": {
+          "enable_thinking": true
+        }
+      }
+    },
+    {
+      "sampling": {
+        "chat_template_kwargs": {
+          "foo": 1,
+          "enable_thinking": false
+        }
+      },
+      "base_max_tokens": 1024,
+      "model_type": "gpt_oss",
+      "enable_thinking": false,
+      "out": {
+        "max_tokens": 8192,
+        "temperature": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "chat_template_kwargs": {
+          "foo": 1,
+          "enable_thinking": false
+        }
+      }
+    },
+    {
+      "sampling": {
+        "chat_template_kwargs": {},
+        "seed": 7
+      },
+      "base_max_tokens": 256,
+      "model_type": "",
+      "enable_thinking": true,
+      "out": {
+        "seed": 7,
+        "max_tokens": 8192,
+        "temperature": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "chat_template_kwargs": {
+          "enable_thinking": true
+        }
+      }
+    },
+    {
+      "sampling": {
+        "max_tokens": 99,
+        "temperature": 0.7
+      },
+      "base_max_tokens": 2048,
+      "model_type": "",
+      "enable_thinking": false,
+      "out": {
+        "max_tokens": 2048,
+        "temperature": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      }
+    }
+  ]
+}
