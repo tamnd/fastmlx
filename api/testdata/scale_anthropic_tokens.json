@@ -1,0 +1,106 @@
+[
+  {
+    "token_count": 1000,
+    "scaling_enabled": false,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 32768,
+    "result": 1000
+  },
+  {
+    "token_count": 1000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": true,
+    "actual": 0,
+    "result": 1000
+  },
+  {
+    "token_count": 1000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 0,
+    "result": 1000
+  },
+  {
+    "token_count": 1000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 200000,
+    "result": 1000
+  },
+  {
+    "token_count": 1000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 262144,
+    "result": 1000
+  },
+  {
+    "token_count": 1000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 32768,
+    "result": 6103
+  },
+  {
+    "token_count": 50000,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 131072,
+    "result": 76293
+  },
+  {
+    "token_count": 12345,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 32768,
+    "result": 75347
+  },
+  {
+    "token_count": 1,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 32768,
+    "result": 6
+  },
+  {
+    "token_count": 0,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 32768,
+    "result": 0
+  },
+  {
+    "token_count": 98765,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 100000,
+    "result": 197530
+  },
+  {
+    "token_count": 7,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 3,
+    "result": 466666
+  },
+  {
+    "token_count": 999999,
+    "scaling_enabled": true,
+    "target_context_size": 200000,
+    "actual_is_none": false,
+    "actual": 131072,
+    "result": 1525877
+  }
+]
