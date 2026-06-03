@@ -242,3 +242,50 @@ func (c *RotatingKVCache) Trim(n int) int {
 	c.Idx -= n
 	return n
 }
+
+// ArraysCache mirrors mlx_lm.models.cache.ArraysCache: the fixed-slot state
+// holder a recurrent (linear-attention) layer uses, two slots for the
+// gated-delta net (the depthwise-conv window and the recurrent state). The state
+// arrays are opaque to the bookkeeping, so there is no sequence-range arithmetic:
+// Update only advances the seen-token count for the batched length tracking, the
+// fill flips on the first step, and Capacity/Size stay zero. Crucially it is
+// never trimmable, which inherits from the base cache. A per-layer cache list
+// that holds one cannot be trimmed as a whole (a list is trimmable only when
+// every entry is), so a hybrid model that interleaves these with KVCache layers
+// cannot use plain prefix-cache trimming and must snapshot at boundaries instead.
+type ArraysCache struct {
+	Slots  int // number of state arrays (2 for the gated-delta net)
+	Offset int // tokens seen, for the batched length bookkeeping
+	filled bool
+}
+
+// NewArraysCache builds a fixed-slot recurrent state cache.
+func NewArraysCache(slots int) *ArraysCache { return &ArraysCache{Slots: slots} }
+
+// Capacity is always 0: the recurrent state has no sequence dimension to size.
+func (c *ArraysCache) Capacity() int { return 0 }
+
+// Empty matches ArraysCache.empty() (cache[0] is None): true until the first step
+// writes the state.
+func (c *ArraysCache) Empty() bool { return !c.filled }
+
+// Size matches the base cache size() of 0 (the recurrent state is not a sequence).
+func (c *ArraysCache) Size() int { return 0 }
+
+// IsTrimmable is always false (ArraysCache inherits the base, which does not
+// implement trimming), the property that forces boundary-snapshot prefix caching.
+func (c *ArraysCache) IsTrimmable() bool { return false }
+
+// Update advances the seen-token count and marks the state written. It carries no
+// write/fetch ranges, since the conv and recurrent updates are the cgo seam.
+func (c *ArraysCache) Update(numSteps int) UpdatePlan {
+	prev := c.Offset
+	if numSteps > 0 {
+		c.Offset += numSteps
+		c.filled = true
+	}
+	return UpdatePlan{Prev: prev, Offset: c.Offset}
+}
+
+// Trim is a no-op: the recurrent cache cannot be trimmed, so nothing is dropped.
+func (c *ArraysCache) Trim(n int) int { return 0 }
