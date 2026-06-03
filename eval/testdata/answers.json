@@ -1,0 +1,362 @@
+{
+ "mc": [
+  {
+   "resp": "The answer is C.",
+   "out": "C"
+  },
+  {
+   "resp": "answer: B",
+   "out": "B"
+  },
+  {
+   "resp": "Let me think... A) wrong B) right. So B",
+   "out": "B"
+  },
+  {
+   "resp": "I believe the correct option is D",
+   "out": "D"
+  },
+  {
+   "resp": "  d) something",
+   "out": "D"
+  },
+  {
+   "resp": "no letters here at all",
+   "out": ""
+  },
+  {
+   "resp": "A B C D then finally A",
+   "out": "A"
+  },
+  {
+   "resp": "ANSWER IS C",
+   "out": "C"
+  },
+  {
+   "resp": "The answer is clearly (A).",
+   "out": "A"
+  },
+  {
+   "resp": "First A, then B, but actually the answer: D",
+   "out": "D"
+  },
+  {
+   "resp": "",
+   "out": ""
+  },
+  {
+   "resp": "   ",
+   "out": ""
+  },
+  {
+   "resp": "Q.",
+   "out": ""
+  },
+  {
+   "resp": "between B and C, I pick C",
+   "out": "C"
+  },
+  {
+   "resp": "x",
+   "out": ""
+  },
+  {
+   "resp": "Cats and dogs",
+   "out": "C"
+  }
+ ],
+ "code": [
+  {
+   "resp": "```python\ndef f():\n    return 1\n```",
+   "out": "def f():\n    return 1"
+  },
+  {
+   "resp": "draft:\n```python\ndef a(): pass\n```\nfinal:\n```python\ndef b():\n    return 2\n```",
+   "out": "def b():\n    return 2"
+  },
+  {
+   "resp": "```\nprint('hi')\n```",
+   "out": "print('hi')"
+  },
+  {
+   "resp": "no fences\ndef solve(x):\n    return x*2\nthat's it",
+   "out": "def solve(x):\n    return x*2\nthat's it"
+  },
+  {
+   "resp": "just prose, no code at all",
+   "out": "just prose, no code at all"
+  },
+  {
+   "resp": "import os\nfrom sys import argv\n# comment\nx = 1",
+   "out": "import os\nfrom sys import argv\n# comment\nx = 1"
+  },
+  {
+   "resp": "```python\n\n```",
+   "out": ""
+  },
+  {
+   "resp": "",
+   "out": ""
+  }
+ ],
+ "think": [
+  {
+   "in": "<think>hidden reasoning</think>The answer is 42.",
+   "out": "The answer is 42."
+  },
+  {
+   "in": "before <think>a</think> middle <think>b</think> after",
+   "out": "before  middle  after"
+  },
+  {
+   "in": "<think>\nmultiline\nreasoning\n</think>\n\nFinal text",
+   "out": "Final text"
+  },
+  {
+   "in": "no tags here",
+   "out": "no tags here"
+  },
+  {
+   "in": "<think>unclosed tag",
+   "out": "<think>unclosed tag"
+  },
+  {
+   "in": "  <think>x</think>  ",
+   "out": ""
+  }
+ ],
+ "numeric": [
+  {
+   "in": "The total is #### 42",
+   "out": "42"
+  },
+  {
+   "in": "Steps... so the answer is 1,234 dollars",
+   "out": "1234"
+  },
+  {
+   "in": "#### -7",
+   "out": "-7"
+  },
+  {
+   "in": "#### 3.5",
+   "out": "3.5"
+  },
+  {
+   "in": "no number here",
+   "out": ""
+  },
+  {
+   "in": "first 10 then 20 then #### 30",
+   "out": "30"
+  },
+  {
+   "in": "result: 1,000,000",
+   "out": "1000000"
+  },
+  {
+   "in": "#### 0",
+   "out": "0"
+  },
+  {
+   "in": "3.14159",
+   "out": "3.14159"
+  },
+  {
+   "in": "",
+   "out": ""
+  },
+  {
+   "in": "answer is -2.50",
+   "out": "-2.50"
+  }
+ ],
+ "normalize": [
+  {
+   "in": "42",
+   "out": "42"
+  },
+  {
+   "in": "42.0",
+   "out": "42"
+  },
+  {
+   "in": "3.5",
+   "out": "3.5"
+  },
+  {
+   "in": "1,234",
+   "out": "1234"
+  },
+  {
+   "in": " 7 ",
+   "out": "7"
+  },
+  {
+   "in": "abc",
+   "out": "abc"
+  },
+  {
+   "in": "-0",
+   "out": "0"
+  },
+  {
+   "in": "0.0",
+   "out": "0"
+  },
+  {
+   "in": "1000000",
+   "out": "1000000"
+  },
+  {
+   "in": "-2.50",
+   "out": "-2.5"
+  },
+  {
+   "in": "3.14",
+   "out": "3.14"
+  }
+ ],
+ "check": [
+  {
+   "pred": "42",
+   "ans": "42.0",
+   "out": true
+  },
+  {
+   "pred": "42.0",
+   "ans": "42",
+   "out": true
+  },
+  {
+   "pred": "",
+   "ans": "5",
+   "out": false
+  },
+  {
+   "pred": "3.5",
+   "ans": "3.50",
+   "out": true
+  },
+  {
+   "pred": "7",
+   "ans": "8",
+   "out": false
+  },
+  {
+   "pred": "1,234",
+   "ans": "1234",
+   "out": true
+  }
+ ],
+ "subject": [
+  {
+   "in": "high_school_biology",
+   "out": "High School Biology"
+  },
+  {
+   "in": "us_foreign_policy",
+   "out": "Us Foreign Policy"
+  },
+  {
+   "in": "abstract_algebra",
+   "out": "Abstract Algebra"
+  },
+  {
+   "in": "world_religions",
+   "out": "World Religions"
+  },
+  {
+   "in": "unknown",
+   "out": "Unknown"
+  }
+ ],
+ "question": [
+  {
+   "in": {
+    "question": "What is 2+2?",
+    "choices": [
+     "3",
+     "4",
+     "5",
+     "6"
+    ]
+   },
+   "out": "What is 2+2?\nA. 3\nB. 4\nC. 5\nD. 6"
+  },
+  {
+   "in": {
+    "question": "Capital of France?",
+    "choices": [
+     "London",
+     "Paris",
+     "Berlin",
+     "Rome"
+    ]
+   },
+   "out": "Capital of France?\nA. London\nB. Paris\nC. Berlin\nD. Rome"
+  }
+ ],
+ "choices": [
+  {
+   "in": [
+    "a",
+    "b",
+    "c"
+   ],
+   "out": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  {
+   "in": "['x', 'y', 'z']",
+   "out": [
+    "x",
+    "y",
+    "z"
+   ]
+  },
+  {
+   "in": "[\"p\", \"q\"]",
+   "out": [
+    "p",
+    "q"
+   ]
+  },
+  {
+   "in": "not a list",
+   "out": []
+  },
+  {
+   "in": "['mixed', \"quotes\"]",
+   "out": [
+    "mixed",
+    "quotes"
+   ]
+  },
+  {
+   "in": [],
+   "out": []
+  },
+  {
+   "in": "[]",
+   "out": []
+  },
+  {
+   "in": "{'not': 'list'}",
+   "out": []
+  },
+  {
+   "in": 42,
+   "out": []
+  }
+ ],
+ "answer_map": {
+  "0": "A",
+  "1": "B",
+  "2": "C",
+  "3": "D"
+ }
+}
