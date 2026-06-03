@@ -1,0 +1,287 @@
+{
+  "small_reserve": 4294967296,
+  "small_threshold": 17179869184,
+  "static_reserve_large": {
+    "safe": 12884901888,
+    "balanced": 8589934592,
+    "aggressive": 6442450944,
+    "custom": 2147483648
+  },
+  "active_reclaim_ratio": {
+    "safe": 0.2,
+    "balanced": 0.5,
+    "aggressive": 0.8
+  },
+  "soft_threshold": 0.9,
+  "hard_threshold": 0.95,
+  "normalize": [
+    {
+      "tier": "safe",
+      "norm": "safe"
+    },
+    {
+      "tier": "Balanced ",
+      "norm": "balanced"
+    },
+    {
+      "tier": " AGGRESSIVE",
+      "norm": "aggressive"
+    },
+    {
+      "tier": "custom",
+      "norm": "custom"
+    },
+    {
+      "tier": "",
+      "norm": "balanced"
+    },
+    {
+      "tier": "weird",
+      "norm": "balanced"
+    },
+    {
+      "tier": "CUSTOM",
+      "norm": "custom"
+    },
+    {
+      "tier": "sAfE",
+      "norm": "safe"
+    }
+  ],
+  "static": [
+    {
+      "system": 8589934592,
+      "tier": "safe",
+      "ceiling": 4294967296
+    },
+    {
+      "system": 8589934592,
+      "tier": "balanced",
+      "ceiling": 4294967296
+    },
+    {
+      "system": 8589934592,
+      "tier": "custom",
+      "ceiling": 6442450944
+    },
+    {
+      "system": 68719476736,
+      "tier": "safe",
+      "ceiling": 55834574848
+    },
+    {
+      "system": 68719476736,
+      "tier": "balanced",
+      "ceiling": 60129542144
+    },
+    {
+      "system": 68719476736,
+      "tier": "aggressive",
+      "ceiling": 62277025792
+    },
+    {
+      "system": 68719476736,
+      "tier": "custom",
+      "ceiling": 66571993088
+    },
+    {
+      "system": 17179869184,
+      "tier": "balanced",
+      "ceiling": 8589934592
+    },
+    {
+      "system": 1073741824,
+      "tier": "balanced",
+      "ceiling": 0
+    },
+    {
+      "system": 3221225472,
+      "tier": "custom",
+      "ceiling": 1073741824
+    }
+  ],
+  "reclaim": [
+    {
+      "phys": 4294967296,
+      "free": 2147483648,
+      "inactive": 1073741824,
+      "active": 10737418240,
+      "tier": "safe",
+      "ceiling": 9663676416
+    },
+    {
+      "phys": 4294967296,
+      "free": 2147483648,
+      "inactive": 1073741824,
+      "active": 10737418240,
+      "tier": "balanced",
+      "ceiling": 12884901888
+    },
+    {
+      "phys": 4294967296,
+      "free": 2147483648,
+      "inactive": 1073741824,
+      "active": 10737418240,
+      "tier": "aggressive",
+      "ceiling": 16106127360
+    },
+    {
+      "phys": 0,
+      "free": 0,
+      "inactive": 0,
+      "active": 7,
+      "tier": "balanced",
+      "ceiling": 3
+    }
+  ],
+  "fallback": [
+    {
+      "phys": 4294967296,
+      "available": 8589934592,
+      "ceiling": 12884901888
+    },
+    {
+      "phys": 0,
+      "available": 0,
+      "ceiling": 0
+    },
+    {
+      "phys": 2147483648,
+      "available": 0,
+      "ceiling": 2147483648
+    }
+  ],
+  "watermark": [
+    {
+      "ceiling": 0,
+      "soft": 0,
+      "hard": 0
+    },
+    {
+      "ceiling": -5,
+      "soft": 0,
+      "hard": 0
+    },
+    {
+      "ceiling": 1,
+      "soft": 0,
+      "hard": 0
+    },
+    {
+      "ceiling": 10737418240,
+      "soft": 9663676416,
+      "hard": 10200547328
+    },
+    {
+      "ceiling": 107374182400,
+      "soft": 96636764160,
+      "hard": 102005473280
+    },
+    {
+      "ceiling": 7,
+      "soft": 6,
+      "hard": 6
+    }
+  ],
+  "classify": [
+    {
+      "current": 0,
+      "ceiling": 107374182400,
+      "level": "ok"
+    },
+    {
+      "current": 53687091200,
+      "ceiling": 107374182400,
+      "level": "ok"
+    },
+    {
+      "current": 96636764159,
+      "ceiling": 107374182400,
+      "level": "ok"
+    },
+    {
+      "current": 96636764160,
+      "ceiling": 107374182400,
+      "level": "soft"
+    },
+    {
+      "current": 99857989632,
+      "ceiling": 107374182400,
+      "level": "soft"
+    },
+    {
+      "current": 102005473279,
+      "ceiling": 107374182400,
+      "level": "soft"
+    },
+    {
+      "current": 102005473280,
+      "ceiling": 107374182400,
+      "level": "hard"
+    },
+    {
+      "current": 107374182400,
+      "ceiling": 107374182400,
+      "level": "hard"
+    },
+    {
+      "current": 214748364800,
+      "ceiling": 107374182400,
+      "level": "hard"
+    },
+    {
+      "current": 5,
+      "ceiling": 0,
+      "level": "ok"
+    },
+    {
+      "current": 5,
+      "ceiling": -1,
+      "level": "ok"
+    }
+  ],
+  "hard_limit": [
+    {
+      "enabled": false,
+      "static": 10,
+      "dynamic_or_custom": 20,
+      "metal_cap": 30,
+      "limit": 0
+    },
+    {
+      "enabled": true,
+      "static": 10737418240,
+      "dynamic_or_custom": 21474836480,
+      "metal_cap": 0,
+      "limit": 10737418240
+    },
+    {
+      "enabled": true,
+      "static": 21474836480,
+      "dynamic_or_custom": 10737418240,
+      "metal_cap": 0,
+      "limit": 10737418240
+    },
+    {
+      "enabled": true,
+      "static": 32212254720,
+      "dynamic_or_custom": 26843545600,
+      "metal_cap": 16106127360,
+      "limit": 16106127360
+    },
+    {
+      "enabled": true,
+      "static": 32212254720,
+      "dynamic_or_custom": 26843545600,
+      "metal_cap": 0,
+      "limit": 26843545600
+    },
+    {
+      "enabled": true,
+      "static": 5368709120,
+      "dynamic_or_custom": 8589934592,
+      "metal_cap": 6442450944,
+      "limit": 5368709120
+    }
+  ]
+}
