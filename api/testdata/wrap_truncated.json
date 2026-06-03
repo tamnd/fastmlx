@@ -1,0 +1,70 @@
+{
+  "wrap": [
+    {
+      "in": "plain tool result",
+      "out": {
+        "output": "plain tool result"
+      }
+    },
+    {
+      "in": "",
+      "out": {
+        "output": ""
+      }
+    },
+    {
+      "in": "the visible body\n\n<truncated total_tokens=\"500\" shown_tokens=\"120\" />",
+      "out": {
+        "output": "the visible body",
+        "truncated": "Showing 120 of 500 tokens"
+      }
+    },
+    {
+      "in": "body text\n\n<truncated total_tokens=\"9000\" shown_tokens=\"256\" />   ",
+      "out": {
+        "output": "body text",
+        "truncated": "Showing 256 of 9000 tokens"
+      }
+    },
+    {
+      "in": "body text\n\n<truncated total_tokens=\"42\" shown_tokens=\"7\" />\n",
+      "out": {
+        "output": "body text",
+        "truncated": "Showing 7 of 42 tokens"
+      }
+    },
+    {
+      "in": "{\"key\": \"val\"} and more\n\n<truncated total_tokens=\"1000\" shown_tokens=\"50\" />",
+      "out": {
+        "output": "{\"key\": \"val\"} and more",
+        "truncated": "Showing 50 of 1000 tokens"
+      }
+    },
+    {
+      "in": "mid\n\n<truncated total_tokens=\"5\" shown_tokens=\"3\" /> trailing words",
+      "out": {
+        "output": "mid\n\n<truncated total_tokens=\"5\" shown_tokens=\"3\" /> trailing words"
+      }
+    },
+    {
+      "in": "x\n\n<truncated total_tokens=\"100\" shown_tokens=\"0\" />",
+      "out": {
+        "output": "x",
+        "truncated": "Showing 0 of 100 tokens"
+      }
+    },
+    {
+      "in": "line one\nline two\n\n<truncated total_tokens=\"300\" shown_tokens=\"80\" />",
+      "out": {
+        "output": "line one\nline two",
+        "truncated": "Showing 80 of 300 tokens"
+      }
+    },
+    {
+      "in": "no blank line<truncated total_tokens=\"5\" shown_tokens=\"3\" />",
+      "out": {
+        "output": "no blank line<truncated total_tokens=\"5\" shown_tokens=\"3\" />"
+      }
+    }
+  ]
+}
