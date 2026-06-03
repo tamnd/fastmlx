@@ -1,0 +1,334 @@
+{
+  "convert": [
+    {
+      "in": null,
+      "out": null
+    },
+    {
+      "in": [],
+      "out": null
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get weather",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get weather",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "noparams"
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "noparams",
+            "description": "",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {}
+        }
+      ],
+      "out": null
+    },
+    {
+      "in": [
+        {
+          "type": "other",
+          "function": {
+            "name": "x"
+          }
+        }
+      ],
+      "out": null
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "a",
+            "description": "",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "other"
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "b",
+            "description": "",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "a",
+            "description": "",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "b",
+            "description": "",
+            "parameters": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enrich": [
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "f",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "City name"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "description",
+                "city"
+              ]
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "f",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "param_description": {
+                  "type": "string",
+                  "description": "REQUIRED. The 'description' value (type: string)"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "City name"
+                },
+                "count": {
+                  "type": "integer",
+                  "description": "The 'count' value (type: integer)"
+                }
+              },
+              "required": [
+                "param_description",
+                "city"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "g",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "g",
+            "parameters": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "h",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "description": ""
+                }
+              },
+              "required": []
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "h",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "description": "The 'q' value (type: string)"
+                }
+              },
+              "required": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "type": "function",
+          "function": {
+            "name": "i",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "out": [
+        {
+          "type": "function",
+          "function": {
+            "name": "i",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "type": "number",
+                  "description": "The 'a' value (type: number)"
+                }
+              },
+              "required": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "restore": [
+    {
+      "in": {
+        "param_description": "hi",
+        "city": "x"
+      },
+      "out": {
+        "description": "hi",
+        "city": "x"
+      }
+    },
+    {
+      "in": {
+        "param_other": "keep",
+        "param_description": "d"
+      },
+      "out": {
+        "param_other": "keep",
+        "description": "d"
+      }
+    },
+    {
+      "in": {
+        "normal": 1
+      },
+      "out": {
+        "normal": 1
+      }
+    },
+    {
+      "in": {},
+      "out": {}
+    }
+  ]
+}
