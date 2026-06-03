@@ -13,7 +13,10 @@ import (
 	"strconv"
 	"syscall"
 
+	"github.com/tamnd/fastmlx/compute"
+	"github.com/tamnd/fastmlx/compute/models"
 	"github.com/tamnd/fastmlx/enginecore"
+	"github.com/tamnd/fastmlx/pipeline"
 	"github.com/tamnd/fastmlx/scheduler"
 	"github.com/tamnd/fastmlx/server"
 )
@@ -77,13 +80,25 @@ func runServe(args []string) error {
 		o.modelDir = filepath.Join(o.basePath, "models")
 	}
 
-	// v0.2: the serving layer runs behind the mock decode backend so the
-	// OpenAI-compatible HTTP path is exercisable end-to-end. The compute backend
-	// (real tokens) lands in v0.4 (spec 1990, 02_compute_backend_mlxc.md).
-	fmt.Printf("fastmlx serve (v%s) - mock decode backend\n", version)
+	// When the model directory holds a checkpoint (config.json plus safetensors),
+	// the real continuous-batching compute backend is wired in. Otherwise the mock
+	// decode backend keeps the OpenAI-compatible HTTP path exercisable end-to-end.
+	// The real HuggingFace tokenizer lands with spec 06; until then the engine
+	// pairs the compute backend with the mock tokenizer.
+	decode, modelName, err := decodeBackend(o.modelDir)
+	if err != nil {
+		return err
+	}
+	backendLabel := "mock decode backend"
+	if decode != nil {
+		backendLabel = "compute decode backend"
+	}
+
+	fmt.Printf("fastmlx serve (v%s) - %s\n", version, backendLabel)
 	fmt.Printf("  listen      %s:%d\n", o.host, o.port)
 	fmt.Printf("  base-path   %s\n", o.basePath)
 	fmt.Printf("  model-dir   %s\n", o.modelDir)
+	fmt.Printf("  model       %s\n", modelName)
 	fmt.Printf("  max-conc    %d\n", o.maxConcurrentRequests)
 	fmt.Printf("  sse-keep    %s\n", o.sseKeepaliveMode)
 	if o.noCache {
@@ -97,7 +112,8 @@ func runServe(args []string) error {
 	schedCfg.EmbeddingBatchSize = o.embeddingBatchSize
 
 	eng := enginecore.NewBatchedEngine(enginecore.Options{
-		ModelName:     "mock-model",
+		ModelName:     modelName,
+		Decode:        decode,
 		Scheduler:     schedCfg,
 		MaxConcurrent: o.maxConcurrentRequests,
 	})
@@ -116,6 +132,29 @@ func runServe(args []string) error {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 	return app.Run(ctx)
+}
+
+// decodeBackend selects the decode backend for a model directory. When the
+// directory holds a config.json it is treated as a real checkpoint: the
+// end-of-sequence token is read from the config and NewBatchDecodeDir builds the
+// continuous-batching compute backend over the (possibly sharded) safetensors
+// weights, returned as a pipeline.DecodeStrategy with the directory base as the
+// served model name. A present-but-broken checkpoint is a hard error. When no
+// config.json is found the function returns a nil strategy, which signals the
+// caller to fall back to the mock backend so the HTTP path still runs.
+func decodeBackend(modelDir string) (pipeline.DecodeStrategy, string, error) {
+	configJSON, err := os.ReadFile(filepath.Join(modelDir, compute.ConfigFileName))
+	if os.IsNotExist(err) {
+		return nil, "mock-model", nil
+	}
+	if err != nil {
+		return nil, "", err
+	}
+	dec, err := models.NewBatchDecodeDir(modelDir, models.EOSFromConfig(configJSON))
+	if err != nil {
+		return nil, "", err
+	}
+	return dec, filepath.Base(modelDir), nil
 }
 
 func runLaunch(args []string) error {

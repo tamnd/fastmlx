@@ -136,6 +136,29 @@ func TestNewBatchDecodeBadBlob(t *testing.T) {
 	}
 }
 
+func TestEOSFromConfig(t *testing.T) {
+	cases := []struct {
+		name string
+		json string
+		want int
+	}{
+		{"single", `{"eos_token_id":2}`, 2},
+		{"list", `{"eos_token_id":[151645,151643]}`, 151645},
+		{"absent", `{"hidden_size":8}`, -1},
+		{"null", `{"eos_token_id":null}`, -1},
+		{"emptyList", `{"eos_token_id":[]}`, -1},
+		{"badJSON", `{not json`, -1},
+		{"wrongType", `{"eos_token_id":"2"}`, -1},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := EOSFromConfig([]byte(c.json)); got != c.want {
+				t.Fatalf("EOSFromConfig(%s) = %d, want %d", c.json, got, c.want)
+			}
+		})
+	}
+}
+
 func BenchmarkNewBatchDecode(b *testing.B) {
 	args, _ := ParseQwen3Args([]byte(minimalQwen3Config))
 	cfg := []byte(minimalQwen3Config)

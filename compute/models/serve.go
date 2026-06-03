@@ -41,6 +41,29 @@ func NewBatchDecode(configJSON, blob []byte, eos int) (*compute.BatchGenerator, 
 	return newBatchDecode(configJSON, weights, eos)
 }
 
+// EOSFromConfig extracts the end-of-sequence token id from a config.json body.
+// HuggingFace configs spell eos_token_id either as a single integer or as a list
+// (the model stops on any of them); this returns the integer, or the first of the
+// list, or -1 when the field is absent or null. The caller treats -1 as "the
+// tokenizer or generation config must supply it instead."
+func EOSFromConfig(configJSON []byte) int {
+	var head struct {
+		EOSTokenID json.RawMessage `json:"eos_token_id"`
+	}
+	if err := json.Unmarshal(configJSON, &head); err != nil || len(head.EOSTokenID) == 0 || string(head.EOSTokenID) == "null" {
+		return -1
+	}
+	var one int
+	if err := json.Unmarshal(head.EOSTokenID, &one); err == nil {
+		return one
+	}
+	var many []int
+	if err := json.Unmarshal(head.EOSTokenID, &many); err == nil && len(many) > 0 {
+		return many[0]
+	}
+	return -1
+}
+
 // newBatchDecode is the shared core: read the model_type out of the config,
 // dispatch to the family that serves it, and wrap the model in a BatchGenerator.
 func newBatchDecode(configJSON []byte, weights map[string]*mlxgo.Array, eos int) (*compute.BatchGenerator, error) {
