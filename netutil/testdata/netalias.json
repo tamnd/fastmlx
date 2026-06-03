@@ -1,0 +1,318 @@
+{
+  "hostname": [
+    {
+      "in": "localhost",
+      "out": true
+    },
+    {
+      "in": "example.com",
+      "out": true
+    },
+    {
+      "in": "EXAMPLE.com",
+      "out": true
+    },
+    {
+      "in": "a.b.c.",
+      "out": true
+    },
+    {
+      "in": "a.b.c",
+      "out": true
+    },
+    {
+      "in": "-bad.com",
+      "out": false
+    },
+    {
+      "in": "bad-.com",
+      "out": false
+    },
+    {
+      "in": "",
+      "out": false
+    },
+    {
+      "in": ".",
+      "out": false
+    },
+    {
+      "in": "foo..bar",
+      "out": false
+    },
+    {
+      "in": "host_name",
+      "out": false
+    },
+    {
+      "in": "0.0.0.0",
+      "out": true
+    },
+    {
+      "in": "192.168.1.1",
+      "out": true
+    },
+    {
+      "in": "caf\u00e9.com",
+      "out": false
+    },
+    {
+      "in": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "out": true
+    },
+    {
+      "in": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "out": false
+    },
+    {
+      "in": "a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.com",
+      "out": true
+    },
+    {
+      "in": "Sub-Domain.Example.COM",
+      "out": true
+    },
+    {
+      "in": "a-b.c-d.e",
+      "out": true
+    }
+  ],
+  "ip": [
+    {
+      "in": "127.0.0.1",
+      "out": true
+    },
+    {
+      "in": "0.0.0.0",
+      "out": false
+    },
+    {
+      "in": "::",
+      "out": false
+    },
+    {
+      "in": "::1",
+      "out": true
+    },
+    {
+      "in": "192.168.1.5",
+      "out": true
+    },
+    {
+      "in": "256.1.1.1",
+      "out": false
+    },
+    {
+      "in": "not-an-ip",
+      "out": false
+    },
+    {
+      "in": "2001:db8::1",
+      "out": true
+    },
+    {
+      "in": "010.0.0.1",
+      "out": false
+    },
+    {
+      "in": "10.0.0.5",
+      "out": true
+    },
+    {
+      "in": "255.255.255.255",
+      "out": true
+    },
+    {
+      "in": "1.2.3.4.5",
+      "out": false
+    },
+    {
+      "in": "fe80::1",
+      "out": true
+    },
+    {
+      "in": "",
+      "out": false
+    }
+  ],
+  "alias": [
+    {
+      "in": "  example.com  ",
+      "out": true
+    },
+    {
+      "in": "0.0.0.0",
+      "out": false
+    },
+    {
+      "in": "127.0.0.1",
+      "out": true
+    },
+    {
+      "in": "",
+      "out": false
+    },
+    {
+      "in": "   ",
+      "out": false
+    },
+    {
+      "in": "host.local",
+      "out": true
+    },
+    {
+      "in": "::",
+      "out": false
+    },
+    {
+      "in": "-bad",
+      "out": false
+    },
+    {
+      "in": "::1",
+      "out": true
+    },
+    {
+      "in": "EXAMPLE.com",
+      "out": true
+    },
+    {
+      "in": "256.1.1.1",
+      "out": true
+    },
+    {
+      "in": "192.168.1.5",
+      "out": true
+    }
+  ],
+  "dedupe": [
+    {
+      "in": [
+        "a",
+        "b",
+        "a",
+        "",
+        "c",
+        "b"
+      ],
+      "out": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    {
+      "in": [
+        ""
+      ],
+      "out": []
+    },
+    {
+      "in": [
+        "x",
+        "x"
+      ],
+      "out": [
+        "x"
+      ]
+    },
+    {
+      "in": [
+        "one",
+        "two",
+        "three"
+      ],
+      "out": [
+        "one",
+        "two",
+        "three"
+      ]
+    },
+    {
+      "in": [],
+      "out": []
+    }
+  ],
+  "detect": [
+    {
+      "in": {
+        "host": "127.0.0.1",
+        "hostname": "mymac",
+        "fqdn": "mymac.local",
+        "local_ips": [
+          "192.168.1.10"
+        ]
+      },
+      "out": [
+        "localhost",
+        "127.0.0.1",
+        "mymac",
+        "mymac.local",
+        "192.168.1.10"
+      ]
+    },
+    {
+      "in": {
+        "host": "0.0.0.0",
+        "hostname": "srv",
+        "fqdn": "srv.example.com",
+        "local_ips": [
+          "10.0.0.5",
+          "10.0.0.5"
+        ]
+      },
+      "out": [
+        "localhost",
+        "127.0.0.1",
+        "srv",
+        "srv.local",
+        "srv.example.com",
+        "10.0.0.5"
+      ]
+    },
+    {
+      "in": {
+        "host": "192.168.1.50",
+        "hostname": "box",
+        "fqdn": "box.1.168.192.in-addr.arpa",
+        "local_ips": [
+          "192.168.1.50"
+        ]
+      },
+      "out": [
+        "box",
+        "box.local",
+        "192.168.1.50"
+      ]
+    },
+    {
+      "in": {
+        "host": "localhost",
+        "hostname": "",
+        "fqdn": "",
+        "local_ips": []
+      },
+      "out": [
+        "localhost",
+        "127.0.0.1"
+      ]
+    },
+    {
+      "in": {
+        "host": "::",
+        "hostname": "node.local",
+        "fqdn": "node.local",
+        "local_ips": [
+          "0.0.0.0",
+          "10.1.1.1"
+        ]
+      },
+      "out": [
+        "localhost",
+        "127.0.0.1",
+        "node.local",
+        "10.1.1.1"
+      ]
+    }
+  ]
+}
