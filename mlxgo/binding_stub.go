@@ -179,6 +179,9 @@ func Transpose(a *Array, axes []int, s *Stream) (*Array, error)   { return nil, 
 func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
+func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
+	return nil, ErrMLXUnavailable
+}
 func Take(a, indices *Array, axis int, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
 func Argmax(a *Array, axis int, s *Stream) (*Array, error)        { return nil, ErrMLXUnavailable }
 

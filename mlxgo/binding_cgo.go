@@ -413,6 +413,21 @@ func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+// Split divides a into `parts` equal sections along axis.
+func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
+	vec := C.mlx_vector_array_new()
+	defer C.mlx_vector_array_free(vec)
+	if C.mlx_split_equal_parts(&vec, a.c, C.int(parts), C.int(axis), s.stream()) != 0 {
+		return nil, ErrMLXUnavailable
+	}
+	n := int(C.mlx_vector_array_size(vec))
+	out := make([]*Array, n)
+	for i := range out {
+		out[i] = wrap(C.mlx_vector_array_get(vec, C.size_t(i)))
+	}
+	return out, nil
+}
+
 func Take(a, indices *Array, axis int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_take(&out, a.c, indices.c, C.int(axis), s.stream()) != 0 {

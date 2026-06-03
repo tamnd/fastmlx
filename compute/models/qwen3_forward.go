@@ -133,10 +133,16 @@ func (b *fb) rmsNorm(x, w *mlxgo.Array, eps float32) *mlxgo.Array {
 }
 
 func (b *fb) rope(x *mlxgo.Array, dims int, base float32, offset int) *mlxgo.Array {
+	return b.ropeTrad(x, dims, false, base, offset)
+}
+
+// ropeTrad is rope with an explicit traditional (interleaved) flag. GLM rotates
+// only the first `dims` of each head with traditional pairing.
+func (b *fb) ropeTrad(x *mlxgo.Array, dims int, traditional bool, base float32, offset int) *mlxgo.Array {
 	if b.err != nil {
 		return nil
 	}
-	r, err := mlxgo.RoPE(x, dims, false, base, 1, offset, b.s)
+	r, err := mlxgo.RoPE(x, dims, traditional, base, 1, offset, b.s)
 	b.err = err
 	return r
 }
