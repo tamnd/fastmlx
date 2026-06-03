@@ -1,0 +1,214 @@
+{
+  "files": [
+    {
+      "files": [],
+      "out": 0
+    },
+    {
+      "files": [
+        {
+          "Size": 1000
+        },
+        {
+          "Size": 2000
+        }
+      ],
+      "out": 3000
+    },
+    {
+      "files": [
+        {
+          "size": 500
+        },
+        {
+          "Size": 1500
+        }
+      ],
+      "out": 2000
+    },
+    {
+      "files": [
+        {
+          "Name": "x"
+        },
+        {
+          "Size": 4096
+        }
+      ],
+      "out": 4096
+    },
+    {
+      "files": [
+        {
+          "Size": 1024.7
+        },
+        {
+          "Size": 0
+        }
+      ],
+      "out": 1024
+    }
+  ],
+  "params": [
+    {
+      "config": null,
+      "out": 0
+    },
+    {
+      "config": {},
+      "out": 0
+    },
+    {
+      "config": {
+        "vocab_size": 1000
+      },
+      "out": 0
+    },
+    {
+      "config": {
+        "vocab_size": 151936,
+        "hidden_size": 2048,
+        "num_hidden_layers": 36,
+        "intermediate_size": 11008,
+        "num_attention_heads": 16,
+        "num_key_value_heads": 2,
+        "head_dim": 128,
+        "tie_word_embeddings": true
+      },
+      "out": 3085846528
+    },
+    {
+      "config": {
+        "vocab_size": 32000,
+        "hidden_size": 4096,
+        "num_hidden_layers": 32,
+        "intermediate_size": 14336,
+        "num_attention_heads": 32,
+        "num_key_value_heads": 8,
+        "tie_word_embeddings": false
+      },
+      "out": 7241732096
+    },
+    {
+      "config": {
+        "vocab_size": 32000,
+        "hidden_size": 4096,
+        "num_hidden_layers": 32,
+        "num_attention_heads": 32
+      },
+      "out": 6573789184
+    },
+    {
+      "config": {
+        "vocab_size": 50000,
+        "hidden_size": 1024,
+        "num_hidden_layers": 12,
+        "intermediate_size": 4096,
+        "num_local_experts": 8,
+        "num_attention_heads": 16,
+        "num_key_value_heads": 16,
+        "head_dim": 64
+      },
+      "out": 1309516800
+    },
+    {
+      "config": {
+        "vocab_size": 50000,
+        "hidden_size": 2048,
+        "num_hidden_layers": 24,
+        "intermediate_size": 8192
+      },
+      "out": 1713113088
+    }
+  ],
+  "entries": [
+    {
+      "entry": {
+        "Path": "qwen",
+        "Name": "Qwen3-4B",
+        "Downloads": 5000,
+        "Likes": 42,
+        "StorageSize": 8589934592
+      },
+      "out": {
+        "repo_id": "qwen/Qwen3-4B",
+        "name": "Qwen3-4B",
+        "downloads": 5000,
+        "likes": 42,
+        "trending_score": 0,
+        "size": 8589934592,
+        "size_formatted": "8.0 GB",
+        "params": null,
+        "params_formatted": null
+      }
+    },
+    {
+      "entry": {
+        "Name": "solo-model",
+        "Downloads": 10
+      },
+      "out": {
+        "repo_id": "solo-model",
+        "name": "solo-model",
+        "downloads": 10,
+        "likes": 0,
+        "trending_score": 0,
+        "size": 0,
+        "size_formatted": "",
+        "params": null,
+        "params_formatted": null
+      }
+    },
+    {
+      "entry": {
+        "Path": "org",
+        "Stars": 7
+      },
+      "out": {
+        "repo_id": "org",
+        "name": "org",
+        "downloads": 0,
+        "likes": 7,
+        "trending_score": 0,
+        "size": 0,
+        "size_formatted": "",
+        "params": null,
+        "params_formatted": null
+      }
+    },
+    {
+      "entry": {},
+      "out": {
+        "repo_id": "",
+        "name": "",
+        "downloads": 0,
+        "likes": 0,
+        "trending_score": 0,
+        "size": 0,
+        "size_formatted": "",
+        "params": null,
+        "params_formatted": null
+      }
+    },
+    {
+      "entry": {
+        "Path": "a",
+        "Name": "b",
+        "StorageSize": 0,
+        "Likes": 0,
+        "Stars": 9
+      },
+      "out": {
+        "repo_id": "a/b",
+        "name": "b",
+        "downloads": 0,
+        "likes": 9,
+        "trending_score": 0,
+        "size": 0,
+        "size_formatted": "",
+        "params": null,
+        "params_formatted": null
+      }
+    }
+  ]
+}
