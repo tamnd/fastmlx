@@ -1,0 +1,534 @@
+[
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "developer",
+        "content": "be terse"
+      },
+      {
+        "role": "user",
+        "content": "q"
+      }
+    ],
+    "result": [
+      {
+        "role": "system",
+        "content": "be terse"
+      },
+      {
+        "role": "user",
+        "content": "q"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "a"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "x"
+            }
+          },
+          {
+            "type": "text",
+            "text": "b"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "a\nb"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": ""
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": "result text"
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": "result text"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": false,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c1",
+        "content": "result text"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "[Tool Result (c1)]: result text",
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "tool",
+        "tool_call_id": "c2",
+        "content": [
+          {
+            "type": "text",
+            "text": "x"
+          },
+          {
+            "type": "text",
+            "text": "y"
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "c2",
+        "content": "x\ny"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": false,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "tool",
+        "content": "r"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "[Tool Result ()]: r",
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a1",
+            "function": {
+              "name": "fn",
+              "arguments": "{\"x\": 1}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "a1",
+            "function": {
+              "name": "fn",
+              "arguments": {
+                "x": 1
+              }
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": false,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "thinking",
+        "tool_calls": [
+          {
+            "id": "a1",
+            "function": {
+              "name": "fn",
+              "arguments": "{\"x\": 1}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "thinking\n[Calling tool: fn({\"x\": 1})]",
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": false,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "function": {
+              "name": "search",
+              "arguments": "{}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "[Calling tool: search({})]",
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "c",
+        "name": "bot",
+        "partial": true,
+        "tool_calls": [
+          {
+            "id": "a2",
+            "function": {
+              "name": "g",
+              "arguments": "{}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "c",
+        "name": "bot",
+        "partial": true,
+        "tool_calls": [
+          {
+            "id": "a2",
+            "function": {
+              "name": "g",
+              "arguments": {}
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": true,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "answer",
+        "reasoning_content": "because"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "answer",
+        "reasoning_content": "because"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "answer",
+        "reasoning_content": "because"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "<think>\nbecause\n</think>\n\nanswer"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": true,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "ans",
+        "reasoning_content": "rsn",
+        "tool_calls": [
+          {
+            "id": "a3",
+            "function": {
+              "name": "h",
+              "arguments": "{\"k\": 2}"
+            }
+          }
+        ]
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "ans",
+        "reasoning_content": "rsn",
+        "tool_calls": [
+          {
+            "id": "a3",
+            "function": {
+              "name": "h",
+              "arguments": {
+                "k": 2
+              }
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "u",
+        "name": "alice",
+        "partial": true
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "u",
+        "name": "alice",
+        "partial": true
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": ""
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "hi"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "one"
+      },
+      {
+        "role": "user",
+        "content": "two"
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "one\n\ntwo"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "system",
+        "content": "s1"
+      },
+      {
+        "role": "user",
+        "content": "u"
+      },
+      {
+        "role": "system",
+        "content": "s2"
+      }
+    ],
+    "result": [
+      {
+        "role": "system",
+        "content": "s1\n\ns2"
+      },
+      {
+        "role": "user",
+        "content": "u"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "t1",
+            "function": {
+              "name": "f",
+              "arguments": "{}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": "ok"
+      },
+      {
+        "role": "user",
+        "content": "next"
+      }
+    ],
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "t1",
+            "function": {
+              "name": "f",
+              "arguments": {}
+            }
+          }
+        ],
+        "_preserve_role_boundary": true
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "t1",
+        "content": "ok"
+      },
+      {
+        "role": "user",
+        "content": "next"
+      }
+    ]
+  },
+  {
+    "native_tool_calling": true,
+    "native_reasoning_content": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": 42
+      }
+    ],
+    "result": [
+      {
+        "role": "user",
+        "content": "42"
+      }
+    ]
+  }
+]
