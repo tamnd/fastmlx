@@ -163,6 +163,58 @@ func PiSettings(config map[string]any, c Context) map[string]any {
 	return config
 }
 
+// hermesMinContextLength is the smallest context Hermes Agent will start with;
+// a smaller reported window is bumped up to this floor.
+const hermesMinContextLength = 64000
+
+// HermesConfig merges the fastmlx provider into a Hermes config (config.yaml,
+// parsed to a map) and points the model block at it. Context window and max
+// tokens are gated on presence, not truthiness, so a reported zero still writes
+// the bumped-up minimum; absent ones are cleared from a stale model block.
+func HermesConfig(config map[string]any, c Context) map[string]any {
+	if config == nil {
+		config = map[string]any{}
+	}
+	providers := childMap(config, "providers")
+
+	provider, ok := providers["fastmlx"].(map[string]any)
+	if !ok {
+		provider = map[string]any{}
+	}
+	provider["name"] = "fastmlx"
+	provider["base_url"] = c.OpenAIBaseURL()
+	provider["api_key"] = c.AuthToken()
+	provider["api_mode"] = "chat_completions"
+	if c.Model != "" {
+		provider["default_model"] = c.Model
+	}
+	providers["fastmlx"] = provider
+
+	model, ok := config["model"].(map[string]any)
+	if !ok {
+		model = map[string]any{}
+	}
+	for _, stale := range []string{"base_url", "api_key", "api", "api_mode", "transport"} {
+		delete(model, stale)
+	}
+	model["provider"] = "fastmlx"
+	if c.Model != "" {
+		model["default"] = c.Model
+	}
+	if c.ContextWindow != nil {
+		model["context_length"] = max(*c.ContextWindow, hermesMinContextLength)
+	} else {
+		delete(model, "context_length")
+	}
+	if c.MaxTokens != nil {
+		model["max_tokens"] = *c.MaxTokens
+	} else {
+		delete(model, "max_tokens")
+	}
+	config["model"] = model
+	return config
+}
+
 // childMap returns the map stored at key, creating an empty one when the key is
 // absent or not a map, reproducing dict.setdefault for the nested-config case.
 func childMap(parent map[string]any, key string) map[string]any {

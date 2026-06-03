@@ -1,0 +1,186 @@
+{
+  "codex": [
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "Qwen3-8B"
+      },
+      "existing": "",
+      "out": "model_provider = \"fastmlx\"\nmodel = \"Qwen3-8B\"\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://127.0.0.1:8000/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n"
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "k",
+        "model": "thinking-model"
+      },
+      "existing": "",
+      "out": "model_reasoning_effort = \"high\"\nmodel_provider = \"fastmlx\"\nmodel = \"thinking-model\"\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://127.0.0.1:8000/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n"
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "Qwen3-8B"
+      },
+      "existing": "model = \"old\"\nmodel_provider = \"other\"\nmodel_reasoning_effort = \"low\"\napproval_policy = \"on-request\"\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://old/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n\n[foo]\nbar = 1\n",
+      "out": "model = \"Qwen3-8B\"\nmodel_provider = \"fastmlx\"\napproval_policy = \"on-request\"\n\n[foo]\nbar = 1\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://127.0.0.1:8000/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n"
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "o3",
+        "reasoning": true
+      },
+      "existing": "model_reasoning_effort = \"low\"\nmodel = \"x\"\n",
+      "out": "model_provider = \"fastmlx\"\nmodel_reasoning_effort = \"high\"\nmodel = \"o3\"\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://127.0.0.1:8000/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n"
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "thinking-x",
+        "reasoning": false
+      },
+      "existing": "model_reasoning_effort = \"high\"\n[foo]\na = 1\n",
+      "out": "model_provider = \"fastmlx\"\nmodel = \"thinking-x\"\n[foo]\na = 1\n\n[model_providers.fastmlx]\nname = \"fastmlx\"\nbase_url = \"http://127.0.0.1:8000/v1\"\nenv_key = \"FASTMLX_API_KEY\"\n"
+    }
+  ],
+  "hermes": [
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "k",
+        "model": "Qwen3-8B",
+        "context_window": 128000,
+        "max_tokens": 4096
+      },
+      "existing": {},
+      "out": {
+        "providers": {
+          "fastmlx": {
+            "name": "fastmlx",
+            "base_url": "http://127.0.0.1:8000/v1",
+            "api_key": "k",
+            "api_mode": "chat_completions",
+            "default_model": "Qwen3-8B"
+          }
+        },
+        "model": {
+          "provider": "fastmlx",
+          "default": "Qwen3-8B",
+          "context_length": 128000,
+          "max_tokens": 4096
+        }
+      }
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "",
+        "context_window": 32000
+      },
+      "existing": {},
+      "out": {
+        "providers": {
+          "fastmlx": {
+            "name": "fastmlx",
+            "base_url": "http://127.0.0.1:8000/v1",
+            "api_key": "fastmlx",
+            "api_mode": "chat_completions"
+          }
+        },
+        "model": {
+          "provider": "fastmlx",
+          "context_length": 64000
+        }
+      }
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "m"
+      },
+      "existing": {
+        "providers": {
+          "fastmlx": {
+            "name": "old",
+            "custom": 1
+          },
+          "other": {
+            "x": 1
+          }
+        },
+        "model": {
+          "base_url": "drop",
+          "transport": "drop",
+          "keep": "yes",
+          "context_length": 999,
+          "max_tokens": 50
+        },
+        "toplevel": "keep"
+      },
+      "out": {
+        "providers": {
+          "fastmlx": {
+            "name": "fastmlx",
+            "custom": 1,
+            "base_url": "http://127.0.0.1:8000/v1",
+            "api_key": "fastmlx",
+            "api_mode": "chat_completions",
+            "default_model": "m"
+          },
+          "other": {
+            "x": 1
+          }
+        },
+        "model": {
+          "keep": "yes",
+          "provider": "fastmlx",
+          "default": "m"
+        },
+        "toplevel": "keep"
+      }
+    },
+    {
+      "ctx": {
+        "host": "127.0.0.1",
+        "port": 8000,
+        "api_key": "",
+        "model": "z",
+        "context_window": 0,
+        "max_tokens": 0
+      },
+      "existing": {},
+      "out": {
+        "providers": {
+          "fastmlx": {
+            "name": "fastmlx",
+            "base_url": "http://127.0.0.1:8000/v1",
+            "api_key": "fastmlx",
+            "api_mode": "chat_completions",
+            "default_model": "z"
+          }
+        },
+        "model": {
+          "provider": "fastmlx",
+          "default": "z",
+          "context_length": 64000,
+          "max_tokens": 0
+        }
+      }
+    }
+  ]
+}
