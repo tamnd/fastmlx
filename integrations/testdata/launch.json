@@ -1,0 +1,218 @@
+{
+  "commands": [
+    {
+      "prefix": "fastmlx",
+      "tool": "claude",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch claude"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "claude",
+      "model": "",
+      "out": "fastmlx launch claude"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "codex",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch codex --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "codex",
+      "model": "",
+      "out": "fastmlx launch codex --model select-a-model"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "hermes",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch hermes --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "hermes",
+      "model": "",
+      "out": "fastmlx launch hermes --model select-a-model"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "opencode",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch opencode --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "opencode",
+      "model": "",
+      "out": "fastmlx launch opencode --model select-a-model"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "copilot",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch copilot --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "copilot",
+      "model": "",
+      "out": "fastmlx launch copilot --model select-a-model"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "pi",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch pi --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "pi",
+      "model": "",
+      "out": "fastmlx launch pi --model select-a-model"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "openclaw",
+      "model": "Qwen3-8B",
+      "out": "fastmlx launch openclaw --model Qwen3-8B"
+    },
+    {
+      "prefix": "fastmlx",
+      "tool": "openclaw",
+      "model": "",
+      "out": "fastmlx launch openclaw --model select-a-model"
+    }
+  ],
+  "scrub": [
+    {
+      "in": {
+        "PATH": "/bin",
+        "PYTHONHOME": "/x",
+        "PYTHONPATH": "/y",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "HOME": "/h"
+      },
+      "out": {
+        "PATH": "/bin",
+        "HOME": "/h"
+      }
+    },
+    {
+      "in": {
+        "PATH": "/bin",
+        "HOME": "/h"
+      },
+      "out": {
+        "PATH": "/bin",
+        "HOME": "/h"
+      }
+    },
+    {
+      "in": {},
+      "out": {}
+    }
+  ],
+  "format": [
+    {
+      "index": 1,
+      "id": "only-model",
+      "max_context_window": 128000,
+      "out": "  1. only-model  [128,000 ctx]"
+    },
+    {
+      "index": 1,
+      "id": "a",
+      "max_context_window": 262144,
+      "out": "  1. a  [262,144 ctx]"
+    },
+    {
+      "index": 2,
+      "id": "b",
+      "max_context_window": null,
+      "out": "  2. b"
+    },
+    {
+      "index": 3,
+      "id": "c",
+      "max_context_window": 0,
+      "out": "  3. c"
+    }
+  ],
+  "auto": [
+    {
+      "n": 0,
+      "id": "",
+      "needs_prompt": false
+    },
+    {
+      "n": 1,
+      "id": "only-model",
+      "needs_prompt": false
+    },
+    {
+      "n": 3,
+      "id": "",
+      "needs_prompt": true
+    }
+  ],
+  "choices": [
+    {
+      "input": "1",
+      "n": 3,
+      "out": [
+        0,
+        true
+      ]
+    },
+    {
+      "input": " 2 ",
+      "n": 3,
+      "out": [
+        1,
+        true
+      ]
+    },
+    {
+      "input": "3",
+      "n": 3,
+      "out": [
+        2,
+        true
+      ]
+    },
+    {
+      "input": "0",
+      "n": 3,
+      "out": [
+        -1,
+        false
+      ]
+    },
+    {
+      "input": "4",
+      "n": 3,
+      "out": [
+        -1,
+        false
+      ]
+    },
+    {
+      "input": "x",
+      "n": 3,
+      "out": [
+        -1,
+        false
+      ]
+    },
+    {
+      "input": "",
+      "n": 3,
+      "out": [
+        -1,
+        false
+      ]
+    }
+  ]
+}
