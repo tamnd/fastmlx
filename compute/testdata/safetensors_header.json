@@ -1,0 +1,172 @@
+[
+  {
+    "label": "single_f32",
+    "blob_b64": "QAAAAAAAAAB7InciOnsiZHR5cGUiOiJGMzIiLCJzaGFwZSI6WzIsM10sImRhdGFfb2Zmc2V0cyI6WzAsMjRdfX0gICAgICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "truth": {
+      "header_size": 64,
+      "data_start": 72,
+      "data_len": 24,
+      "metadata": null,
+      "tensors": [
+        {
+          "name": "w",
+          "dtype": "F32",
+          "shape": [
+            2,
+            3
+          ],
+          "begin": 0,
+          "end": 24
+        }
+      ]
+    }
+  },
+  {
+    "label": "mixed",
+    "blob_b64": "yAAAAAAAAAB7ImxtX2hlYWQuYmlhcyI6eyJkdHlwZSI6IkkzMiIsInNoYXBlIjpbNF0sImRhdGFfb2Zmc2V0cyI6WzAsMTZdfSwiZW1iZWQud2VpZ2h0Ijp7ImR0eXBlIjoiRjE2Iiwic2hhcGUiOls0LDhdLCJkYXRhX29mZnNldHMiOlsxNiw4MF19LCJtYXNrIjp7ImR0eXBlIjoiQk9PTCIsInNoYXBlIjpbM10sImRhdGFfb2Zmc2V0cyI6WzgwLDgzXX19ICAgICAgIAAAAAABAAAAAgAAAAMAAAAAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8ADwAPAA8AQAB",
+    "truth": {
+      "header_size": 200,
+      "data_start": 208,
+      "data_len": 83,
+      "metadata": null,
+      "tensors": [
+        {
+          "name": "lm_head.bias",
+          "dtype": "I32",
+          "shape": [
+            4
+          ],
+          "begin": 0,
+          "end": 16
+        },
+        {
+          "name": "embed.weight",
+          "dtype": "F16",
+          "shape": [
+            4,
+            8
+          ],
+          "begin": 16,
+          "end": 80
+        },
+        {
+          "name": "mask",
+          "dtype": "BOOL",
+          "shape": [
+            3
+          ],
+          "begin": 80,
+          "end": 83
+        }
+      ]
+    }
+  },
+  {
+    "label": "scalar",
+    "blob_b64": "QAAAAAAAAAB7InNjYWxlIjp7ImR0eXBlIjoiRjMyIiwic2hhcGUiOltdLCJkYXRhX29mZnNldHMiOlswLDRdfX0gICAgICAgAADAPw==",
+    "truth": {
+      "header_size": 64,
+      "data_start": 72,
+      "data_len": 4,
+      "metadata": null,
+      "tensors": [
+        {
+          "name": "scale",
+          "dtype": "F32",
+          "shape": [],
+          "begin": 0,
+          "end": 4
+        }
+      ]
+    }
+  },
+  {
+    "label": "multi_rank",
+    "blob_b64": "eAAAAAAAAAB7ImExZCI6eyJkdHlwZSI6Ikk2NCIsInNoYXBlIjpbNV0sImRhdGFfb2Zmc2V0cyI6WzAsNDBdfSwiYjNkIjp7ImR0eXBlIjoiVTgiLCJzaGFwZSI6WzIsMiwyXSwiZGF0YV9vZmZzZXRzIjpbNDAsNDhdfX0gICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+    "truth": {
+      "header_size": 120,
+      "data_start": 128,
+      "data_len": 48,
+      "metadata": null,
+      "tensors": [
+        {
+          "name": "a1d",
+          "dtype": "I64",
+          "shape": [
+            5
+          ],
+          "begin": 0,
+          "end": 40
+        },
+        {
+          "name": "b3d",
+          "dtype": "U8",
+          "shape": [
+            2,
+            2,
+            2
+          ],
+          "begin": 40,
+          "end": 48
+        }
+      ]
+    }
+  },
+  {
+    "label": "with_metadata",
+    "blob_b64": "cAAAAAAAAAB7Il9fbWV0YWRhdGFfXyI6eyJtb2RlbF90eXBlIjoicXdlbjMiLCJmb3JtYXQiOiJwdCJ9LCJ3Ijp7ImR0eXBlIjoiRjMyIiwic2hhcGUiOlsxLDFdLCJkYXRhX29mZnNldHMiOlswLDRdfX0gICAgAAAAAA==",
+    "truth": {
+      "header_size": 112,
+      "data_start": 120,
+      "data_len": 4,
+      "metadata": {
+        "model_type": "qwen3",
+        "format": "pt"
+      },
+      "tensors": [
+        {
+          "name": "w",
+          "dtype": "F32",
+          "shape": [
+            1,
+            1
+          ],
+          "begin": 0,
+          "end": 4
+        }
+      ]
+    }
+  },
+  {
+    "label": "zero_dim",
+    "blob_b64": "eAAAAAAAAAB7ImVtcHR5Ijp7ImR0eXBlIjoiRjMyIiwic2hhcGUiOlswLDRdLCJkYXRhX29mZnNldHMiOlswLDBdfSwicmVhbCI6eyJkdHlwZSI6IkYzMiIsInNoYXBlIjpbMiwyXSwiZGF0YV9vZmZzZXRzIjpbMCwxNl19fSAAAIA/AACAPwAAgD8AAIA/",
+    "truth": {
+      "header_size": 120,
+      "data_start": 128,
+      "data_len": 16,
+      "metadata": null,
+      "tensors": [
+        {
+          "name": "empty",
+          "dtype": "F32",
+          "shape": [
+            0,
+            4
+          ],
+          "begin": 0,
+          "end": 0
+        },
+        {
+          "name": "real",
+          "dtype": "F32",
+          "shape": [
+            2,
+            2
+          ],
+          "begin": 0,
+          "end": 16
+        }
+      ]
+    }
+  }
+]
