@@ -1,0 +1,169 @@
+{
+  "single": [
+    {
+      "in": {
+        "prompt_tokens": 512,
+        "completion_tokens": 128,
+        "start_time": 100.0,
+        "first_token_time": 100.25,
+        "end_time": 102.75,
+        "peak_memory": 8000000000,
+        "cached_tokens": 0
+      },
+      "out": {
+        "ttft_ms": 250.0,
+        "tpot_ms": 19.69,
+        "gen_tps": 51.2,
+        "processing_tps": 2048.0,
+        "e2e_latency_s": 2.75,
+        "total_throughput": 232.7,
+        "peak_memory_bytes": 8000000000,
+        "prompt_tokens": 512,
+        "completion_tokens": 128,
+        "cached_tokens": 0
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 2048,
+        "completion_tokens": 1,
+        "start_time": 0.0,
+        "first_token_time": 0.4,
+        "end_time": 0.4,
+        "peak_memory": 1234,
+        "cached_tokens": 256
+      },
+      "out": {
+        "ttft_ms": 400.0,
+        "tpot_ms": 0.0,
+        "gen_tps": 1000000000.0,
+        "processing_tps": 5120.0,
+        "e2e_latency_s": 0.4,
+        "total_throughput": 5122.5,
+        "peak_memory_bytes": 1234,
+        "prompt_tokens": 2048,
+        "completion_tokens": 1,
+        "cached_tokens": 256
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 64,
+        "completion_tokens": 512,
+        "start_time": 10.0,
+        "first_token_time": 10.05,
+        "end_time": 18.3,
+        "peak_memory": 512,
+        "cached_tokens": 64
+      },
+      "out": {
+        "ttft_ms": 50.0,
+        "tpot_ms": 16.14,
+        "gen_tps": 62.1,
+        "processing_tps": 1280.0,
+        "e2e_latency_s": 8.3,
+        "total_throughput": 69.4,
+        "peak_memory_bytes": 512,
+        "prompt_tokens": 64,
+        "completion_tokens": 512,
+        "cached_tokens": 64
+      }
+    }
+  ],
+  "batch": {
+    "pp_tps": 5120.0,
+    "tg_tps": 46.2,
+    "avg_ttft_ms": 237.5,
+    "e2e_latency_s": 9.5,
+    "total_gen_tokens": 420,
+    "batch_size": 4
+  },
+  "batch_in": {
+    "results": [
+      {
+        "completion_tokens": 100,
+        "ttft_s": 0.2,
+        "first_token_abs": 0.3
+      },
+      {
+        "completion_tokens": 120,
+        "ttft_s": 0.25,
+        "first_token_abs": 0.35
+      },
+      {
+        "completion_tokens": 90,
+        "ttft_s": 0.22,
+        "first_token_abs": 0.33
+      },
+      {
+        "completion_tokens": 110,
+        "ttft_s": 0.28,
+        "first_token_abs": 0.4
+      }
+    ],
+    "prompt_tokens": 512,
+    "batch_size": 4,
+    "wall_start": 0.0,
+    "wall_end": 9.5
+  },
+  "clean_name": [
+    {
+      "in": "Qwen3-30B-A3B-4bit",
+      "out": "Qwen3-30B-A3B"
+    },
+    {
+      "in": "Llama-3-8B-Instruct-8bit",
+      "out": "Llama-3-8B-Instruct"
+    },
+    {
+      "in": "mlx-community-Phi-4-MLX-bf16",
+      "out": "community-Phi-4"
+    },
+    {
+      "in": "Mistral-7B",
+      "out": "Mistral-7B"
+    },
+    {
+      "in": "gemma-2-9b-fp32",
+      "out": "gemma-2-9b"
+    },
+    {
+      "in": "Model-MLX-",
+      "out": "Model"
+    },
+    {
+      "in": "DeepSeek-V3-MXFP4",
+      "out": "DeepSeek-V3"
+    },
+    {
+      "in": "Qwen2.5-MLX-4bit",
+      "out": "Qwen2.5"
+    }
+  ],
+  "detect_quant": [
+    {
+      "in": "Qwen3-30B-A3B-4bit",
+      "out": "4bit"
+    },
+    {
+      "in": "Llama-8bit",
+      "out": "8bit"
+    },
+    {
+      "in": "Phi-bf16",
+      "out": "bf16"
+    },
+    {
+      "in": "plain-model",
+      "out": "unknown"
+    },
+    {
+      "in": "model-MXFP4",
+      "out": "mxfp4"
+    },
+    {
+      "in": "thing-fp32",
+      "out": "unknown"
+    }
+  ]
+}
