@@ -1,0 +1,240 @@
+{
+  "valid_prompt_lengths": [
+    1024,
+    4096,
+    8192,
+    16384,
+    32768,
+    65536,
+    131072,
+    200000
+  ],
+  "valid_batch_sizes": [
+    2,
+    4,
+    8
+  ],
+  "metrics": [
+    {
+      "in": {
+        "prompt_tokens": 1024,
+        "completion_tokens": 128,
+        "start_time": 0.0,
+        "first_token_time": 0.25,
+        "end_time": 2.75,
+        "peak_memory": 8589934592,
+        "cached_tokens": 0
+      },
+      "out": {
+        "ttft_ms": 250.0,
+        "tpot_ms": 19.69,
+        "gen_tps": 51.2,
+        "processing_tps": 4096.0,
+        "e2e_latency_s": 2.75,
+        "total_throughput": 418.9,
+        "peak_memory_bytes": 8589934592,
+        "prompt_tokens": 1024,
+        "completion_tokens": 128,
+        "cached_tokens": 0
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 4096,
+        "completion_tokens": 1,
+        "start_time": 10.0,
+        "first_token_time": 10.5,
+        "end_time": 10.5,
+        "peak_memory": 0,
+        "cached_tokens": 512
+      },
+      "out": {
+        "ttft_ms": 500.0,
+        "tpot_ms": 0.0,
+        "gen_tps": 1000000000.0,
+        "processing_tps": 8192.0,
+        "e2e_latency_s": 0.5,
+        "total_throughput": 8194.0,
+        "peak_memory_bytes": 0,
+        "prompt_tokens": 4096,
+        "completion_tokens": 1,
+        "cached_tokens": 512
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 200000,
+        "completion_tokens": 256,
+        "start_time": 100.0,
+        "first_token_time": 105.123,
+        "end_time": 130.456,
+        "peak_memory": 17179869184,
+        "cached_tokens": 1024
+      },
+      "out": {
+        "ttft_ms": 5123.0,
+        "tpot_ms": 99.35,
+        "gen_tps": 10.1,
+        "processing_tps": 39039.6,
+        "e2e_latency_s": 30.456,
+        "total_throughput": 6575.3,
+        "peak_memory_bytes": 17179869184,
+        "prompt_tokens": 200000,
+        "completion_tokens": 256,
+        "cached_tokens": 1024
+      }
+    }
+  ],
+  "quant": [
+    {
+      "name": "Qwen3-30B-A3B-4bit",
+      "out": "4bit"
+    },
+    {
+      "name": "model-8BIT",
+      "out": "8bit"
+    },
+    {
+      "name": "Llama-3-fp16",
+      "out": "fp16"
+    },
+    {
+      "name": "some-MXFP4-thing",
+      "out": "mxfp4"
+    },
+    {
+      "name": "plain-model",
+      "out": "unknown"
+    },
+    {
+      "name": "nvfp4-test",
+      "out": "nvfp4"
+    },
+    {
+      "name": "BF16-model",
+      "out": "bf16"
+    }
+  ],
+  "clean": [
+    {
+      "model_id": "Qwen3-30B-A3B-4bit",
+      "out": "Qwen3-30B-A3B"
+    },
+    {
+      "model_id": "Qwen3-8B-MLX-bf16",
+      "out": "Qwen3-8B"
+    },
+    {
+      "model_id": "mlx-community-Qwen2.5-MLX",
+      "out": "community-Qwen2.5"
+    },
+    {
+      "model_id": "Model-fp32",
+      "out": "Model"
+    },
+    {
+      "model_id": "Llama-3.1-8B-Instruct",
+      "out": "Llama-3.1-8B-Instruct"
+    },
+    {
+      "model_id": "thing-MLX-",
+      "out": "thing"
+    },
+    {
+      "model_id": "Phi-4-6bit",
+      "out": "Phi-4"
+    }
+  ],
+  "prompt_validation": [
+    {
+      "in": [
+        8192,
+        1024,
+        4096
+      ],
+      "ok": true,
+      "out": [
+        1024,
+        4096,
+        8192
+      ]
+    },
+    {
+      "in": [
+        1024
+      ],
+      "ok": true,
+      "out": [
+        1024
+      ]
+    },
+    {
+      "in": [],
+      "ok": false,
+      "out": null
+    },
+    {
+      "in": [
+        1024,
+        999
+      ],
+      "ok": false,
+      "out": null
+    },
+    {
+      "in": [
+        200000,
+        131072
+      ],
+      "ok": true,
+      "out": [
+        131072,
+        200000
+      ]
+    }
+  ],
+  "batch_validation": [
+    {
+      "in": [
+        8,
+        2,
+        4
+      ],
+      "ok": true,
+      "out": [
+        2,
+        4,
+        8
+      ]
+    },
+    {
+      "in": [],
+      "ok": true,
+      "out": []
+    },
+    {
+      "in": [
+        2
+      ],
+      "ok": true,
+      "out": [
+        2
+      ]
+    },
+    {
+      "in": [
+        3
+      ],
+      "ok": false,
+      "out": null
+    },
+    {
+      "in": [
+        2,
+        16
+      ],
+      "ok": false,
+      "out": null
+    }
+  ]
+}
