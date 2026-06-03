@@ -1,0 +1,121 @@
+{
+  "generating": [
+    {
+      "request_id": "r1",
+      "elapsed_seconds": 10.0,
+      "generated_tokens": 20,
+      "tokens_per_second": 2.0,
+      "last_activity_age_seconds": 5.0,
+      "prompt_tokens": 8,
+      "max_tokens": 64
+    },
+    {
+      "request_id": "r2",
+      "elapsed_seconds": null,
+      "generated_tokens": 0,
+      "tokens_per_second": 0.0,
+      "last_activity_age_seconds": null,
+      "prompt_tokens": 0,
+      "max_tokens": null
+    },
+    {
+      "request_id": "r3",
+      "elapsed_seconds": 0.0,
+      "generated_tokens": 5,
+      "tokens_per_second": 0.0,
+      "last_activity_age_seconds": null,
+      "prompt_tokens": 3,
+      "max_tokens": null
+    },
+    {
+      "request_id": "r4",
+      "elapsed_seconds": 3.0,
+      "generated_tokens": 10,
+      "tokens_per_second": 3.3333333333333335,
+      "last_activity_age_seconds": null,
+      "prompt_tokens": 1,
+      "max_tokens": null
+    },
+    {
+      "request_id": "r5",
+      "elapsed_seconds": null,
+      "generated_tokens": 5,
+      "tokens_per_second": 0.0,
+      "last_activity_age_seconds": null,
+      "prompt_tokens": 0,
+      "max_tokens": null
+    }
+  ],
+  "waiting": [
+    {
+      "request_id": "w1",
+      "queue_position": 1,
+      "elapsed_seconds": 5.0,
+      "prompt_tokens": 12
+    },
+    {
+      "request_id": "w2",
+      "queue_position": 2,
+      "elapsed_seconds": 0.0,
+      "prompt_tokens": 0
+    }
+  ],
+  "loading": [
+    {
+      "loading_elapsed_seconds": 10.0,
+      "loading_estimated_seconds": 17.0,
+      "loading_remaining_seconds_estimate": 7.0
+    },
+    {
+      "loading_elapsed_seconds": null,
+      "loading_estimated_seconds": null,
+      "loading_remaining_seconds_estimate": null
+    },
+    {
+      "loading_elapsed_seconds": 10.0,
+      "loading_estimated_seconds": null,
+      "loading_remaining_seconds_estimate": null
+    },
+    {
+      "loading_elapsed_seconds": 10.0,
+      "loading_estimated_seconds": 3.0,
+      "loading_remaining_seconds_estimate": null
+    },
+    {
+      "loading_elapsed_seconds": 12.0,
+      "loading_estimated_seconds": 11.0,
+      "loading_remaining_seconds_estimate": null
+    },
+    {
+      "loading_elapsed_seconds": 1.0,
+      "loading_estimated_seconds": 9.0,
+      "loading_remaining_seconds_estimate": 8.0
+    }
+  ],
+  "idlettl": [
+    {
+      "idle_seconds": 100.0,
+      "ttl_remaining_seconds": 200.0
+    },
+    {
+      "idle_seconds": null,
+      "ttl_remaining_seconds": null
+    },
+    {
+      "idle_seconds": null,
+      "ttl_remaining_seconds": null
+    },
+    {
+      "idle_seconds": null,
+      "ttl_remaining_seconds": null
+    },
+    {
+      "idle_seconds": 100.0,
+      "ttl_remaining_seconds": 0.0
+    },
+    {
+      "idle_seconds": 0.0,
+      "ttl_remaining_seconds": 300.0
+    }
+  ]
+}
