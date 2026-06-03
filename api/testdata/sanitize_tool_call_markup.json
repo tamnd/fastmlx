@@ -1,0 +1,74 @@
+[
+  {
+    "text": "",
+    "result": "",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "just plain prose with no markup",
+    "result": "just plain prose with no markup",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "before <tool_call>{\"name\":\"f\"}</tool_call> after",
+    "result": "before  after",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "  leading and trailing space  ",
+    "result": "leading and trailing space",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "text <weather:tool_call>{\"q\":\"x\"}</weather:tool_call> tail",
+    "result": "text  tail",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "ahead [Calling tool: search({\"q\":\"hi\"})] done",
+    "result": "ahead  done",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "alpha [Tool call: lookup] omega",
+    "result": "alpha  omega",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "one <tool_call>a</tool_call> two <tool_call>b</tool_call> three",
+    "result": "one  two  three",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "reasoning then [TOOL_CALLS] everything after is gone",
+    "result": "reasoning then",
+    "marker_start": "[TOOL_CALLS]",
+    "marker_end": ""
+  },
+  {
+    "text": "\n\n<tool_call>x</tool_call>\n\n",
+    "result": "",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "prose with a lone < bracket and more",
+    "result": "prose with a lone < bracket and more",
+    "marker_start": "",
+    "marker_end": ""
+  },
+  {
+    "text": "emoji 🚀 before <tool_call>z</tool_call> emoji 🌟 after",
+    "result": "emoji 🚀 before  emoji 🌟 after",
+    "marker_start": "",
+    "marker_end": ""
+  }
+]
