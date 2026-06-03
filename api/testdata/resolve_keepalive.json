@@ -1,0 +1,104 @@
+[
+  {
+    "mode": "off",
+    "protocol": "openai_chat",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "comment",
+    "protocol": "openai_chat",
+    "is_none": false,
+    "frame": ": keep-alive\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "openai_chat",
+    "is_none": false,
+    "frame": "data: {\"id\":\"chatcmpl-keepalive\",\"object\":\"chat.completion.chunk\",\"created\":0,\"model\":\"keepalive\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\"},\"finish_reason\":null}]}\n\n"
+  },
+  {
+    "mode": "off",
+    "protocol": "openai_completion",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "comment",
+    "protocol": "openai_completion",
+    "is_none": false,
+    "frame": ": keep-alive\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "openai_completion",
+    "is_none": false,
+    "frame": "data: {\"id\":\"cmpl-keepalive\",\"object\":\"text_completion\",\"created\":0,\"model\":\"keepalive\",\"choices\":[{\"index\":0,\"text\":\"\",\"logprobs\":null,\"finish_reason\":null}]}\n\n"
+  },
+  {
+    "mode": "off",
+    "protocol": "anthropic",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "comment",
+    "protocol": "anthropic",
+    "is_none": false,
+    "frame": ": keep-alive\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "anthropic",
+    "is_none": false,
+    "frame": "event: ping\ndata: {\"type\":\"ping\"}\n\n"
+  },
+  {
+    "mode": "off",
+    "protocol": "openai_responses",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "comment",
+    "protocol": "openai_responses",
+    "is_none": false,
+    "frame": ": keep-alive\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "openai_responses",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "off",
+    "protocol": "unknown",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "comment",
+    "protocol": "unknown",
+    "is_none": false,
+    "frame": ": keep-alive\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "unknown",
+    "is_none": true,
+    "frame": ""
+  },
+  {
+    "mode": "weird",
+    "protocol": "openai_chat",
+    "is_none": false,
+    "frame": "data: {\"id\":\"chatcmpl-keepalive\",\"object\":\"chat.completion.chunk\",\"created\":0,\"model\":\"keepalive\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\"},\"finish_reason\":null}]}\n\n"
+  },
+  {
+    "mode": "chunk",
+    "protocol": "",
+    "is_none": true,
+    "frame": ""
+  }
+]
