@@ -193,3 +193,13 @@ func (r *PyRandom) SampleIndices(n, k int) []int {
 	}
 	return result
 }
+
+// Shuffle permutes idx in place, reproducing CPython's Random.shuffle: it walks
+// from the last index down to 1, swapping each element with one drawn uniformly
+// from the not-yet-fixed prefix via randbelow(i+1). Same seed, same permutation.
+func (r *PyRandom) Shuffle(idx []int) {
+	for i := len(idx) - 1; i >= 1; i-- {
+		j := r.RandBelow(i + 1)
+		idx[i], idx[j] = idx[j], idx[i]
+	}
+}

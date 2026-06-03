@@ -166,6 +166,70 @@ func (TruthfulQA) CheckAnswer(predicted string, item Item) bool {
 
 func (TruthfulQA) Category(item Item) string { return "" }
 
+// NormalizeTruthfulQAItem reshapes one raw MC1 record into the run's item form,
+// reproducing the reference loader exactly: it keeps only records carrying an
+// mc1_targets block with both choices and a single label==1 marking the correct
+// option, then shuffles the choices with a per-question seed (42+idx) so every
+// model is scored on the same lettering. The gold answer is the shuffled
+// position of the originally-correct choice. Returns ok=false for a record the
+// reference skips.
+func NormalizeTruthfulQAItem(raw Item, idx int) (Item, bool) {
+	mc1, ok := raw["mc1_targets"].(map[string]any)
+	if !ok || len(mc1) == 0 {
+		return nil, false
+	}
+	choices, _ := mc1["choices"].([]any)
+	labels, _ := mc1["labels"].([]any)
+	if len(choices) == 0 || len(labels) == 0 {
+		return nil, false
+	}
+
+	correctIdx := -1
+	for j, label := range labels {
+		if isLabelOne(label) {
+			correctIdx = j
+			break
+		}
+	}
+	if correctIdx < 0 {
+		return nil, false
+	}
+
+	indices := make([]int, len(choices))
+	for i := range indices {
+		indices[i] = i
+	}
+	NewPyRandom(uint64(42 + idx)).Shuffle(indices)
+
+	shuffled := make([]any, len(choices))
+	newCorrectPos := 0
+	for pos, j := range indices {
+		shuffled[pos] = choices[j]
+		if j == correctIdx {
+			newCorrectPos = pos
+		}
+	}
+
+	return Item{
+		"id":       strconv.Itoa(idx),
+		"question": itemStr(raw, "question"),
+		"choices":  shuffled,
+		"answer":   newCorrectPos,
+	}, true
+}
+
+// isLabelOne reports whether a TruthfulQA mc1 label marks the correct option,
+// tolerating the float64 a JSON number decodes to as well as an int.
+func isLabelOne(v any) bool {
+	switch n := v.(type) {
+	case float64:
+		return n == 1
+	case int:
+		return n == 1
+	}
+	return false
+}
+
 // itemStrOr reads a string field, returning the fallback when it is absent or
 // not a string.
 func itemStrOr(item Item, key, fallback string) string {
