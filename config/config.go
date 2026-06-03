@@ -53,6 +53,27 @@ type ServerConfig struct {
 	CORSOrigins []string `json:"cors_origins"`
 }
 
+// ModelConfig holds the model selection. ModelPath is optional; a nil pointer
+// means no explicit path was set. TrustRemoteCode defaults to false: a model
+// repo can ship arbitrary modeling code that runs at load time, so the flag
+// must be turned on deliberately per model.
+type ModelConfig struct {
+	ModelName       string  `json:"model_name"`
+	TrustRemoteCode bool    `json:"trust_remote_code"`
+	ModelPath       *string `json:"model_path"`
+}
+
+// MCPConfig holds the Model Context Protocol settings. ConfigPath is optional;
+// a nil pointer means none was set.
+type MCPConfig struct {
+	ConfigPath *string `json:"config_path"`
+	Enabled    bool    `json:"enabled"`
+}
+
+// CacheConfig is retained for structural compatibility. All cache options live
+// on PagedSSDCacheConfig; this section carries no fields.
+type CacheConfig struct{}
+
 // GenerationConfig holds the generation defaults.
 type GenerationConfig struct {
 	MaxTokens     int     `json:"max_tokens"`
@@ -111,4 +132,82 @@ func DefaultServer() ServerConfig {
 // DefaultCache returns the PagedSSDCacheConfig defaults.
 func DefaultCache() PagedSSDCacheConfig {
 	return PagedSSDCacheConfig{MaxSize: "100GB", HotCacheMaxSize: "0"}
+}
+
+// DefaultModel returns the ModelConfig defaults.
+func DefaultModel() ModelConfig {
+	return ModelConfig{}
+}
+
+// DefaultMCP returns the MCPConfig defaults.
+func DefaultMCP() MCPConfig {
+	return MCPConfig{}
+}
+
+// Config is the centralized configuration that combines every section. The
+// continuous-batching flag is a top-level feature toggle.
+type Config struct {
+	Server             ServerConfig        `json:"server"`
+	Model              ModelConfig         `json:"model"`
+	Generation         GenerationConfig    `json:"generation"`
+	Scheduler          SchedulerConfig     `json:"scheduler"`
+	Cache              CacheConfig         `json:"cache"`
+	PagedSSDCache      PagedSSDCacheConfig `json:"paged_ssd_cache"`
+	MCP                MCPConfig           `json:"mcp"`
+	ContinuousBatching bool                `json:"continuous_batching"`
+}
+
+// DefaultConfig returns a Config with every section at its defaults.
+func DefaultConfig() Config {
+	return Config{
+		Server:        DefaultServer(),
+		Model:         DefaultModel(),
+		Generation:    DefaultGeneration(),
+		Scheduler:     DefaultScheduler(),
+		PagedSSDCache: DefaultCache(),
+		MCP:           DefaultMCP(),
+	}
+}
+
+// Validate checks the configuration and returns a list of error messages, one
+// per problem found, in section order: server, generation, then paged SSD
+// cache. An empty slice means the configuration is valid.
+func (c Config) Validate() []string {
+	errors := []string{}
+
+	// Server: the port must be a usable TCP port number.
+	if !(0 < c.Server.Port && c.Server.Port < 65536) {
+		errors = append(errors, fmt.Sprintf("Invalid port: %d", c.Server.Port))
+	}
+
+	// Generation: token budget and sampling ranges.
+	if c.Generation.MaxTokens <= 0 {
+		errors = append(errors, fmt.Sprintf("max_tokens must be positive: %d", c.Generation.MaxTokens))
+	}
+	if !(0.0 <= c.Generation.Temperature && c.Generation.Temperature <= 2.0) {
+		errors = append(errors, "temperature must be 0.0-2.0: "+pyFloat(c.Generation.Temperature))
+	}
+	if !(0.0 <= c.Generation.TopP && c.Generation.TopP <= 1.0) {
+		errors = append(errors, "top_p must be 0.0-1.0: "+pyFloat(c.Generation.TopP))
+	}
+
+	// Paged SSD cache: a cache directory is required once it is enabled.
+	if c.PagedSSDCache.Enabled && c.PagedSSDCache.CacheDir == "" {
+		errors = append(errors, "Paged SSD cache enabled but no cache_dir specified")
+	}
+
+	return errors
+}
+
+// pyFloat formats f the way Python's str() renders a float, so validation
+// messages match the reference byte for byte. The shortest round-tripping form
+// is used, and an integer-valued float keeps a trailing ".0" (Python prints
+// 5.0, not 5). Exponent thresholds line up with Python repr for the small
+// magnitudes that appear in generation settings.
+func pyFloat(f float64) string {
+	s := strconv.FormatFloat(f, 'g', -1, 64)
+	if !strings.ContainsAny(s, ".eEnN") {
+		s += ".0"
+	}
+	return s
 }

@@ -1,0 +1,94 @@
+{
+  "validate": [
+    {
+      "label": "defaults_valid",
+      "errors": []
+    },
+    {
+      "label": "port_zero",
+      "errors": [
+        "Invalid port: 0"
+      ]
+    },
+    {
+      "label": "port_too_high",
+      "errors": [
+        "Invalid port: 70000"
+      ]
+    },
+    {
+      "label": "port_negative",
+      "errors": [
+        "Invalid port: -5"
+      ]
+    },
+    {
+      "label": "max_tokens_zero",
+      "errors": [
+        "max_tokens must be positive: 0"
+      ]
+    },
+    {
+      "label": "temp_low",
+      "errors": [
+        "temperature must be 0.0-2.0: -0.1"
+      ]
+    },
+    {
+      "label": "temp_high",
+      "errors": [
+        "temperature must be 0.0-2.0: 2.5"
+      ]
+    },
+    {
+      "label": "top_p_high",
+      "errors": [
+        "top_p must be 0.0-1.0: 1.5"
+      ]
+    },
+    {
+      "label": "cache_enabled_no_dir",
+      "errors": [
+        "Paged SSD cache enabled but no cache_dir specified"
+      ]
+    },
+    {
+      "label": "cache_enabled_with_dir",
+      "errors": []
+    },
+    {
+      "label": "many_errors",
+      "errors": [
+        "Invalid port: 99999",
+        "max_tokens must be positive: -3",
+        "temperature must be 0.0-2.0: 5.0",
+        "top_p must be 0.0-1.0: -0.2",
+        "Paged SSD cache enabled but no cache_dir specified"
+      ]
+    },
+    {
+      "label": "temp_zero_ok",
+      "errors": []
+    },
+    {
+      "label": "temp_two_ok",
+      "errors": []
+    },
+    {
+      "label": "top_p_one_ok",
+      "errors": []
+    },
+    {
+      "label": "top_p_zero_ok",
+      "errors": []
+    },
+    {
+      "label": "port_one_ok",
+      "errors": []
+    },
+    {
+      "label": "port_max_ok",
+      "errors": []
+    }
+  ]
+}
