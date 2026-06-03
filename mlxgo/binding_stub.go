@@ -182,6 +182,13 @@ func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
 func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
 	return nil, ErrMLXUnavailable
 }
+
+// SplitSections divides a along axis at the given boundary indices, yielding
+// len(indices)+1 sections (the fused-QKV split passes the two query/key
+// boundaries to carve out unequal query, key, and value slices).
+func SplitSections(a *Array, indices []int, axis int, s *Stream) ([]*Array, error) {
+	return nil, ErrMLXUnavailable
+}
 func Take(a, indices *Array, axis int, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
 func Argmax(a *Array, axis int, s *Stream) (*Array, error)        { return nil, ErrMLXUnavailable }
 

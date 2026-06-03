@@ -139,10 +139,16 @@ func (b *fb) rope(x *mlxgo.Array, dims int, base float32, offset int) *mlxgo.Arr
 // ropeTrad is rope with an explicit traditional (interleaved) flag. GLM rotates
 // only the first `dims` of each head with traditional pairing.
 func (b *fb) ropeTrad(x *mlxgo.Array, dims int, traditional bool, base float32, offset int) *mlxgo.Array {
+	return b.ropeScaled(x, dims, traditional, base, 1, offset)
+}
+
+// ropeScaled is rope with an explicit position scale. Phi-4's linear rope
+// scaling passes 1/factor so positions compress by the configured factor.
+func (b *fb) ropeScaled(x *mlxgo.Array, dims int, traditional bool, base, scale float32, offset int) *mlxgo.Array {
 	if b.err != nil {
 		return nil
 	}
-	r, err := mlxgo.RoPE(x, dims, traditional, base, 1, offset, b.s)
+	r, err := mlxgo.RoPE(x, dims, traditional, base, scale, offset, b.s)
 	b.err = err
 	return r
 }

@@ -152,6 +152,9 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 	if _, err := Split(a, 2, -1, s); !errors.Is(err, ErrMLXUnavailable) {
 		t.Errorf("Split: err = %v, want ErrMLXUnavailable", err)
 	}
+	if _, err := SplitSections(a, []int{1}, -1, s); !errors.Is(err, ErrMLXUnavailable) {
+		t.Errorf("SplitSections: err = %v, want ErrMLXUnavailable", err)
+	}
 }
 
 func TestStreamAndMemoryControlsAreInert(t *testing.T) {

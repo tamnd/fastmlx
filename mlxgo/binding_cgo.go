@@ -428,6 +428,30 @@ func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
 	return out, nil
 }
 
+// SplitSections divides a along axis at the given boundary indices, yielding
+// len(indices)+1 sections.
+func SplitSections(a *Array, indices []int, axis int, s *Stream) ([]*Array, error) {
+	vec := C.mlx_vector_array_new()
+	defer C.mlx_vector_array_free(vec)
+	cidx := make([]C.int, len(indices))
+	for i, v := range indices {
+		cidx[i] = C.int(v)
+	}
+	var idxPtr *C.int
+	if len(cidx) > 0 {
+		idxPtr = &cidx[0]
+	}
+	if C.mlx_split(&vec, a.c, idxPtr, C.size_t(len(cidx)), C.int(axis), s.stream()) != 0 {
+		return nil, ErrMLXUnavailable
+	}
+	n := int(C.mlx_vector_array_size(vec))
+	out := make([]*Array, n)
+	for i := range out {
+		out[i] = wrap(C.mlx_vector_array_get(vec, C.size_t(i)))
+	}
+	return out, nil
+}
+
 func Take(a, indices *Array, axis int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_take(&out, a.c, indices.c, C.int(axis), s.stream()) != 0 {

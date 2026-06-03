@@ -1,0 +1,399 @@
+{
+  "derivations": [
+    {
+      "label": "phi4_standard_gqa_untied",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 8,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": false,
+      "tie_word_embeddings": false,
+      "weight_names": [
+        "lm_head.weight",
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    },
+    {
+      "label": "tied",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0,
+        "tie_word_embeddings": true
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 8,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": false,
+      "tie_word_embeddings": true,
+      "weight_names": [
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    },
+    {
+      "label": "linear_scaling",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0,
+        "rope_scaling": {
+          "type": "linear",
+          "factor": 2.0,
+          "long_factor": [
+            1.0
+          ]
+        }
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 8,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": true,
+      "tie_word_embeddings": false,
+      "weight_names": [
+        "lm_head.weight",
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    },
+    {
+      "label": "partial_rotary",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0,
+        "partial_rotary_factor": 0.75
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 6,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": false,
+      "tie_word_embeddings": false,
+      "weight_names": [
+        "lm_head.weight",
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    },
+    {
+      "label": "unsupported_rope_type_nulled",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0,
+        "rope_scaling": {
+          "type": "mrope",
+          "long_factor": [
+            1.0
+          ],
+          "rope_type": "mrope"
+        }
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 8,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": false,
+      "tie_word_embeddings": false,
+      "weight_names": [
+        "lm_head.weight",
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    },
+    {
+      "label": "longrope",
+      "config": {
+        "model_type": "phi3",
+        "hidden_size": 64,
+        "num_hidden_layers": 2,
+        "intermediate_size": 128,
+        "num_attention_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "vocab_size": 320,
+        "num_key_value_heads": 4,
+        "rope_theta": 250000.0,
+        "rope_scaling": {
+          "type": "longrope",
+          "short_factor": [
+            1.0,
+            1.1,
+            1.3,
+            1.5
+          ],
+          "long_factor": [
+            1.0,
+            1.4,
+            2.0,
+            3.0
+          ],
+          "original_max_position_embeddings": 4096
+        },
+        "max_position_embeddings": 131072
+      },
+      "num_key_value_heads": 4,
+      "head_dim": 8,
+      "scale": 0.3535533905932738,
+      "rope_dim": 8,
+      "op_size": 128,
+      "query_pos": 64,
+      "kv_size": 32,
+      "rope_scaling_kept": true,
+      "tie_word_embeddings": false,
+      "weight_names": [
+        "lm_head.weight",
+        "model.embed_tokens.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.mlp.gate_up_proj.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.qkv_proj.weight",
+        "model.layers.1.input_layernorm.weight",
+        "model.layers.1.mlp.down_proj.weight",
+        "model.layers.1.mlp.gate_up_proj.weight",
+        "model.layers.1.post_attention_layernorm.weight",
+        "model.layers.1.self_attn.o_proj.weight",
+        "model.layers.1.self_attn.qkv_proj.weight",
+        "model.norm.weight"
+      ],
+      "cache_count": 2,
+      "cache_types": [
+        "KVCache",
+        "KVCache"
+      ]
+    }
+  ],
+  "su_cases": [
+    {
+      "label": "su_a",
+      "dims": 32,
+      "base": 250000.0,
+      "max_position_embeddings": 131072,
+      "original_max_position_embeddings": 4096,
+      "long_factor": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.2,
+        2.5,
+        2.8,
+        3.0,
+        3.2,
+        3.5,
+        3.8,
+        4.0
+      ],
+      "freqs": [
+        1.0,
+        2.3920154571533203,
+        5.674449920654297,
+        13.367713928222656,
+        31.304954528808594,
+        77.79940032958984,
+        190.3268280029297,
+        459.86328125,
+        1100.0,
+        2718.19921875,
+        6620.19189453125,
+        15424.283203125,
+        35777.08984375,
+        85093.09375,
+        200900.546875,
+        459863.3125
+      ],
+      "scale": 1.1902380714238083
+    },
+    {
+      "label": "su_small",
+      "dims": 16,
+      "base": 10000.0,
+      "max_position_embeddings": 8192,
+      "original_max_position_embeddings": 4096,
+      "long_factor": [
+        1.0,
+        1.2,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.2,
+        2.4
+      ],
+      "freqs": [
+        1.0,
+        3.7947332859039307,
+        14.000000953674316,
+        50.59644317626953,
+        180.0,
+        632.45556640625,
+        2200.0,
+        7589.46630859375
+      ],
+      "scale": 1.0408329997330663
+    },
+    {
+      "label": "su_nofactor",
+      "dims": 16,
+      "base": 10000.0,
+      "max_position_embeddings": 2048,
+      "original_max_position_embeddings": 4096,
+      "long_factor": 1.0,
+      "freqs": [
+        1.0,
+        3.1622776985168457,
+        10.000000953674316,
+        31.62277603149414,
+        100.0,
+        316.227783203125,
+        1000.0,
+        3162.277587890625
+      ],
+      "scale": 1.0
+    }
+  ]
+}
