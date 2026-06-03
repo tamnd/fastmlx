@@ -38,6 +38,20 @@ type UpdatePlan struct {
 	TruncatedTail bool
 }
 
+// Cache is the bookkeeping contract both cache layouts satisfy. A model whose
+// layers mix attention kinds (a full-attention layer next to a sliding-window
+// layer) holds its per-layer caches as a slice of this interface, so the
+// scheduler can drive each layer's index arithmetic without knowing which
+// concrete layout backs it. KVCache and RotatingKVCache both implement it.
+type Cache interface {
+	Capacity() int
+	Empty() bool
+	Size() int
+	IsTrimmable() bool
+	Update(numSteps int) UpdatePlan
+	Trim(n int) int
+}
+
 // KVCache is the growable contiguous cache. Offset is the number of valid
 // tokens; capacity is the allocated length.
 type KVCache struct {
