@@ -1,0 +1,135 @@
+{
+  "sse_keepalive": [
+    {
+      "mode": "chunk",
+      "detail": ""
+    },
+    {
+      "mode": "comment",
+      "detail": ""
+    },
+    {
+      "mode": "off",
+      "detail": ""
+    },
+    {
+      "mode": "Chunk",
+      "detail": "Invalid sse_keepalive_mode: Chunk (must be one of ['chunk', 'comment', 'off'])"
+    },
+    {
+      "mode": "",
+      "detail": "Invalid sse_keepalive_mode:  (must be one of ['chunk', 'comment', 'off'])"
+    },
+    {
+      "mode": "invalid",
+      "detail": "Invalid sse_keepalive_mode: invalid (must be one of ['chunk', 'comment', 'off'])"
+    },
+    {
+      "mode": "none",
+      "detail": "Invalid sse_keepalive_mode: none (must be one of ['chunk', 'comment', 'off'])"
+    },
+    {
+      "mode": "on",
+      "detail": "Invalid sse_keepalive_mode: on (must be one of ['chunk', 'comment', 'off'])"
+    }
+  ],
+  "model_dirs": [
+    {
+      "model_dirs": null,
+      "model_dir": null,
+      "result": {
+        "has_update": false,
+        "new_dirs": null,
+        "primary": null
+      }
+    },
+    {
+      "model_dirs": null,
+      "model_dir": "/models/a",
+      "result": {
+        "has_update": true,
+        "new_dirs": [
+          "/models/a"
+        ],
+        "primary": "/models/a"
+      }
+    },
+    {
+      "model_dirs": [
+        "/models/a",
+        "/models/b"
+      ],
+      "model_dir": null,
+      "result": {
+        "has_update": true,
+        "new_dirs": [
+          "/models/a",
+          "/models/b"
+        ],
+        "primary": "/models/a"
+      }
+    },
+    {
+      "model_dirs": [
+        "  /models/a  ",
+        "",
+        "   ",
+        "/models/b"
+      ],
+      "model_dir": "/ignored",
+      "result": {
+        "has_update": true,
+        "new_dirs": [
+          "  /models/a  ",
+          "/models/b"
+        ],
+        "primary": "  /models/a  "
+      }
+    },
+    {
+      "model_dirs": [],
+      "model_dir": "/ignored",
+      "result": {
+        "has_update": true,
+        "new_dirs": [],
+        "primary": null
+      }
+    },
+    {
+      "model_dirs": [
+        "   ",
+        ""
+      ],
+      "model_dir": "/ignored",
+      "result": {
+        "has_update": true,
+        "new_dirs": [],
+        "primary": null
+      }
+    },
+    {
+      "model_dirs": null,
+      "model_dir": "  ",
+      "result": {
+        "has_update": true,
+        "new_dirs": [
+          "  "
+        ],
+        "primary": "  "
+      }
+    },
+    {
+      "model_dirs": [
+        "/only"
+      ],
+      "model_dir": null,
+      "result": {
+        "has_update": true,
+        "new_dirs": [
+          "/only"
+        ],
+        "primary": "/only"
+      }
+    }
+  ]
+}
