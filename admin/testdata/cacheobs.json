@@ -1,0 +1,223 @@
+{
+  "entries": [
+    {
+      "id": "model-a",
+      "block_size": 16,
+      "indexed_blocks": 100,
+      "indexed_blocks_display": "100",
+      "has_sub_block_cache": false,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 0,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "num_files": 5,
+      "total_size_bytes": 1000,
+      "max_size_bytes": 4000,
+      "hot_cache_max_bytes": 200,
+      "hot_cache_size_bytes": 50,
+      "hot_cache_entries": 3,
+      "cache_rates": {
+        "hit_rate": 0.5
+      }
+    },
+    {
+      "id": "model-b",
+      "block_size": 32,
+      "indexed_blocks": 0,
+      "indexed_blocks_display": "<32",
+      "has_sub_block_cache": true,
+      "partial_block_skips": 3,
+      "partial_tokens_skipped": 7,
+      "last_partial_tokens_skipped": 2,
+      "last_tokens_to_next_block": 9,
+      "num_files": 2,
+      "total_size_bytes": 500,
+      "max_size_bytes": 1000,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    },
+    {
+      "id": "model-c",
+      "block_size": 0,
+      "indexed_blocks": 0,
+      "indexed_blocks_display": "0",
+      "has_sub_block_cache": false,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 0,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "num_files": 0,
+      "total_size_bytes": 0,
+      "max_size_bytes": 0,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    },
+    {
+      "id": "model-d",
+      "block_size": 64,
+      "indexed_blocks": 50,
+      "indexed_blocks_display": "50",
+      "has_sub_block_cache": false,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 0,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "num_files": 1,
+      "total_size_bytes": 0,
+      "max_size_bytes": 0,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    },
+    {
+      "id": "model-e",
+      "block_size": 8,
+      "indexed_blocks": 10,
+      "indexed_blocks_display": "10",
+      "has_sub_block_cache": false,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 0,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "num_files": 0,
+      "total_size_bytes": 0,
+      "max_size_bytes": 0,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    },
+    {
+      "id": "model-f",
+      "block_size": 16,
+      "indexed_blocks": 4,
+      "indexed_blocks_display": "4",
+      "has_sub_block_cache": false,
+      "partial_block_skips": 0,
+      "partial_tokens_skipped": 3,
+      "last_partial_tokens_skipped": 0,
+      "last_tokens_to_next_block": 0,
+      "num_files": 2,
+      "total_size_bytes": 999,
+      "max_size_bytes": 0,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    }
+  ],
+  "payloads": [
+    {
+      "base_path": "/base",
+      "ssd_cache_dir": "/base/ssd",
+      "response_state_dir": "/base/ssd/response-state",
+      "models": [],
+      "total_num_files": 0,
+      "total_size_bytes": 0,
+      "effective_block_sizes": [],
+      "disk_max_bytes": 100000,
+      "hot_cache_max_bytes": 0,
+      "hot_cache_size_bytes": 0,
+      "hot_cache_entries": 0
+    },
+    {
+      "base_path": "/base",
+      "ssd_cache_dir": "/base/ssd",
+      "response_state_dir": "/base/ssd/response-state",
+      "models": [
+        {
+          "id": "model-a",
+          "block_size": 16,
+          "indexed_blocks": 100,
+          "indexed_blocks_display": "100",
+          "has_sub_block_cache": false,
+          "partial_block_skips": 0,
+          "partial_tokens_skipped": 0,
+          "last_partial_tokens_skipped": 0,
+          "last_tokens_to_next_block": 0,
+          "num_files": 5,
+          "total_size_bytes": 1000,
+          "max_size_bytes": 4000,
+          "hot_cache_max_bytes": 200,
+          "hot_cache_size_bytes": 50,
+          "hot_cache_entries": 3,
+          "cache_rates": {
+            "hit_rate": 0.5
+          }
+        },
+        {
+          "id": "model-b",
+          "block_size": 32,
+          "indexed_blocks": 0,
+          "indexed_blocks_display": "<32",
+          "has_sub_block_cache": true,
+          "partial_block_skips": 3,
+          "partial_tokens_skipped": 7,
+          "last_partial_tokens_skipped": 2,
+          "last_tokens_to_next_block": 9,
+          "num_files": 2,
+          "total_size_bytes": 500,
+          "max_size_bytes": 1000,
+          "hot_cache_max_bytes": 0,
+          "hot_cache_size_bytes": 0,
+          "hot_cache_entries": 0
+        }
+      ],
+      "total_num_files": 7,
+      "total_size_bytes": 1500,
+      "effective_block_sizes": [
+        16,
+        32
+      ],
+      "disk_max_bytes": 100000,
+      "hot_cache_max_bytes": 200,
+      "hot_cache_size_bytes": 50,
+      "hot_cache_entries": 3
+    },
+    {
+      "base_path": "/x",
+      "ssd_cache_dir": "/x/c",
+      "response_state_dir": "/x/c/response-state",
+      "models": [
+        {
+          "id": "model-a",
+          "block_size": 16,
+          "indexed_blocks": 100,
+          "indexed_blocks_display": "100",
+          "has_sub_block_cache": false,
+          "partial_block_skips": 0,
+          "partial_tokens_skipped": 0,
+          "last_partial_tokens_skipped": 0,
+          "last_tokens_to_next_block": 0,
+          "num_files": 5,
+          "total_size_bytes": 1000,
+          "max_size_bytes": 4000,
+          "hot_cache_max_bytes": 200,
+          "hot_cache_size_bytes": 50,
+          "hot_cache_entries": 3,
+          "cache_rates": {
+            "hit_rate": 0.5
+          }
+        }
+      ],
+      "total_num_files": 5,
+      "total_size_bytes": 1000,
+      "effective_block_sizes": [
+        16
+      ],
+      "disk_max_bytes": 4000,
+      "hot_cache_max_bytes": 200,
+      "hot_cache_size_bytes": 50,
+      "hot_cache_entries": 3
+    }
+  ],
+  "empty": {
+    "base_path": "",
+    "ssd_cache_dir": "",
+    "response_state_dir": "",
+    "models": [],
+    "total_num_files": 0,
+    "total_size_bytes": 0,
+    "effective_block_sizes": []
+  }
+}
