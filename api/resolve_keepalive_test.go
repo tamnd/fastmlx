@@ -43,3 +43,30 @@ func BenchmarkResolveKeepalive(b *testing.B) {
 		_, _ = ResolveKeepalive("chunk", "openai_chat")
 	}
 }
+
+func TestChatKeepaliveChunkParity(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("testdata", "chat_keepalive_chunk.json"))
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+	var cases []struct {
+		ResponseID string `json:"response_id"`
+		Result     string `json:"result"`
+	}
+	if err := json.Unmarshal(raw, &cases); err != nil {
+		t.Fatalf("unmarshal fixture: %v", err)
+	}
+
+	for i, c := range cases {
+		if got := ChatKeepaliveChunk(c.ResponseID); got != c.Result {
+			t.Errorf("case %d: ChatKeepaliveChunk(%q) =\n %q\nwant %q", i, c.ResponseID, got, c.Result)
+		}
+	}
+}
+
+func BenchmarkChatKeepaliveChunk(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		_ = ChatKeepaliveChunk("chatcmpl-abc123")
+	}
+}

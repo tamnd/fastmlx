@@ -44,3 +44,16 @@ func ResolveKeepalive(mode, protocol string) (string, bool) {
 		return "", false
 	}
 }
+
+// ChatKeepaliveChunk builds a chat keepalive frame carrying the stream's own
+// completion id instead of the static sentinel, porting _chat_keepalive_chunk.
+// Strict OpenAI stream accumulators latch the first chunk's id and silently drop
+// later chunks whose id differs; emitting the keepalive under the stream's own
+// response id makes it a true no-op for those clients while still parsing as a
+// data event for clients that cannot read SSE comment lines. The "keepalive"
+// model marker is the literal protocol sentinel and is kept verbatim.
+func ChatKeepaliveChunk(responseID string) string {
+	return "data: {\"id\":\"" + responseID + "\",\"object\":\"chat.completion.chunk\"," +
+		"\"created\":0,\"model\":\"keepalive\"," +
+		"\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\"},\"finish_reason\":null}]}\n\n"
+}
