@@ -1,0 +1,176 @@
+{
+  "events": [
+    {
+      "label": "r1 first chunk",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "r1",
+          "processed": 100,
+          "total": 2048,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "r1 second chunk",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "r1",
+          "processed": 600,
+          "total": 2048,
+          "speed": 1000.0,
+          "eta": 1.4,
+          "elapsed": 0.5,
+          "phase": "prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "r2 with extra",
+      "model_id": "gemma",
+      "out": [
+        {
+          "request_id": "r2",
+          "processed": 50,
+          "total": 400,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "spec_prefill",
+          "detail": "scoring",
+          "scored_tokens": 400,
+          "selected_tokens": 50,
+          "keep_percent": 12.5,
+          "cached_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "qwen3 still r1",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "r1",
+          "processed": 600,
+          "total": 2048,
+          "speed": 1000.0,
+          "eta": 1.4,
+          "elapsed": 1.0,
+          "phase": "prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "r1 phase changed",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "r1",
+          "processed": 700,
+          "total": 2048,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "spec_prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "r1 dt zero keeps speed",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "r1",
+          "processed": 700,
+          "total": 2048,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "spec_prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "r1 complete removed",
+      "model_id": "qwen3",
+      "out": []
+    },
+    {
+      "label": "r2 removed",
+      "model_id": "gemma",
+      "out": []
+    },
+    {
+      "label": "unknown model",
+      "model_id": "nope",
+      "out": []
+    },
+    {
+      "label": "ra then rb order",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "ra",
+          "processed": 10,
+          "total": 100,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "prefill",
+          "detail": null
+        },
+        {
+          "request_id": "rb",
+          "processed": 20,
+          "total": 100,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "ra reinserted last",
+      "model_id": "qwen3",
+      "out": [
+        {
+          "request_id": "rb",
+          "processed": 20,
+          "total": 100,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "prefill",
+          "detail": null
+        },
+        {
+          "request_id": "ra",
+          "processed": 30,
+          "total": 100,
+          "speed": 0.0,
+          "eta": null,
+          "elapsed": 0.0,
+          "phase": "prefill",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "label": "after clear",
+      "model_id": "qwen3",
+      "out": []
+    }
+  ]
+}
