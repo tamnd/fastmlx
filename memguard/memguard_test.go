@@ -48,6 +48,16 @@ type memguardFixture struct {
 		MetalCap        int64 `json:"metal_cap"`
 		Limit           int64 `json:"limit"`
 	} `json:"hard_limit"`
+	AbortLimit []struct {
+		Enabled  bool  `json:"enabled"`
+		Static   int64 `json:"static"`
+		MetalCap int64 `json:"metal_cap"`
+		Limit    int64 `json:"limit"`
+	} `json:"abort_limit"`
+	FormatGB []struct {
+		Bytes int64  `json:"bytes"`
+		Text  string `json:"text"`
+	} `json:"format_gb"`
 }
 
 // reclaimRow decodes the reclaim cases, which carry distinct memory fields.
@@ -162,6 +172,31 @@ func TestHardLimit(t *testing.T) {
 		if got := HardLimit(c.Enabled, c.Static, c.DynamicOrCustom, c.MetalCap); got != c.Limit {
 			t.Errorf("HardLimit(%v,%d,%d,%d) = %d, want %d", c.Enabled, c.Static, c.DynamicOrCustom, c.MetalCap, got, c.Limit)
 		}
+	}
+}
+
+func TestAbortLimit(t *testing.T) {
+	fx, _ := loadFixture(t)
+	for _, c := range fx.AbortLimit {
+		if got := AbortLimit(c.Enabled, c.Static, c.MetalCap); got != c.Limit {
+			t.Errorf("AbortLimit(%v,%d,%d) = %d, want %d", c.Enabled, c.Static, c.MetalCap, got, c.Limit)
+		}
+	}
+}
+
+func TestFormatGB(t *testing.T) {
+	fx, _ := loadFixture(t)
+	for _, c := range fx.FormatGB {
+		if got := FormatGB(c.Bytes); got != c.Text {
+			t.Errorf("FormatGB(%d) = %q, want %q", c.Bytes, got, c.Text)
+		}
+	}
+}
+
+func BenchmarkFormatGB(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		_ = FormatGB(68665789644)
 	}
 }
 

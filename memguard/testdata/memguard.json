@@ -283,5 +283,89 @@
       "metal_cap": 6442450944,
       "limit": 5368709120
     }
+  ],
+  "format_gb": [
+    {
+      "bytes": 0,
+      "text": "0.0GB"
+    },
+    {
+      "bytes": 1073741824,
+      "text": "1.0GB"
+    },
+    {
+      "bytes": 17179869184,
+      "text": "16.0GB"
+    },
+    {
+      "bytes": 8589934592,
+      "text": "8.0GB"
+    },
+    {
+      "bytes": 12884901888,
+      "text": "12.0GB"
+    },
+    {
+      "bytes": 1610612736,
+      "text": "1.5GB"
+    },
+    {
+      "bytes": 53687091,
+      "text": "0.0GB"
+    },
+    {
+      "bytes": -3221225472,
+      "text": "-3.0GB"
+    },
+    {
+      "bytes": 7784628224,
+      "text": "7.2GB"
+    },
+    {
+      "bytes": 68665789644,
+      "text": "63.9GB"
+    },
+    {
+      "bytes": 100,
+      "text": "0.0GB"
+    }
+  ],
+  "abort_limit": [
+    {
+      "enabled": true,
+      "static": 53687091200,
+      "metal_cap": 32212254720,
+      "limit": 32212254720
+    },
+    {
+      "enabled": true,
+      "static": 53687091200,
+      "metal_cap": 0,
+      "limit": 53687091200
+    },
+    {
+      "enabled": true,
+      "static": 53687091200,
+      "metal_cap": 64424509440,
+      "limit": 53687091200
+    },
+    {
+      "enabled": false,
+      "static": 53687091200,
+      "metal_cap": 32212254720,
+      "limit": 0
+    },
+    {
+      "enabled": true,
+      "static": 53687091200,
+      "metal_cap": -5,
+      "limit": 53687091200
+    },
+    {
+      "enabled": true,
+      "static": 0,
+      "metal_cap": 0,
+      "limit": 0
+    }
   ]
 }

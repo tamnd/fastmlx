@@ -8,7 +8,10 @@
 // the same split the memory and enginepool packages use.
 package memguard
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 // Byte reserves and the small-system cutoff. Systems below the threshold get a
 // flat reserve regardless of tier, since a tier-scaled cut would leave too
@@ -130,6 +133,29 @@ func HardLimit(enabled bool, staticCeiling, dynamicOrCustom, metalCap int64) int
 		limit = metalCap
 	}
 	return limit
+}
+
+// AbortLimit is the stable physical cap used to abort an in-flight prefill:
+// min(static ceiling, Metal cap), deliberately excluding the jittery dynamic
+// ceiling so a transient dip cannot kill a near-complete prefill. It matches the
+// limit the enforcer arms via the wired-limit call, returning 0 when the guard
+// is disabled (callers treat 0 as "no limit").
+func AbortLimit(enabled bool, staticCeiling, metalCap int64) int64 {
+	if !enabled {
+		return 0
+	}
+	if metalCap > 0 {
+		return min(staticCeiling, metalCap)
+	}
+	return staticCeiling
+}
+
+// FormatGB renders a byte count as a one-decimal gigabyte string (for example
+// "8.0GB"), matching the reference's f"{b/1024**3:.1f}GB". Rounding is
+// round-half-to-even, as in both Python's format and Go's strconv.
+func FormatGB(b int64) string {
+	gb := float64(b) / float64(1024*1024*1024)
+	return strconv.FormatFloat(gb, 'f', 1, 64) + "GB"
 }
 
 func clampZero(v int64) int64 {
