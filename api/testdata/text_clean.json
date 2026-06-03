@@ -1,0 +1,295 @@
+{
+  "clean_special": [
+    {
+      "in": "",
+      "out": ""
+    },
+    {
+      "in": "hello",
+      "out": "hello"
+    },
+    {
+      "in": "  spaced  ",
+      "out": "spaced"
+    },
+    {
+      "in": "answer<|im_end|>",
+      "out": "answer"
+    },
+    {
+      "in": "<|im_start|>user<|im_end|>",
+      "out": "user"
+    },
+    {
+      "in": "<s>hi</s>",
+      "out": "hi"
+    },
+    {
+      "in": "[CLS]text[SEP]",
+      "out": "text"
+    },
+    {
+      "in": "<|eot_id|>done<|endoftext|>",
+      "out": "done"
+    },
+    {
+      "in": "keep <think>secret</think> tags",
+      "out": "keep <think>secret</think> tags"
+    },
+    {
+      "in": "  <|end|>  trimmed  <|end|>  ",
+      "out": "trimmed"
+    },
+    {
+      "in": "text<pad>[PAD]more",
+      "out": "textmore"
+    },
+    {
+      "in": "<|start_header_id|>a<|end_header_id|>b",
+      "out": "ab"
+    }
+  ],
+  "clean_output": [
+    {
+      "in": "",
+      "out": ""
+    },
+    {
+      "in": "plain answer",
+      "out": "plain answer"
+    },
+    {
+      "in": "<think>reasoning</think>answer",
+      "out": "answer"
+    },
+    {
+      "in": "<|im_start|><think>hidden</think>visible<|im_end|>",
+      "out": "visible"
+    },
+    {
+      "in": "reasoning</think>tail",
+      "out": "tail"
+    },
+    {
+      "in": "<think>only</think>",
+      "out": ""
+    },
+    {
+      "in": "<think>everything no close",
+      "out": "everything no close"
+    },
+    {
+      "in": "  <think>r</think>  ans  ",
+      "out": "ans"
+    },
+    {
+      "in": "<s>a</s><think>t</think>b",
+      "out": "ab"
+    }
+  ],
+  "detect_partial": [
+    {
+      "in": [],
+      "is_partial": false,
+      "out": []
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "is_partial": false,
+      "out": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "x",
+          "partial": true
+        }
+      ],
+      "is_partial": true,
+      "out": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "x"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "x",
+          "partial": false
+        }
+      ],
+      "is_partial": false,
+      "out": [
+        {
+          "role": "assistant",
+          "content": "x"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "user",
+          "content": "q",
+          "partial": true
+        },
+        {
+          "role": "assistant",
+          "content": "a"
+        }
+      ],
+      "is_partial": false,
+      "out": [
+        {
+          "role": "user",
+          "content": "q"
+        },
+        {
+          "role": "assistant",
+          "content": "a"
+        }
+      ]
+    },
+    {
+      "in": [
+        {
+          "role": "assistant",
+          "content": "x"
+        }
+      ],
+      "is_partial": false,
+      "out": [
+        {
+          "role": "assistant",
+          "content": "x"
+        }
+      ]
+    }
+  ],
+  "usage": [
+    {
+      "in": {},
+      "out": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "input_tokens": 0,
+        "output_tokens": 0
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 10,
+        "completion_tokens": 5
+      },
+      "out": {
+        "prompt_tokens": 10,
+        "completion_tokens": 5,
+        "total_tokens": 15,
+        "input_tokens": 10,
+        "output_tokens": 5
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 10,
+        "completion_tokens": 5,
+        "total_tokens": 99
+      },
+      "out": {
+        "prompt_tokens": 10,
+        "completion_tokens": 5,
+        "total_tokens": 99,
+        "input_tokens": 10,
+        "output_tokens": 5
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 7
+      },
+      "out": {
+        "prompt_tokens": 7,
+        "completion_tokens": 0,
+        "total_tokens": 7,
+        "input_tokens": 7,
+        "output_tokens": 0
+      }
+    },
+    {
+      "in": {
+        "completion_tokens": 3
+      },
+      "out": {
+        "prompt_tokens": 0,
+        "completion_tokens": 3,
+        "total_tokens": 3,
+        "input_tokens": 0,
+        "output_tokens": 3
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 4,
+        "completion_tokens": 6,
+        "input_tokens": 100,
+        "output_tokens": 200
+      },
+      "out": {
+        "prompt_tokens": 4,
+        "completion_tokens": 6,
+        "total_tokens": 10,
+        "input_tokens": 100,
+        "output_tokens": 200
+      }
+    },
+    {
+      "in": {
+        "input_tokens": 1,
+        "output_tokens": 2
+      },
+      "out": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "input_tokens": 1,
+        "output_tokens": 2
+      }
+    },
+    {
+      "in": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "out": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "input_tokens": 0,
+        "output_tokens": 0
+      }
+    }
+  ]
+}
