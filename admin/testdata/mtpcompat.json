@@ -1,0 +1,231 @@
+{
+  "cache": [
+    {
+      "bytes": 0,
+      "out": "0MB"
+    },
+    {
+      "bytes": 536870912,
+      "out": "512MB"
+    },
+    {
+      "bytes": 1073741824,
+      "out": "1GB"
+    },
+    {
+      "bytes": 107374182400,
+      "out": "100GB"
+    },
+    {
+      "bytes": 1610612736,
+      "out": "2GB"
+    },
+    {
+      "bytes": 1048576,
+      "out": "1MB"
+    }
+  ],
+  "paroquant": [
+    {
+      "config": {},
+      "out": [
+        false,
+        ""
+      ]
+    },
+    {
+      "config": {
+        "quantization_config": {
+          "quant_method": "paroquant"
+        }
+      },
+      "out": [
+        true,
+        "Not supported on paroquant models yet (compatibility not verified)"
+      ]
+    },
+    {
+      "config": {
+        "quantization_config": {
+          "quant_method": "PAROQUANT"
+        }
+      },
+      "out": [
+        true,
+        "Not supported on paroquant models yet (compatibility not verified)"
+      ]
+    },
+    {
+      "config": {
+        "quantization_config": {
+          "quant_method": "fp8"
+        }
+      },
+      "out": [
+        false,
+        ""
+      ]
+    },
+    {
+      "config": {
+        "quantization_config": {}
+      },
+      "out": [
+        false,
+        ""
+      ]
+    },
+    {
+      "config": {
+        "quantization_config": null
+      },
+      "out": [
+        false,
+        ""
+      ]
+    }
+  ],
+  "compat": [
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "model_type": "qwen3_5_moe",
+      "out": true
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "model_type": "llama",
+      "out": false
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "model_type": null,
+      "out": false
+    },
+    {
+      "config": {},
+      "model_type": "qwen3_5_moe",
+      "out": false
+    },
+    {
+      "config": {
+        "text_config": {
+          "num_nextn_predict_layers": 2
+        }
+      },
+      "model_type": "deepseek_v4_flash",
+      "out": true
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "model_type": "qwen3_6",
+      "out": true
+    }
+  ],
+  "weights": [
+    {
+      "keys": [],
+      "out": false
+    },
+    {
+      "keys": [
+        "model.embed_tokens.weight",
+        "model.layers.0.self_attn.q_proj.weight"
+      ],
+      "out": false
+    },
+    {
+      "keys": [
+        "mtp.fc.weight",
+        "model.layers.0.x"
+      ],
+      "out": true
+    },
+    {
+      "keys": [
+        "model.language_model.mtp.0.weight"
+      ],
+      "out": true
+    },
+    {
+      "keys": [
+        "model.mtp.embed.weight"
+      ],
+      "out": true
+    }
+  ],
+  "decision": [
+    {
+      "config": {
+        "quantization_config": {
+          "quant_method": "paroquant"
+        },
+        "mtp_num_hidden_layers": 1
+      },
+      "has_mtp_weights": true,
+      "compatible": false,
+      "reason": "Not supported on paroquant models yet (compatibility not verified)"
+    },
+    {
+      "config": {
+        "model_type": "qwen3_5_moe"
+      },
+      "has_mtp_weights": true,
+      "compatible": false,
+      "reason": "model has no MTP heads in config"
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1
+      },
+      "has_mtp_weights": true,
+      "compatible": false,
+      "reason": "model_type=None is not on the MTP whitelist (supported: qwen3_5*, qwen3_6*, deepseek_v4*)"
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1,
+        "model_type": "llama"
+      },
+      "has_mtp_weights": true,
+      "compatible": false,
+      "reason": "model_type='llama' is not on the MTP whitelist (supported: qwen3_5*, qwen3_6*, deepseek_v4*)"
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1,
+        "model_type": "qwen3_5_moe"
+      },
+      "has_mtp_weights": false,
+      "compatible": false,
+      "reason": "Config declares MTP layers but the converted weights are missing mtp.* tensors. Re-convert from HF with a converter that preserves MTP weights."
+    },
+    {
+      "config": {
+        "mtp_num_hidden_layers": 1,
+        "model_type": "qwen3_6"
+      },
+      "has_mtp_weights": true,
+      "compatible": true,
+      "reason": ""
+    },
+    {
+      "config": {
+        "text_config": {
+          "num_nextn_predict_layers": 2
+        },
+        "model_type": "deepseek_v4_flash"
+      },
+      "has_mtp_weights": true,
+      "compatible": true,
+      "reason": ""
+    }
+  ]
+}
