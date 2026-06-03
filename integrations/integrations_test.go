@@ -22,6 +22,7 @@ type rawCase struct {
 	ContextWindow *int     `json:"context_window"`
 	MaxTokens     *int     `json:"max_tokens"`
 	ModelType     *string  `json:"model_type"`
+	Reasoning     *bool    `json:"reasoning"`
 	ToolsProfile  string   `json:"tools_profile"`
 	ExtraArgs     []string `json:"extra_args"`
 }
@@ -42,6 +43,7 @@ func (r rawCase) context() Context {
 		ContextWindow: r.ContextWindow,
 		MaxTokens:     r.MaxTokens,
 		ModelType:     r.ModelType,
+		Reasoning:     r.Reasoning,
 		ToolsProfile:  tools,
 		ExtraArgs:     r.ExtraArgs,
 	}
