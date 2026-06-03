@@ -1,0 +1,168 @@
+{
+  "cases": [
+    {
+      "input": {
+        "bits": 4
+      },
+      "output": {
+        "bits": 4
+      }
+    },
+    {
+      "input": {
+        "quantization": {
+          "bits": 4,
+          "group_size": 64
+        }
+      },
+      "output": {
+        "quantization": {
+          "bits": 4,
+          "group_size": 64
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization": {
+          "lm_head": {
+            "bits": 8
+          },
+          "bits": 4
+        }
+      },
+      "output": {
+        "quantization": {
+          "lm_head": {
+            "bits": 8
+          },
+          "bits": 4,
+          "language_model.lm_head": {
+            "bits": 8
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization": {
+          "language_model.lm_head": {
+            "bits": 8
+          },
+          "bits": 4
+        }
+      },
+      "output": {
+        "quantization": {
+          "language_model.lm_head": {
+            "bits": 8
+          },
+          "bits": 4,
+          "lm_head": {
+            "bits": 8
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization": {
+          "lm_head": {
+            "bits": 8
+          },
+          "language_model.lm_head": {
+            "bits": 2
+          }
+        }
+      },
+      "output": {
+        "quantization": {
+          "lm_head": {
+            "bits": 8
+          },
+          "language_model.lm_head": {
+            "bits": 2
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization_config": {
+          "q_proj": {
+            "bits": 6
+          }
+        },
+        "quantization": {
+          "k_proj": {
+            "bits": 4
+          }
+        }
+      },
+      "output": {
+        "quantization_config": {
+          "q_proj": {
+            "bits": 6
+          },
+          "language_model.q_proj": {
+            "bits": 6
+          }
+        },
+        "quantization": {
+          "k_proj": {
+            "bits": 4
+          },
+          "language_model.k_proj": {
+            "bits": 4
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization": "not-a-dict"
+      },
+      "output": {
+        "quantization": "not-a-dict"
+      }
+    },
+    {
+      "input": {
+        "quantization": {
+          "foo": {
+            "bits": 4
+          },
+          "language_model.bar": {
+            "bits": 2
+          },
+          "scale": 1.5
+        }
+      },
+      "output": {
+        "quantization": {
+          "foo": {
+            "bits": 4
+          },
+          "language_model.bar": {
+            "bits": 2
+          },
+          "scale": 1.5,
+          "language_model.foo": {
+            "bits": 4
+          },
+          "bar": {
+            "bits": 2
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "quantization": {}
+      },
+      "output": {
+        "quantization": {}
+      }
+    }
+  ]
+}
