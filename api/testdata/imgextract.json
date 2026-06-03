@@ -1,0 +1,154 @@
+{
+  "cases": [
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": \"hello\"}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"hello\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"assistant\", \"content\": \"\", \"tool_calls\": [{\"id\": \"c1\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"assistant\", \"content\": \"\", \"tool_calls\": [{\"id\": \"c1\"}]}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"content\": \"no role\"}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"no role\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": null}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"describe\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"describe\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"what is this\"}, {\"type\": \"image_url\", \"image_url\": {\"url\": \"http://x/a.png\"}}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"what is this\"}"
+      ],
+      "image_urls": [
+        "http://x/a.png"
+      ]
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"image_url\", \"image_url\": \"http://x/bare.png\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": [
+        "http://x/bare.png"
+      ]
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"input_image\", \"image_url\": \"http://x/resp.png\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": [
+        "http://x/resp.png"
+      ]
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"input_image\", \"input_image\": {\"url\": \"http://x/fallback.png\"}}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": [
+        "http://x/fallback.png"
+      ]
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"two imgs\"}, {\"type\": \"image_url\", \"image_url\": {\"url\": \"http://x/1.png\"}}, {\"type\": \"image_url\", \"image_url\": {\"url\": \"http://x/2.png\"}}, {\"type\": \"text\", \"text\": \"trailing\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"two imgs\\ntrailing\"}"
+      ],
+      "image_urls": [
+        "http://x/1.png",
+        "http://x/2.png"
+      ]
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": []}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"image_url\", \"image_url\": {\"url\": \"\"}}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"\"}, {\"type\": \"text\", \"text\": \"kept\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"kept\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"user\", \"content\": [\"bare string part\", {\"type\": \"text\", \"text\": \"obj\"}]}"
+      ],
+      "text_messages": [
+        "{\"role\": \"user\", \"content\": \"obj\"}"
+      ],
+      "image_urls": []
+    },
+    {
+      "messages": [
+        "{\"role\": \"system\", \"content\": \"sys\"}",
+        "{\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"hi\"}, {\"type\": \"image_url\", \"image_url\": {\"url\": \"http://x/m.png\"}}], \"name\": \"alice\"}"
+      ],
+      "text_messages": [
+        "{\"role\": \"system\", \"content\": \"sys\"}",
+        "{\"role\": \"user\", \"content\": \"hi\", \"name\": \"alice\"}"
+      ],
+      "image_urls": [
+        "http://x/m.png"
+      ]
+    }
+  ]
+}
