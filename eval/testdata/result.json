@@ -1,0 +1,282 @@
+{
+  "score": [
+    {
+      "item": {
+        "id": "q7",
+        "answer": "C",
+        "subject": "physics"
+      },
+      "idx": 0,
+      "response": "The answer is C.",
+      "prompt_text": "Q?",
+      "time_seconds": 0.5,
+      "out": {
+        "question_id": "q7",
+        "correct": true,
+        "expected": "C",
+        "predicted": "C",
+        "time_seconds": 0.5,
+        "question_text": "Q?",
+        "raw_response": "The answer is C.",
+        "category": "physics"
+      }
+    },
+    {
+      "item": {
+        "answer": "A",
+        "subject": "physics"
+      },
+      "idx": 3,
+      "response": "I pick D",
+      "prompt_text": "Q2?",
+      "time_seconds": 0.25,
+      "out": {
+        "question_id": "3",
+        "correct": false,
+        "expected": "A",
+        "predicted": "D",
+        "time_seconds": 0.25,
+        "question_text": "Q2?",
+        "raw_response": "I pick D",
+        "category": "physics"
+      }
+    },
+    {
+      "item": {
+        "id": 42,
+        "answer": "B"
+      },
+      "idx": 1,
+      "response": "answer: b",
+      "prompt_text": "Q3?",
+      "time_seconds": 0.1,
+      "out": {
+        "question_id": "42",
+        "correct": true,
+        "expected": "B",
+        "predicted": "B",
+        "time_seconds": 0.1,
+        "question_text": "Q3?",
+        "raw_response": "answer: b",
+        "category": ""
+      }
+    },
+    {
+      "item": {
+        "id": "z",
+        "subject": "law"
+      },
+      "idx": 9,
+      "response": "no letter here",
+      "prompt_text": "Q4?",
+      "time_seconds": 0.0,
+      "out": {
+        "question_id": "z",
+        "correct": true,
+        "expected": "",
+        "predicted": "",
+        "time_seconds": 0.0,
+        "question_text": "Q4?",
+        "raw_response": "no letter here",
+        "category": "law"
+      }
+    }
+  ],
+  "aggregate": [
+    {
+      "name": "mmlu",
+      "time_seconds": 12.5,
+      "thinking_used": true,
+      "results": [
+        {
+          "question_id": "0",
+          "correct": true,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": "physics"
+        },
+        {
+          "question_id": "1",
+          "correct": false,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": "physics"
+        },
+        {
+          "question_id": "2",
+          "correct": true,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": "law"
+        },
+        {
+          "question_id": "3",
+          "correct": true,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": "law"
+        }
+      ],
+      "out": {
+        "benchmark_name": "mmlu",
+        "accuracy": 0.75,
+        "total_questions": 4,
+        "correct_count": 3,
+        "time_seconds": 12.5,
+        "question_results": [
+          {
+            "question_id": "0",
+            "correct": true,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": "physics"
+          },
+          {
+            "question_id": "1",
+            "correct": false,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": "physics"
+          },
+          {
+            "question_id": "2",
+            "correct": true,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": "law"
+          },
+          {
+            "question_id": "3",
+            "correct": true,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": "law"
+          }
+        ],
+        "category_scores": {
+          "law": 1.0,
+          "physics": 0.5
+        },
+        "thinking_used": true
+      }
+    },
+    {
+      "name": "gsm8k",
+      "time_seconds": 3.0,
+      "thinking_used": false,
+      "results": [
+        {
+          "question_id": "0",
+          "correct": true,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": ""
+        },
+        {
+          "question_id": "1",
+          "correct": false,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": ""
+        },
+        {
+          "question_id": "2",
+          "correct": true,
+          "expected": "",
+          "predicted": "",
+          "time_seconds": 0.0,
+          "question_text": "",
+          "raw_response": "",
+          "category": ""
+        }
+      ],
+      "out": {
+        "benchmark_name": "gsm8k",
+        "accuracy": 0.6666666666666666,
+        "total_questions": 3,
+        "correct_count": 2,
+        "time_seconds": 3.0,
+        "question_results": [
+          {
+            "question_id": "0",
+            "correct": true,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": ""
+          },
+          {
+            "question_id": "1",
+            "correct": false,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": ""
+          },
+          {
+            "question_id": "2",
+            "correct": true,
+            "expected": "",
+            "predicted": "",
+            "time_seconds": 0.0,
+            "question_text": "",
+            "raw_response": "",
+            "category": ""
+          }
+        ],
+        "category_scores": null,
+        "thinking_used": false
+      }
+    },
+    {
+      "name": "empty",
+      "time_seconds": 0.0,
+      "thinking_used": false,
+      "results": [],
+      "out": {
+        "benchmark_name": "empty",
+        "accuracy": 0.0,
+        "total_questions": 0,
+        "correct_count": 0,
+        "time_seconds": 0.0,
+        "question_results": [],
+        "category_scores": null,
+        "thinking_used": false
+      }
+    }
+  ]
+}
