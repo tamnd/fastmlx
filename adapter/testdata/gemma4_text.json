@@ -1,0 +1,112 @@
+{
+  "strip": [
+    {
+      "in": "",
+      "out": ""
+    },
+    {
+      "in": "plain answer with no thought block",
+      "out": "plain answer with no thought block"
+    },
+    {
+      "in": "<think>\nstep one\nstep two\n</think>\n\nThe answer is 42.",
+      "out": "The answer is 42."
+    },
+    {
+      "in": "<think>reasoning</think>visible",
+      "out": "visible"
+    },
+    {
+      "in": "<|channel>thought\nlet me think\n<channel|>The result.",
+      "out": "The result."
+    },
+    {
+      "in": "  \n  <think>a</think>  trimmed answer",
+      "out": "trimmed answer"
+    },
+    {
+      "in": "<think>one</think>\n<think>two</think>\nfinal",
+      "out": "final"
+    },
+    {
+      "in": "<think>a</think><|channel>b<channel|>\nmixed final",
+      "out": "mixed final"
+    },
+    {
+      "in": "Here is how <think> tags work in markdown.",
+      "out": "Here is how <think> tags work in markdown."
+    },
+    {
+      "in": "answer first <think>then a late block</think>",
+      "out": "answer first <think>then a late block</think>"
+    },
+    {
+      "in": "<think>multi\nline\nDOTALL\nbody</think>after",
+      "out": "after"
+    },
+    {
+      "in": "<|channel>only channel<channel|>",
+      "out": ""
+    },
+    {
+      "in": "<think>unterminated block with no close tag and trailing text",
+      "out": "<think>unterminated block with no close tag and trailing text"
+    },
+    {
+      "in": "\n\n\n<think>x</think>",
+      "out": ""
+    }
+  ],
+  "prefix": [
+    {
+      "text": "hello<chan",
+      "marker": "<channel|>",
+      "out": 5
+    },
+    {
+      "text": "plain text",
+      "marker": "<channel|>",
+      "out": 0
+    },
+    {
+      "text": "foo<",
+      "marker": "<channel|>",
+      "out": 1
+    },
+    {
+      "text": "<channel|>",
+      "marker": "<channel|>",
+      "out": 0
+    },
+    {
+      "text": "text<channel",
+      "marker": "<channel|>",
+      "out": 8
+    },
+    {
+      "text": "",
+      "marker": "<channel|>",
+      "out": 0
+    },
+    {
+      "text": "a",
+      "marker": "<",
+      "out": 0
+    },
+    {
+      "text": "something<channel|",
+      "marker": "<channel|>",
+      "out": 9
+    },
+    {
+      "text": "xy<|chan",
+      "marker": "<|channel>",
+      "out": 6
+    },
+    {
+      "text": "<thi",
+      "marker": "<think>\n",
+      "out": 4
+    }
+  ]
+}
