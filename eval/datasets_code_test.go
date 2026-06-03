@@ -40,9 +40,24 @@ type mbppFixture struct {
 	Category  []categoryCase   `json:"category"`
 }
 
+type lcbNormalizeCase struct {
+	Raw map[string]any `json:"raw"`
+	Idx int            `json:"idx"`
+	Out map[string]any `json:"out"`
+}
+
+type lcbFixture struct {
+	Normalize []lcbNormalizeCase `json:"normalize"`
+	Prompt    []promptCase       `json:"prompt"`
+	Extract   []extractCase      `json:"extract"`
+	Check     []checkCase        `json:"check"`
+	Category  []categoryCase     `json:"category"`
+}
+
 type codeFixture struct {
-	HumanEval humanEvalFixture `json:"humaneval"`
-	MBPP      mbppFixture      `json:"mbpp"`
+	HumanEval     humanEvalFixture `json:"humaneval"`
+	MBPP          mbppFixture      `json:"mbpp"`
+	LiveCodeBench lcbFixture       `json:"livecodebench"`
 }
 
 func loadCode(t *testing.T) codeFixture {
@@ -177,6 +192,116 @@ func TestMBPPCheckRunner(t *testing.T) {
 	}
 	if (MBPP{Runner: runner}).CheckAnswer("", item) {
 		t.Error("expected fail for blank prediction before invoking runner")
+	}
+}
+
+// stdinScript pairs the code and stdin a StdinRunner was handed.
+type stdinScript struct {
+	code  string
+	stdin string
+}
+
+// scriptedStdin is a fake StdinRunner: it returns a canned stdout/success for
+// each call in order and records the (code, stdin) pairs it received.
+type scriptedStdin struct {
+	results []struct {
+		stdout  string
+		success bool
+	}
+	calls []stdinScript
+	n     int
+}
+
+func (s *scriptedStdin) Run(code, stdin string) (string, bool, string) {
+	s.calls = append(s.calls, stdinScript{code, stdin})
+	r := s.results[s.n]
+	s.n++
+	return r.stdout, r.success, ""
+}
+
+func TestLiveCodeBenchParity(t *testing.T) {
+	f := loadCode(t).LiveCodeBench
+	checkBenchmark(t, LiveCodeBench{}, benchFixture{
+		Prompt:   f.Prompt,
+		Extract:  f.Extract,
+		Check:    f.Check,
+		Category: f.Category,
+	})
+}
+
+func TestLiveCodeBenchNormalizeParity(t *testing.T) {
+	for i, c := range loadCode(t).LiveCodeBench.Normalize {
+		got, ok := NormalizeLiveCodeBenchItem(c.Raw, c.Idx)
+		if c.Out == nil {
+			if ok {
+				t.Errorf("NormalizeLiveCodeBenchItem case %d: expected skip, got %v", i, got)
+			}
+			continue
+		}
+		if !ok {
+			t.Errorf("NormalizeLiveCodeBenchItem case %d: unexpected skip", i)
+			continue
+		}
+		if !jsonEqual(t, got, c.Out) {
+			gb, _ := json.Marshal(got)
+			wb, _ := json.Marshal(c.Out)
+			t.Errorf("NormalizeLiveCodeBenchItem case %d = %s, want %s", i, gb, wb)
+		}
+	}
+}
+
+func TestLiveCodeBenchCheckRunner(t *testing.T) {
+	item := Item{
+		"inputs":  []any{"1 2\n", "4 5\n", "7 8\n", "9 9\n"},
+		"outputs": []any{"3\n", " 9 ", "15", "18"},
+	}
+	// All three of the first three test cases pass (only the first three run);
+	// stdout is compared after trimming, so " 9 " matches "9".
+	runner := &scriptedStdin{results: []struct {
+		stdout  string
+		success bool
+	}{{"3", true}, {"9", true}, {"15", true}}}
+	l := LiveCodeBench{Runner: runner}
+	if !l.CheckAnswer("print(1)", item) {
+		t.Fatal("expected pass when all of the first three cases match")
+	}
+	if len(runner.calls) != 3 {
+		t.Errorf("expected only the first 3 cases to run, got %d", len(runner.calls))
+	}
+	if runner.calls[0].stdin != "1 2\n" {
+		t.Errorf("first stdin = %q, want %q", runner.calls[0].stdin, "1 2\n")
+	}
+
+	// A mismatched stdout fails the run.
+	mismatch := &scriptedStdin{results: []struct {
+		stdout  string
+		success bool
+	}{{"3", true}, {"wrong", true}, {"15", true}}}
+	if (LiveCodeBench{Runner: mismatch}).CheckAnswer("print(1)", item) {
+		t.Error("expected fail on stdout mismatch")
+	}
+
+	// A non-zero exit fails the run immediately.
+	crash := &scriptedStdin{results: []struct {
+		stdout  string
+		success bool
+	}{{"", false}, {"9", true}, {"15", true}}}
+	if (LiveCodeBench{Runner: crash}).CheckAnswer("print(1)", item) {
+		t.Error("expected fail when a case exits non-zero")
+	}
+
+	// Blank prediction never invokes the runner.
+	if (LiveCodeBench{Runner: runner}).CheckAnswer("  ", item) {
+		t.Error("expected fail for blank prediction")
+	}
+}
+
+func BenchmarkLiveCodeBenchFormatPrompt(b *testing.B) {
+	item := Item{"description": "Read two integers and print their sum."}
+	bench := LiveCodeBench{}
+	b.ReportAllocs()
+	for b.Loop() {
+		_ = bench.FormatPrompt(item)
 	}
 }
 

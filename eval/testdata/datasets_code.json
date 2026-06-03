@@ -374,5 +374,236 @@
         "out": null
       }
     ]
+  },
+  "livecodebench": {
+    "normalize": [
+      {
+        "raw": {
+          "question_id": "abc123",
+          "question_title": "Sum Two",
+          "question_content": "Read two integers and print their sum.",
+          "public_test_cases": "[{\"input\": \"1 2\\n\", \"output\": \"3\\n\"}, {\"input\": \"4 5\\n\", \"output\": \"9\"}]",
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "idx": 0,
+        "out": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        }
+      },
+      {
+        "raw": {
+          "question_content": "Echo input.",
+          "public_test_cases": [
+            {
+              "input": "hi",
+              "output": "hi"
+            }
+          ]
+        },
+        "idx": 1,
+        "out": {
+          "id": "1",
+          "title": "Problem 1",
+          "description": "Echo input.",
+          "inputs": [
+            "hi"
+          ],
+          "outputs": [
+            "hi"
+          ],
+          "difficulty": "",
+          "starter_code": ""
+        }
+      },
+      {
+        "raw": {
+          "question_id": "empty1",
+          "public_test_cases": "[]"
+        },
+        "idx": 2,
+        "out": null
+      },
+      {
+        "raw": {
+          "question_id": "bad1",
+          "public_test_cases": "not json"
+        },
+        "idx": 3,
+        "out": null
+      }
+    ],
+    "prompt": [
+      {
+        "item": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Solve the following programming problem in Python. Read input from stdin and print the output to stdout. Provide only the complete Python code, no explanations.\n\nProblem:\nRead two integers and print their sum.\n\nSolution:"
+          }
+        ]
+      },
+      {
+        "item": {
+          "id": "1",
+          "title": "Problem 1",
+          "description": "Echo input.",
+          "inputs": [
+            "hi"
+          ],
+          "outputs": [
+            "hi"
+          ],
+          "difficulty": "",
+          "starter_code": ""
+        },
+        "out": [
+          {
+            "role": "user",
+            "content": "Solve the following programming problem in Python. Read input from stdin and print the output to stdout. Provide only the complete Python code, no explanations.\n\nProblem:\nEcho input.\n\nSolution:"
+          }
+        ]
+      }
+    ],
+    "extract": [
+      {
+        "resp": "```python\nprint(sum(map(int, input().split())))\n```",
+        "item": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "out": "print(sum(map(int, input().split())))"
+      },
+      {
+        "resp": "import sys\nprint(sys.stdin.read())",
+        "item": {
+          "id": "1",
+          "title": "Problem 1",
+          "description": "Echo input.",
+          "inputs": [
+            "hi"
+          ],
+          "outputs": [
+            "hi"
+          ],
+          "difficulty": "",
+          "starter_code": ""
+        },
+        "out": "import sys\nprint(sys.stdin.read())"
+      }
+    ],
+    "check": [
+      {
+        "pred": "",
+        "item": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "out": false
+      },
+      {
+        "pred": "   ",
+        "item": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "out": false
+      }
+    ],
+    "category": [
+      {
+        "item": {
+          "id": "abc123",
+          "title": "Sum Two",
+          "description": "Read two integers and print their sum.",
+          "inputs": [
+            "1 2\n",
+            "4 5\n"
+          ],
+          "outputs": [
+            "3\n",
+            "9"
+          ],
+          "difficulty": "easy",
+          "starter_code": ""
+        },
+        "out": null
+      },
+      {
+        "item": {
+          "id": "1",
+          "title": "Problem 1",
+          "description": "Echo input.",
+          "inputs": [
+            "hi"
+          ],
+          "outputs": [
+            "hi"
+          ],
+          "difficulty": "",
+          "starter_code": ""
+        },
+        "out": null
+      }
+    ]
   }
 }

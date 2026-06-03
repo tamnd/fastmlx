@@ -2,12 +2,16 @@
 
 package eval
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
-// This file holds the code-generation benchmarks HumanEval and MBPP. Their
-// prompts, answer extraction, item normalization, and test-script assembly are
-// pure and live here. Scoring runs the assembled script in a sandboxed
-// subprocess, which is the one compute seam: it is injected as a CodeRunner so
+// This file holds the code-generation benchmarks HumanEval, MBPP, and
+// LiveCodeBench. Their prompts, answer extraction, item normalization, and
+// test-script assembly are pure and live here. Scoring runs the candidate in a
+// sandboxed subprocess, which is the one compute seam: it is injected as a
+// CodeRunner (assertion-based) or StdinRunner (stdin/stdout) so
 // the script the runner receives stays exact and testable.
 
 // CodeRunner executes an assembled Python script and reports whether it exited
@@ -170,3 +174,137 @@ func (m MBPP) CheckAnswer(predicted string, item Item) bool {
 }
 
 func (MBPP) Category(item Item) string { return "" }
+
+// StdinRunner executes a complete Python program with the given stdin and
+// reports its stdout, whether it exited cleanly, and any stderr. It is the
+// compute seam LiveCodeBench injects; the input feeding and output comparison
+// stay pure on the benchmark's side.
+type StdinRunner interface {
+	Run(code, stdin string) (stdout string, success bool, stderr string)
+}
+
+// LiveCodeBench is the competitive-programming benchmark: the model writes a
+// full program that reads stdin and prints stdout, scored by running it against
+// the public test cases. Runner is the injected sandbox seam.
+type LiveCodeBench struct {
+	Runner StdinRunner
+}
+
+func (LiveCodeBench) Name() string   { return "livecodebench" }
+func (LiveCodeBench) QuickSize() int { return 100 }
+func (LiveCodeBench) MaxTokens() int { return 16384 }
+
+// NormalizeLiveCodeBenchItem turns a raw LiveCodeBench record into the loader's
+// shape, parsing the public test cases (a JSON string or an already-decoded
+// list) into parallel input and output slices. It reports false when there are
+// no usable test cases, so the record should be skipped, mirroring the loader's
+// per-index fallbacks for the id and title.
+func NormalizeLiveCodeBenchItem(raw Item, idx int) (Item, bool) {
+	testCases := parseTestCases(raw["public_test_cases"])
+	if len(testCases) == 0 {
+		return nil, false
+	}
+
+	inputs := make([]any, 0, len(testCases))
+	outputs := make([]any, 0, len(testCases))
+	for _, tc := range testCases {
+		m, ok := tc.(map[string]any)
+		if !ok {
+			inputs = append(inputs, "")
+			outputs = append(outputs, "")
+			continue
+		}
+		inputs = append(inputs, mapGet(m, "input"))
+		outputs = append(outputs, mapGet(m, "output"))
+	}
+	if len(inputs) == 0 || len(outputs) == 0 {
+		return nil, false
+	}
+
+	id := asStr(idx)
+	if v, ok := raw["question_id"]; ok {
+		id = asStr(v)
+	}
+	title := "Problem " + asStr(idx)
+	if v, ok := raw["question_title"]; ok {
+		title = asStr(v)
+	}
+
+	return Item{
+		"id":           id,
+		"title":        title,
+		"description":  itemStr(raw, "question_content"),
+		"inputs":       inputs,
+		"outputs":      outputs,
+		"difficulty":   itemStr(raw, "difficulty"),
+		"starter_code": itemStr(raw, "starter_code"),
+	}, true
+}
+
+// parseTestCases coerces the public_test_cases field, which arrives either as a
+// JSON-encoded string or an already-decoded list, into a slice. An unparseable
+// string or any other shape yields an empty slice.
+func parseTestCases(v any) []any {
+	switch tc := v.(type) {
+	case nil:
+		return parseTestCases("[]")
+	case []any:
+		return tc
+	case string:
+		var out []any
+		if err := json.Unmarshal([]byte(tc), &out); err != nil {
+			return nil
+		}
+		return out
+	default:
+		return nil
+	}
+}
+
+// mapGet returns the value at key, or "" when absent.
+func mapGet(m map[string]any, key string) any {
+	if v, ok := m[key]; ok {
+		return v
+	}
+	return ""
+}
+
+func (LiveCodeBench) FormatPrompt(item Item) []Message {
+	content := "Solve the following programming problem in Python. " +
+		"Read input from stdin and print the output to stdout. " +
+		"Provide only the complete Python code, no explanations.\n\n" +
+		"Problem:\n" + itemStr(item, "description") + "\n\n" +
+		"Solution:"
+	return userMessage(content)
+}
+
+func (LiveCodeBench) ExtractAnswer(response string, item Item) string {
+	return ExtractLastCodeBlock(response)
+}
+
+func (l LiveCodeBench) CheckAnswer(predicted string, item Item) bool {
+	if strings.TrimSpace(predicted) == "" || l.Runner == nil {
+		return false
+	}
+	inputs := itemStrList(item, "inputs")
+	outputs := itemStrList(item, "outputs")
+	if len(inputs) > 3 {
+		inputs = inputs[:3]
+	}
+	if len(outputs) > 3 {
+		outputs = outputs[:3]
+	}
+	n := min(len(inputs), len(outputs))
+	for i := range n {
+		stdout, success, _ := l.Runner.Run(predicted, inputs[i])
+		if !success {
+			return false
+		}
+		if strings.TrimSpace(stdout) != strings.TrimSpace(outputs[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func (LiveCodeBench) Category(item Item) string { return "" }
