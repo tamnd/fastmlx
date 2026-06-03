@@ -1,0 +1,205 @@
+[
+  {
+    "text": "",
+    "max_chars": 300,
+    "result": []
+  },
+  {
+    "text": "   ",
+    "max_chars": 300,
+    "result": []
+  },
+  {
+    "text": "Hello world.",
+    "max_chars": 300,
+    "result": [
+      "Hello world."
+    ]
+  },
+  {
+    "text": "First sentence. Second sentence. Third one!",
+    "max_chars": 300,
+    "result": [
+      "First sentence. Second sentence. Third one!"
+    ]
+  },
+  {
+    "text": "Question? Yes. No.",
+    "max_chars": 300,
+    "result": [
+      "Question? Yes. No."
+    ]
+  },
+  {
+    "text": "Line one\nLine two\nLine three",
+    "max_chars": 300,
+    "result": [
+      "Line one Line two Line three"
+    ]
+  },
+  {
+    "text": "Para one.\n\nPara two.",
+    "max_chars": 300,
+    "result": [
+      "Para one. Para two."
+    ]
+  },
+  {
+    "text": "a. b. c.",
+    "max_chars": 5,
+    "result": [
+      "a. b.",
+      "c."
+    ]
+  },
+  {
+    "text": "Short one. Short two. Short three. Short four.",
+    "max_chars": 20,
+    "result": [
+      "Short one.",
+      "Short two.",
+      "Short three.",
+      "Short four."
+    ]
+  },
+  {
+    "text": "This clause is here, and this one too, and a third clause, plus a fourth, and finally a fifth segment to overflow.",
+    "max_chars": 30,
+    "result": [
+      "This clause is here,",
+      "and this one too,",
+      "and a third clause,",
+      "plus a fourth,",
+      "and finally a fifth segment to",
+      "overflow."
+    ]
+  },
+  {
+    "text": "alpha,beta,gamma,delta",
+    "max_chars": 6,
+    "result": [
+      "alpha,",
+      "beta,",
+      "gamma,",
+      "delta"
+    ]
+  },
+  {
+    "text": "one, two; three: four",
+    "max_chars": 5,
+    "result": [
+      "one,",
+      "two;",
+      "three",
+      ":",
+      "four"
+    ]
+  },
+  {
+    "text": "supercalifragilisticexpialidocious",
+    "max_chars": 10,
+    "result": [
+      "supercalif",
+      "ragilistic",
+      "expialidoc",
+      "ious"
+    ]
+  },
+  {
+    "text": "aaaaaaaaaaaaaaaaaaaa bbbb",
+    "max_chars": 8,
+    "result": [
+      "aaaaaaaa",
+      "aaaaaaaa",
+      "aaaa bbb",
+      "b"
+    ]
+  },
+  {
+    "text": "你好。世界！再见？",
+    "max_chars": 100,
+    "result": [
+      "你好。世界！再见？"
+    ]
+  },
+  {
+    "text": "第一句，第二句；第三句：结束。",
+    "max_chars": 4,
+    "result": [
+      "第一句，",
+      "第二句；",
+      "第三句：",
+      "结束。"
+    ]
+  },
+  {
+    "text": "  Leading. Trailing.  ",
+    "max_chars": 300,
+    "result": [
+      "Leading. Trailing."
+    ]
+  },
+  {
+    "text": "Mix.\n  Indented next line.",
+    "max_chars": 100,
+    "result": [
+      "Mix. Indented next line."
+    ]
+  },
+  {
+    "text": "No terminal punctuation here just words",
+    "max_chars": 100,
+    "result": [
+      "No terminal punctuation here just words"
+    ]
+  },
+  {
+    "text": "Tiny.",
+    "max_chars": 1,
+    "result": [
+      "T",
+      "i",
+      "n",
+      "y",
+      "."
+    ]
+  },
+  {
+    "text": "a,b",
+    "max_chars": 1,
+    "result": [
+      "a",
+      ",",
+      "b"
+    ]
+  },
+  {
+    "text": "dotrun. dotrun. dotrun. ",
+    "max_chars": 12,
+    "result": [
+      "dotrun.",
+      "dotrun.",
+      "dotrun."
+    ]
+  },
+  {
+    "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "max_chars": 10,
+    "result": [
+      "xxxxxxxxxx",
+      "xxxxxxxxxx",
+      "xxxxxxxxxx",
+      "xxxxxxxxxx",
+      "xxxxxxxxxx"
+    ]
+  },
+  {
+    "text": "Sentence with, comma over budget triggers clause path here",
+    "max_chars": 25,
+    "result": [
+      "Sentence with,",
+      "comma over budget trigger",
+      "s clause path here"
+    ]
+  }
+]
