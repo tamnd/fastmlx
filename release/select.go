@@ -10,6 +10,7 @@ type Release struct {
 	TagName    string `json:"tag_name"`
 	Draft      bool   `json:"draft"`
 	Prerelease bool   `json:"prerelease"`
+	HTMLURL    string `json:"html_url"`
 }
 
 // SelectLatestStableRelease picks the highest stable release from a GitHub

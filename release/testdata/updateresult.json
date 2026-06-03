@@ -1,0 +1,84 @@
+{
+  "cases": [
+    {
+      "selected": {
+        "tag_name": "v0.5.0",
+        "html_url": "https://x/releases/0.5.0"
+      },
+      "current": "0.4.0",
+      "out": {
+        "update_available": true,
+        "latest_version": "0.5.0",
+        "release_url": "https://x/releases/0.5.0"
+      }
+    },
+    {
+      "selected": {
+        "tag_name": "0.4.0",
+        "html_url": "https://x/releases/0.4.0"
+      },
+      "current": "0.4.0",
+      "out": {
+        "update_available": false,
+        "latest_version": null,
+        "release_url": null
+      }
+    },
+    {
+      "selected": {
+        "tag_name": "v0.3.9",
+        "html_url": "https://x/releases/0.3.9"
+      },
+      "current": "0.4.0",
+      "out": {
+        "update_available": false,
+        "latest_version": null,
+        "release_url": null
+      }
+    },
+    {
+      "selected": null,
+      "current": "0.4.0",
+      "out": {
+        "update_available": false,
+        "latest_version": null,
+        "release_url": null
+      }
+    },
+    {
+      "selected": {
+        "tag_name": "vlatest",
+        "html_url": "https://x/releases/latest"
+      },
+      "current": "0.4.0",
+      "out": {
+        "update_available": false,
+        "latest_version": null,
+        "release_url": null
+      }
+    },
+    {
+      "selected": {
+        "tag_name": "v0.4.0",
+        "html_url": "https://x/r/0.4.0"
+      },
+      "current": "0.4.0rc2",
+      "out": {
+        "update_available": true,
+        "latest_version": "0.4.0",
+        "release_url": "https://x/r/0.4.0"
+      }
+    },
+    {
+      "selected": {
+        "tag_name": "v1.0.0"
+      },
+      "current": "0.9.0",
+      "out": {
+        "update_available": true,
+        "latest_version": "1.0.0",
+        "release_url": null
+      }
+    }
+  ]
+}
