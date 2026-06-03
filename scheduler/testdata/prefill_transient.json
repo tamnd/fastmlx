@@ -1,0 +1,106 @@
+{
+  "steps": [
+    {
+      "in": [
+        100,
+        200000
+      ],
+      "bytes_per_token": 2000.0,
+      "samples": 1,
+      "last_delta_bytes": 200000,
+      "last_n_tokens": 100,
+      "predict_128": 307200,
+      "predict_128_sf_1_0": 256000,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        0,
+        5000
+      ],
+      "bytes_per_token": 2000.0,
+      "samples": 1,
+      "last_delta_bytes": 200000,
+      "last_n_tokens": 100,
+      "predict_128": 307200,
+      "predict_128_sf_1_0": 256000,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        50,
+        0
+      ],
+      "bytes_per_token": 2000.0,
+      "samples": 1,
+      "last_delta_bytes": 200000,
+      "last_n_tokens": 100,
+      "predict_128": 307200,
+      "predict_128_sf_1_0": 256000,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        200,
+        500000
+      ],
+      "bytes_per_token": 2150.0,
+      "samples": 2,
+      "last_delta_bytes": 500000,
+      "last_n_tokens": 200,
+      "predict_128": 330240,
+      "predict_128_sf_1_0": 275200,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        -10,
+        9999
+      ],
+      "bytes_per_token": 2150.0,
+      "samples": 2,
+      "last_delta_bytes": 500000,
+      "last_n_tokens": 200,
+      "predict_128": 330240,
+      "predict_128_sf_1_0": 275200,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        80,
+        160000
+      ],
+      "bytes_per_token": 2105.0,
+      "samples": 3,
+      "last_delta_bytes": 160000,
+      "last_n_tokens": 80,
+      "predict_128": 323328,
+      "predict_128_sf_1_0": 269440,
+      "predict_0": 0
+    },
+    {
+      "in": [
+        400,
+        1200000
+      ],
+      "bytes_per_token": 2373.5,
+      "samples": 4,
+      "last_delta_bytes": 1200000,
+      "last_n_tokens": 400,
+      "predict_128": 364569,
+      "predict_128_sf_1_0": 303808,
+      "predict_0": 0
+    }
+  ],
+  "predict_fresh": [
+    0,
+    0
+  ],
+  "after_reset": {
+    "bytes_per_token": 0.0,
+    "samples": 0,
+    "last_delta_bytes": 0,
+    "last_n_tokens": 0,
+    "predict_128": 0
+  }
+}
