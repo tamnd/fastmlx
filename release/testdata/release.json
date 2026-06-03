@@ -1,0 +1,437 @@
+{
+  "parse": [
+    {
+      "in": "1.2.3",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3"
+    },
+    {
+      "in": "1.2.3rc1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3.rc1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3-rc1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3rc.1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3c1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3a1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3a1"
+    },
+    {
+      "in": "1.2.3b2",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3b2"
+    },
+    {
+      "in": "1.2.3.dev4",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3.dev4"
+    },
+    {
+      "in": "1.2.3.post1",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3.post1"
+    },
+    {
+      "in": "1.2.3.post1.dev2",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3.post1.dev2"
+    },
+    {
+      "in": "1.2",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2"
+    },
+    {
+      "in": "1",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1"
+    },
+    {
+      "in": "1.0.0",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.0.0"
+    },
+    {
+      "in": "v1.2.3",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3"
+    },
+    {
+      "in": "2024.1",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "2024.1"
+    },
+    {
+      "in": "1!2.3",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1!2.3"
+    },
+    {
+      "in": "1.2.3+local.1",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3+local.1"
+    },
+    {
+      "in": "1.2.3-alpha",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3a0"
+    },
+    {
+      "in": "1.2.3-beta.2",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3b2"
+    },
+    {
+      "in": "1.2.3.preview",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc0"
+    },
+    {
+      "in": "01.2.3",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3"
+    },
+    {
+      "in": "1.0.0.0",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.0.0.0"
+    },
+    {
+      "in": "not-a-version",
+      "valid": false,
+      "is_prerelease": false,
+      "str": ""
+    },
+    {
+      "in": "",
+      "valid": false,
+      "is_prerelease": false,
+      "str": ""
+    },
+    {
+      "in": "1.2.3rc",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc0"
+    },
+    {
+      "in": "1.2.3.dev",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3.dev0"
+    },
+    {
+      "in": "10.20.30",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "10.20.30"
+    },
+    {
+      "in": "1.2.3RC1",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1"
+    },
+    {
+      "in": "1.2.3.PoSt2",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3.post2"
+    },
+    {
+      "in": "  1.2.3  ",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "1.2.3"
+    },
+    {
+      "in": "1.2.3rc1.post2",
+      "valid": true,
+      "is_prerelease": true,
+      "str": "1.2.3rc1.post2"
+    },
+    {
+      "in": "0.0.1",
+      "valid": true,
+      "is_prerelease": false,
+      "str": "0.0.1"
+    }
+  ],
+  "compare": [
+    {
+      "a": "1.2.3",
+      "b": "1.2.4",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3",
+      "b": "1.2.3",
+      "cmp": 0
+    },
+    {
+      "a": "1.2.10",
+      "b": "1.2.9",
+      "cmp": 1
+    },
+    {
+      "a": "1.2.0",
+      "b": "1.2",
+      "cmp": 0
+    },
+    {
+      "a": "1.2.0",
+      "b": "1.2.0.0",
+      "cmp": 0
+    },
+    {
+      "a": "1.2.3rc1",
+      "b": "1.2.3",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3a1",
+      "b": "1.2.3b1",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3b1",
+      "b": "1.2.3rc1",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3.dev1",
+      "b": "1.2.3",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3.dev1",
+      "b": "1.2.3rc1",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3.post1",
+      "b": "1.2.3",
+      "cmp": 1
+    },
+    {
+      "a": "1.2.3",
+      "b": "1.2.3.post1",
+      "cmp": -1
+    },
+    {
+      "a": "1!1.0",
+      "b": "2.0",
+      "cmp": 1
+    },
+    {
+      "a": "1.2.3+local",
+      "b": "1.2.3",
+      "cmp": 1
+    },
+    {
+      "a": "2024.1",
+      "b": "2024.02",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3rc1",
+      "b": "1.2.3rc2",
+      "cmp": -1
+    },
+    {
+      "a": "1.2.3.post1.dev1",
+      "b": "1.2.3.post1",
+      "cmp": -1
+    },
+    {
+      "a": "0.9.9",
+      "b": "1.0.0",
+      "cmp": -1
+    },
+    {
+      "a": "1.0",
+      "b": "1.0.0",
+      "cmp": 0
+    },
+    {
+      "a": "10.0.0",
+      "b": "9.99.99",
+      "cmp": 1
+    }
+  ],
+  "select": [
+    {
+      "name": "skips_prerelease_flag_and_pep440_pre",
+      "releases": [
+        {
+          "tag_name": "v1.0.0",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v1.1.0rc1",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v0.9.0",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v1.0.0"
+    },
+    {
+      "name": "prerelease_flag_excludes",
+      "releases": [
+        {
+          "tag_name": "v2.0.0",
+          "draft": false,
+          "prerelease": true
+        },
+        {
+          "tag_name": "v1.5.0",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v1.5.0"
+    },
+    {
+      "name": "draft_excluded",
+      "releases": [
+        {
+          "tag_name": "v3.0.0",
+          "draft": true,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v2.5.0",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v2.5.0"
+    },
+    {
+      "name": "unparseable_skipped",
+      "releases": [
+        {
+          "tag_name": "nightly",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v1.2.3",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v1.2.3"
+    },
+    {
+      "name": "missing_tag_skipped",
+      "releases": [
+        {
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v0.1.0",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v0.1.0"
+    },
+    {
+      "name": "all_prerelease_returns_none",
+      "releases": [
+        {
+          "tag_name": "v1.0.0rc1",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v1.0.0a2",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": null
+    },
+    {
+      "name": "empty",
+      "releases": [],
+      "out_tag": null
+    },
+    {
+      "name": "highest_wins_unordered",
+      "releases": [
+        {
+          "tag_name": "v1.2.0",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v1.10.0",
+          "draft": false,
+          "prerelease": false
+        },
+        {
+          "tag_name": "v1.9.0",
+          "draft": false,
+          "prerelease": false
+        }
+      ],
+      "out_tag": "v1.10.0"
+    }
+  ]
+}
