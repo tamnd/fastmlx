@@ -1,0 +1,472 @@
+[
+  {
+    "request": {
+      "system": "be brief",
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "hello"
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "system",
+        "content": "be brief"
+      },
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "hello"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "let me check"
+            },
+            {
+              "type": "tool_use",
+              "id": "tu1",
+              "name": "get_weather",
+              "input": {
+                "city": "Tokyo"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "assistant",
+        "content": "let me check",
+        "tool_calls": [
+          {
+            "id": "tu1",
+            "function": {
+              "name": "get_weather",
+              "arguments": {
+                "city": "Tokyo"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "tu2",
+              "name": "fn",
+              "input": "{\"x\": 1}"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "tu2",
+            "function": {
+              "name": "fn",
+              "arguments": {
+                "x": 1
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "tu3",
+              "name": "fn",
+              "input": "not json"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "tu3",
+            "function": {
+              "name": "fn",
+              "arguments": "not json"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": "{\"temp\": 21}"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": {
+          "temp": 21
+        }
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": "sunny"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": "sunny"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": "null"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": "null"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": "false"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": false
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "a"
+                },
+                {
+                  "type": "text",
+                  "text": "b"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": "a\nb"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu1",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"ok\": true}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "tool",
+        "tool_call_id": "tu1",
+        "content": {
+          "ok": true
+        }
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "here"
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "tu9",
+              "content": "done"
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "user",
+        "content": "here"
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tu9",
+        "content": "done"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "thinking",
+              "thinking": "secret"
+            },
+            {
+              "type": "text",
+              "text": "answer"
+            },
+            {
+              "type": "image",
+              "source": {
+                "type": "base64",
+                "media_type": "image/png",
+                "data": "AAAA"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "assistant",
+        "content": "answer"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": "base",
+      "messages": [
+        {
+          "role": "system",
+          "content": "inline"
+        },
+        {
+          "role": "user",
+          "content": "q"
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "system",
+        "content": "base\n\ninline"
+      },
+      {
+        "role": "user",
+        "content": "q"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": "one"
+        },
+        {
+          "role": "user",
+          "content": "two"
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "user",
+        "content": "one\n\ntwo"
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "first"
+            },
+            {
+              "type": "tool_use",
+              "id": "tu1",
+              "name": "f",
+              "input": {}
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "second"
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "assistant",
+        "content": "first\n\nsecond",
+        "tool_calls": [
+          {
+            "id": "tu1",
+            "function": {
+              "name": "f",
+              "arguments": {}
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "request": {
+      "system": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": 42
+        }
+      ]
+    },
+    "result": [
+      {
+        "role": "user",
+        "content": "42"
+      }
+    ]
+  }
+]
