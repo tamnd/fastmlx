@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "packages": [
+        {
+          "name": "mlx-lm",
+          "dist_found": true,
+          "version": "0.20.1",
+          "direct_commit": {
+            "commit": "abc1234",
+            "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234"
+          }
+        },
+        {
+          "name": "mlx-vlm",
+          "dist_found": true,
+          "version": "0.1.5",
+          "direct_commit": null
+        },
+        {
+          "name": "mlx-audio",
+          "dist_found": false,
+          "version": null,
+          "direct_commit": null
+        },
+        {
+          "name": "mlx-embeddings",
+          "dist_found": true,
+          "version": "0.0.3",
+          "direct_commit": {}
+        }
+      ],
+      "fallback": {
+        "mlx-vlm": {
+          "commit": "def5678",
+          "url": "https://github.com/Blaizzy/mlx-vlm/commit/def5678"
+        },
+        "mlx-embeddings": {
+          "commit": "99aa00b",
+          "url": "https://github.com/Blaizzy/mlx-embeddings/commit/99aa00b"
+        }
+      },
+      "out": {
+        "mlx-lm": {
+          "name": "mlx-lm",
+          "version": "0.20.1",
+          "commit": "abc1234",
+          "url": "https://github.com/ml-explore/mlx-lm/commit/abc1234"
+        },
+        "mlx-vlm": {
+          "name": "mlx-vlm",
+          "version": "0.1.5",
+          "commit": "def5678",
+          "url": "https://github.com/Blaizzy/mlx-vlm/commit/def5678"
+        },
+        "mlx-audio": {
+          "name": "mlx-audio",
+          "version": null,
+          "commit": null,
+          "url": null
+        },
+        "mlx-embeddings": {
+          "name": "mlx-embeddings",
+          "version": "0.0.3",
+          "commit": "99aa00b",
+          "url": "https://github.com/Blaizzy/mlx-embeddings/commit/99aa00b"
+        }
+      }
+    },
+    {
+      "packages": [
+        {
+          "name": "mlx-lm",
+          "dist_found": true,
+          "version": "0.20.1",
+          "direct_commit": null
+        }
+      ],
+      "fallback": {},
+      "out": {
+        "mlx-lm": {
+          "name": "mlx-lm",
+          "version": "0.20.1",
+          "commit": null,
+          "url": null
+        }
+      }
+    }
+  ]
+}

@@ -79,3 +79,39 @@ func ParseCommitsFromPyproject(content string, packages map[string]string) map[s
 	}
 	return commits
 }
+
+// EnginePackageInfo carries one package's distribution lookup result: whether
+// the package is installed, its version, and the commit already extracted from
+// its PEP 610 direct_url.json (nil or empty when none). The lookup and the
+// extraction are caller seams.
+type EnginePackageInfo struct {
+	Name         string
+	DistFound    bool
+	Version      string
+	DirectCommit map[string]any
+}
+
+// BuildEngineInfo assembles the per-package engine-commit info the about/update
+// panel renders. A package that is not installed yields a name-only entry with a
+// null version and commit. For an installed package the commit comes from its
+// direct-url commit, falling back to the fallback map when that is missing or
+// empty, and stays null when neither resolves.
+func BuildEngineInfo(pkgs []EnginePackageInfo, fallbackCommits map[string]map[string]any) map[string]map[string]any {
+	engines := map[string]map[string]any{}
+	for _, p := range pkgs {
+		info := map[string]any{"name": p.Name, "version": nil, "commit": nil, "url": nil}
+		if p.DistFound {
+			info["version"] = p.Version
+			commitInfo := p.DirectCommit
+			if len(commitInfo) == 0 {
+				commitInfo = fallbackCommits[p.Name]
+			}
+			if len(commitInfo) > 0 {
+				info["commit"] = commitInfo["commit"]
+				info["url"] = commitInfo["url"]
+			}
+		}
+		engines[p.Name] = info
+	}
+	return engines
+}
