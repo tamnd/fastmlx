@@ -222,6 +222,30 @@ func Argpartition(a *Array, kth, axis int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 
+// GatherMM is the batched gather-matmul a mixture-of-experts block uses to run a
+// per-token expert: it multiplies each row of a by the b matrix that rhsIndices
+// selects for that row. lhsIndices may be nil (no left gather, the common MoE
+// case). When sorted is true the caller has pre-sorted the rows by expert so each
+// expert's weight is read once contiguously; the result is identical either way,
+// sorted is only a memory-access hint.
+func GatherMM(a, b, lhsIndices, rhsIndices *Array, sorted bool, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// Argsort returns the indices that sort a along axis. A mixture-of-experts block
+// sorts its flattened routing indices this way to group every token bound for the
+// same expert, then unsorts the expert outputs with a second Argsort of the order.
+func Argsort(a *Array, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// FloorDivide computes element-wise floor(a / b) with broadcasting. The expert
+// sort path uses it to map each sorted routing slot back to its token row
+// (order // top_k) before the gather.
+func FloorDivide(a, b *Array, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // RoPE applies rotary position embedding with a single base frequency.
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable

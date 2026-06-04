@@ -522,6 +522,47 @@ func Argpartition(a *Array, kth, axis int, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func GatherMM(a, b, lhsIndices, rhsIndices *Array, sorted bool, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	var lc C.mlx_array
+	if lhsIndices != nil {
+		lc = lhsIndices.c
+	} else {
+		lc = C.mlx_array_new()
+		defer C.mlx_array_free(lc)
+	}
+	var rc C.mlx_array
+	if rhsIndices != nil {
+		rc = rhsIndices.c
+	} else {
+		rc = C.mlx_array_new()
+		defer C.mlx_array_free(rc)
+	}
+	if C.mlx_gather_mm(&out, a.c, b.c, lc, rc, C._Bool(sorted), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Argsort(a *Array, axis int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_argsort_axis(&out, a.c, C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func FloorDivide(a, b *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_floor_divide(&out, a.c, b.c, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	freq := C.mlx_array_new()
