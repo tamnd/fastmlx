@@ -73,3 +73,109 @@ func (c *KVTensorCache) SetState(conv, ssm *mlxgo.Array, advance int) {
 	c.ssmState = ssm
 	c.Offset += advance
 }
+
+// concatAlongBatch concatenates per-sequence arrays along the batch axis (axis 0)
+// into the single tensor a batched forward consumes. A nil first element means the
+// caches are still empty (no sequence has run a step yet, the state on the default
+// stub where prefill stopped at the embedding), so it returns nil without a kernel;
+// a single array passes through. This is the array-level primitive the cache merge
+// builds on.
+func concatAlongBatch(arrs []*mlxgo.Array, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	if len(arrs) == 0 || arrs[0] == nil {
+		return nil, nil
+	}
+	if len(arrs) == 1 {
+		return arrs[0], nil
+	}
+	return mlxgo.Concatenate(arrs, 0, s)
+}
+
+// splitAlongBatch divides a batched tensor back into n per-sequence arrays along
+// the batch axis (axis 0), the inverse of concatAlongBatch. A nil input (an
+// untouched empty cache) splits into n nils without a kernel.
+func splitAlongBatch(a *mlxgo.Array, n int, s *mlxgo.Stream) ([]*mlxgo.Array, error) {
+	if a == nil {
+		return make([]*mlxgo.Array, n), nil
+	}
+	if n == 1 {
+		return []*mlxgo.Array{a}, nil
+	}
+	return mlxgo.Split(a, n, 0, s)
+}
+
+// mergeCachesAlongBatch stacks per-sequence KV cache sets into one batched set the
+// batched forward threads through its layers. seqs[i] is sequence i's per-layer
+// cache list (all the same length); the result has one KVTensorCache per layer
+// whose key, value, and recurrent-state tensors are the sequences concatenated
+// along the batch axis, with the shared decode offset carried through. The
+// generator only batches a synchronized cohort (every row at one offset), so a
+// single offset describes every row.
+func mergeCachesAlongBatch(seqs [][]*KVTensorCache, s *mlxgo.Stream) ([]*KVTensorCache, error) {
+	layers := len(seqs[0])
+	merged := make([]*KVTensorCache, layers)
+	for l := range layers {
+		keys := make([]*mlxgo.Array, len(seqs))
+		values := make([]*mlxgo.Array, len(seqs))
+		conv := make([]*mlxgo.Array, len(seqs))
+		ssm := make([]*mlxgo.Array, len(seqs))
+		for i, seq := range seqs {
+			keys[i] = seq[l].keys
+			values[i] = seq[l].values
+			conv[i] = seq[l].convState
+			ssm[i] = seq[l].ssmState
+		}
+		mc := &KVTensorCache{Offset: seqs[0][l].Offset}
+		var err error
+		if mc.keys, err = concatAlongBatch(keys, s); err != nil {
+			return nil, err
+		}
+		if mc.values, err = concatAlongBatch(values, s); err != nil {
+			return nil, err
+		}
+		if mc.convState, err = concatAlongBatch(conv, s); err != nil {
+			return nil, err
+		}
+		if mc.ssmState, err = concatAlongBatch(ssm, s); err != nil {
+			return nil, err
+		}
+		merged[l] = mc
+	}
+	return merged, nil
+}
+
+// splitCachesAlongBatch writes a batched cache set back into the per-sequence
+// caches after a batched forward has grown it. merged[l] holds the layer's batched
+// key, value, and recurrent-state tensors and its advanced offset; this carves each
+// back along the batch axis into seqs[i][l], so every sequence resumes with its own
+// grown cache. It is the inverse of mergeCachesAlongBatch and runs only after the
+// forward returns, so on the default stub the forward has already errored and this
+// is never reached.
+func splitCachesAlongBatch(merged []*KVTensorCache, seqs [][]*KVTensorCache, s *mlxgo.Stream) error {
+	n := len(seqs)
+	for l, mc := range merged {
+		keys, err := splitAlongBatch(mc.keys, n, s)
+		if err != nil {
+			return err
+		}
+		values, err := splitAlongBatch(mc.values, n, s)
+		if err != nil {
+			return err
+		}
+		conv, err := splitAlongBatch(mc.convState, n, s)
+		if err != nil {
+			return err
+		}
+		ssm, err := splitAlongBatch(mc.ssmState, n, s)
+		if err != nil {
+			return err
+		}
+		for i, seq := range seqs {
+			seq[l].keys = keys[i]
+			seq[l].values = values[i]
+			seq[l].convState = conv[i]
+			seq[l].ssmState = ssm[i]
+			seq[l].Offset = mc.Offset
+		}
+	}
+	return nil
+}

@@ -33,7 +33,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumLayers(), eos, m.Forward), nil
+		return NewAdapter(args.NumLayers(), eos, m.Forward, m.BatchDecode), nil
 	},
 	"gemma4_text": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseGemma4TextArgs(cfg)
@@ -44,7 +44,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumLayers(), eos, m.Forward), nil
+		return NewAdapter(args.NumLayers(), eos, m.Forward, m.BatchDecode), nil
 	},
 	"deepseek_v3": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseDeepseekV3Args(cfg)
@@ -55,7 +55,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumLayers(), eos, m.Forward), nil
+		return NewAdapter(args.NumLayers(), eos, m.Forward, m.BatchDecode), nil
 	},
 	"qwen3": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseQwen3Args(cfg)
@@ -66,7 +66,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumHiddenLayers, eos, m.Forward), nil
+		return NewAdapter(args.NumHiddenLayers, eos, m.Forward, m.BatchDecode), nil
 	},
 	"llama": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseLlamaArgs(cfg)
@@ -77,7 +77,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumHiddenLayers, eos, m.Forward), nil
+		return NewAdapter(args.NumHiddenLayers, eos, m.Forward, m.BatchDecode), nil
 	},
 	"glm4": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseGlm4Args(cfg)
@@ -88,7 +88,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumHiddenLayers, eos, m.Forward), nil
+		return NewAdapter(args.NumHiddenLayers, eos, m.Forward, m.BatchDecode), nil
 	},
 	"phi3": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParsePhi4Args(cfg)
@@ -99,7 +99,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumHiddenLayers, eos, m.Forward), nil
+		return NewAdapter(args.NumHiddenLayers, eos, m.Forward, m.BatchDecode), nil
 	},
 	"ministral3": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseMinistralArgs(cfg)
@@ -110,7 +110,7 @@ var modelBuilders = map[string]ModelBuilder{
 		if err != nil {
 			return nil, err
 		}
-		return NewAdapter(args.NumHiddenLayers, eos, m.Forward), nil
+		return NewAdapter(args.NumHiddenLayers, eos, m.Forward, m.BatchDecode), nil
 	},
 }
 

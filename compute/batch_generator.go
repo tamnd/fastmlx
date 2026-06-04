@@ -31,6 +31,22 @@ type Model interface {
 	EOS() int
 }
 
+// BatchDecoder is the optional capability a Model implements to decode a
+// synchronized batch of sequences in a single forward. When the generator finds
+// every in-flight sequence on the same decode step (one pending token and an
+// identical cache offset), it calls BatchDecode once instead of Forward per
+// sequence, which is the throughput path the 2x concurrency goal rests on. The
+// per-sequence path stays the fallback for prefill steps and for a backend that
+// does not implement this.
+//
+// tokens[i] and caches[i] belong to sequence i in the same order; caches[i] is the
+// value NewCache produced for that sequence, which BatchDecode merges along the
+// batch axis, advances by one step, and writes back. The result holds one logits
+// row per sequence, again in order, each the opaque value a Sampler consumes.
+type BatchDecoder interface {
+	BatchDecode(tokens []int32, caches []any, s *mlxgo.Stream) (logits []any, err error)
+}
+
 // ErrEmptyPrompt is returned by Insert when a request carries no prompt tokens.
 // A forward pass needs at least one token to produce its first logits row.
 var ErrEmptyPrompt = errors.New("compute: decode request has no prompt tokens")
@@ -133,39 +149,102 @@ func (g *BatchGenerator) Step() ([]pipeline.TokenResult, error) {
 	}
 	sort.Ints(uids)
 
-	results := make([]pipeline.TokenResult, 0, len(uids))
+	live := make([]int, 0, len(uids))
 	for _, uid := range uids {
-		seq := g.active[uid]
-		if seq.finished {
-			continue
+		if !g.active[uid].finished {
+			live = append(live, uid)
 		}
+	}
+
+	if batched, results, err := g.tryBatchedStep(live); batched {
+		return results, err
+	}
+
+	results := make([]pipeline.TokenResult, 0, len(live))
+	for _, uid := range live {
+		seq := g.active[uid]
+		advance := len(seq.pending)
 		logits, err := g.model.Forward(seq.pending, seq.cache, g.s)
 		if err != nil {
 			return nil, err
 		}
-		for _, p := range seq.procs {
-			logits = p.Apply(logits)
-		}
-		tok := seq.sampler.Sample(logits)
-
-		seq.offset += len(seq.pending)
-		seq.pending = []int32{int32(tok)}
-		seq.generated++
-
-		res := pipeline.TokenResult{UID: uid, Token: tok}
-		switch {
-		case tok == g.model.EOS():
-			res.FinishReason = "stop"
-		case seq.maxTokens > 0 && seq.generated >= seq.maxTokens:
-			res.FinishReason = "length"
-		}
-		if res.FinishReason != "" {
-			seq.finished = true
-			res.PromptCache = seq.cache
-		}
-		results = append(results, res)
+		results = append(results, g.consume(uid, seq, logits, advance))
 	}
 	return results, nil
+}
+
+// tryBatchedStep decodes the live cohort in one forward when it is fully
+// synchronized: at least two sequences, every one on a single pending decode
+// token at the same cache offset, and the model implementing BatchDecoder. That
+// is exactly the state a batch reaches once every prompt has been prefilled and
+// the rows step in lockstep, which is the regime the throughput goal targets. It
+// returns batched=false to fall back to the per-sequence path on any prefill
+// step, a ragged cohort (sequences at different offsets, the heterogeneous-length
+// case a right-pad-prefill admission redesign will fold in later), a lone
+// sequence, or a backend without the capability. When it returns batched=true the
+// step is fully handled, error included.
+func (g *BatchGenerator) tryBatchedStep(live []int) (bool, []pipeline.TokenResult, error) {
+	bd, ok := g.model.(BatchDecoder)
+	if !ok || len(live) < 2 {
+		return false, nil, nil
+	}
+	offset := g.active[live[0]].offset
+	for _, uid := range live {
+		seq := g.active[uid]
+		if len(seq.pending) != 1 || seq.offset != offset {
+			return false, nil, nil
+		}
+	}
+
+	tokens := make([]int32, len(live))
+	caches := make([]any, len(live))
+	for i, uid := range live {
+		seq := g.active[uid]
+		tokens[i] = seq.pending[0]
+		caches[i] = seq.cache
+	}
+	rows, err := bd.BatchDecode(tokens, caches, g.s)
+	if err != nil {
+		return true, nil, err
+	}
+
+	results := make([]pipeline.TokenResult, len(live))
+	for i, uid := range live {
+		seq := g.active[uid]
+		results[i] = g.consume(uid, seq, rows[i], 1)
+	}
+	return true, results, nil
+}
+
+// consume turns one sequence's fresh logits into the next token and advances the
+// sequence: it runs the logits processors, samples, moves the cache offset on by
+// the tokens just fed, queues the sampled token as the next pending input, and
+// detects an EOS or max-length finish. It is the shared tail of both the
+// per-sequence Forward path (advance is the prompt or single-token length) and the
+// batched path (advance is always one), so the two paths stay byte-for-byte
+// identical past the forward.
+func (g *BatchGenerator) consume(uid int, seq *bgSeq, logits any, advance int) pipeline.TokenResult {
+	for _, p := range seq.procs {
+		logits = p.Apply(logits)
+	}
+	tok := seq.sampler.Sample(logits)
+
+	seq.offset += advance
+	seq.pending = []int32{int32(tok)}
+	seq.generated++
+
+	res := pipeline.TokenResult{UID: uid, Token: tok}
+	switch {
+	case tok == g.model.EOS():
+		res.FinishReason = "stop"
+	case seq.maxTokens > 0 && seq.generated >= seq.maxTokens:
+		res.FinishReason = "length"
+	}
+	if res.FinishReason != "" {
+		seq.finished = true
+		res.PromptCache = seq.cache
+	}
+	return res
 }
 
 // Remove retires a sequence and returns its KV cache for prefix-cache storage.

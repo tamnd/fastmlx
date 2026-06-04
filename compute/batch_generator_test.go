@@ -46,6 +46,32 @@ func (m *fakeModel) Forward(tokens []int32, cache any, s *mlxgo.Stream) (any, er
 
 func (m *fakeModel) EOS() int { return m.eos }
 
+// batchModel adds the synchronized-batch decode capability to fakeModel. It
+// records each BatchDecode cohort so a test can confirm the generator routes a
+// synchronized cohort through one batched call instead of per-sequence Forwards,
+// and falls back to Forward for prefill and ragged cohorts. Embedding fakeModel
+// keeps NewCache / Forward / EOS identical, so the only difference under test is
+// the extra BatchDecode path.
+type batchModel struct {
+	fakeModel
+	batchCalls [][]int32 // one entry per BatchDecode, the cohort's tokens in order
+	batchEr    error     // when set, BatchDecode returns it (the batched mlx seam)
+}
+
+func (m *batchModel) BatchDecode(tokens []int32, caches []any, s *mlxgo.Stream) ([]any, error) {
+	if m.batchEr != nil {
+		return nil, m.batchEr
+	}
+	cp := make([]int32, len(tokens))
+	copy(cp, tokens)
+	m.batchCalls = append(m.batchCalls, cp)
+	rows := make([]any, len(caches))
+	for i := range rows {
+		rows[i] = []float32{1, 2, 3}
+	}
+	return rows, nil
+}
+
 // scriptSampler returns a pre-planned token per call, ignoring the logits. It
 // records the logits it was handed so a test can confirm processors ran first.
 type scriptSampler struct {
@@ -282,6 +308,114 @@ func TestBatchGeneratorForwardErrorSurfaces(t *testing.T) {
 	}
 	if g.HasActive() != true {
 		t.Fatal("sequence dropped on a forward error; it should remain for retry")
+	}
+}
+
+// TestBatchGeneratorBatchedCohortDispatch is the throughput path: once two
+// equal-length prompts have prefilled, they decode in lockstep, so the generator
+// must replace the two per-sequence Forwards with a single BatchDecode and feed it
+// the prior step's sampled tokens in UID order.
+func TestBatchGeneratorBatchedCohortDispatch(t *testing.T) {
+	m := &batchModel{fakeModel: fakeModel{eos: -1, record: true}}
+	g := newGen(t, m)
+	uidA, _ := g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{20, 21, 22}}})
+	uidB, _ := g.Insert(pipeline.DecodeRequest{Tokens: []int{3, 4}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{30, 31, 32}}})
+
+	// Step 1 is prefill: pending is the whole prompt (len 2), so the cohort is not
+	// yet synchronized and the generator takes the per-sequence path.
+	r1, err := g.Step()
+	if err != nil {
+		t.Fatalf("Step 1: %v", err)
+	}
+	if len(m.batchCalls) != 0 {
+		t.Fatalf("prefill step used the batched path: %v", m.batchCalls)
+	}
+	if len(m.fedTokens) != 2 {
+		t.Fatalf("prefill made %d Forward calls, want 2 (one per sequence)", len(m.fedTokens))
+	}
+	if r1[0].UID != uidA || r1[1].UID != uidB {
+		t.Fatalf("prefill uids out of order: %d then %d", r1[0].UID, r1[1].UID)
+	}
+
+	// Step 2 is a synchronized decode: both sequences have one pending token at the
+	// same offset, so one BatchDecode replaces the two Forwards.
+	before := len(m.fedTokens)
+	r2, err := g.Step()
+	if err != nil {
+		t.Fatalf("Step 2: %v", err)
+	}
+	if len(m.batchCalls) != 1 {
+		t.Fatalf("decode step made %d batched calls, want 1", len(m.batchCalls))
+	}
+	if len(m.fedTokens) != before {
+		t.Fatalf("decode step also ran %d per-sequence Forwards, want 0", len(m.fedTokens)-before)
+	}
+	checkFed(t, m.batchCalls[0], []int32{20, 30}) // prior tokens, UID order
+	if len(r2) != 2 || r2[0].Token != 21 || r2[1].Token != 31 {
+		t.Fatalf("batched tokens = %+v, want 21 then 31", r2)
+	}
+	if r2[0].UID != uidA || r2[1].UID != uidB {
+		t.Fatalf("batched uids out of order: %d then %d", r2[0].UID, r2[1].UID)
+	}
+}
+
+// TestBatchGeneratorRaggedCohortFallsBack pins the limit of the first cut: two
+// prompts of different lengths never share an offset, so the cohort stays ragged
+// and every step uses the per-sequence path. The general heterogeneous-length case
+// awaits a right-pad-prefill admission redesign.
+func TestBatchGeneratorRaggedCohortFallsBack(t *testing.T) {
+	m := &batchModel{fakeModel: fakeModel{eos: -1, record: true}}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2, 3}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{20}}})
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{4}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{30}}})
+	for range 3 {
+		if _, err := g.Step(); err != nil {
+			t.Fatalf("Step: %v", err)
+		}
+	}
+	if len(m.batchCalls) != 0 {
+		t.Fatalf("ragged cohort used the batched path: %v", m.batchCalls)
+	}
+}
+
+// TestBatchGeneratorLoneSequenceNotBatched confirms a single sequence never takes
+// the batched path even with a BatchDecoder model: a batch of one is just the
+// per-sequence forward, and routing it through the merge/split machinery would be
+// pure overhead.
+func TestBatchGeneratorLoneSequenceNotBatched(t *testing.T) {
+	m := &batchModel{fakeModel: fakeModel{eos: -1, record: true}}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{9}}})
+	for range 3 {
+		if _, err := g.Step(); err != nil {
+			t.Fatalf("Step: %v", err)
+		}
+	}
+	if len(m.batchCalls) != 0 {
+		t.Fatalf("a lone sequence was batched: %v", m.batchCalls)
+	}
+	if len(m.fedTokens) != 3 {
+		t.Fatalf("lone sequence made %d Forward calls, want 3", len(m.fedTokens))
+	}
+}
+
+// TestBatchGeneratorBatchedDecodeErrorSurfaces is the batched counterpart of the
+// per-sequence seam test: on the default stub the model's BatchDecode returns
+// ErrMLXUnavailable, and Step surfaces it without advancing or dropping the cohort.
+func TestBatchGeneratorBatchedDecodeErrorSurfaces(t *testing.T) {
+	m := &batchModel{fakeModel: fakeModel{eos: -1}, batchEr: mlxgo.ErrMLXUnavailable}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2}, MaxTokens: 5, Sampler: &scriptSampler{plan: []int{7}}})
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{3, 4}, MaxTokens: 5, Sampler: &scriptSampler{plan: []int{8}}})
+	if _, err := g.Step(); err != nil { // prefill runs the per-sequence path cleanly
+		t.Fatalf("prefill Step: %v", err)
+	}
+	_, err := g.Step() // the synchronized decode hits the batched seam
+	if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("Step err = %v, want ErrMLXUnavailable from the batched seam", err)
+	}
+	if !g.HasActive() {
+		t.Fatal("cohort dropped on a batched error; it should remain for retry")
 	}
 }
 
