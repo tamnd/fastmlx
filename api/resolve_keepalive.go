@@ -21,8 +21,8 @@ const (
 //
 // The second return reports whether a frame applies: it is false (with an empty
 // string) when the mode disables keepalive ("off") or when the protocol has no
-// frame ("openai_responses", or anything unrecognized — the reference's final
-// fall-through to None). The "comment" mode returns the legacy SSE comment for
+// frame ("openai_responses", or anything unrecognized, which is the reference's
+// final fall-through to None). The "comment" mode returns the legacy SSE comment for
 // every protocol; otherwise the chunk frame is chosen per protocol. An
 // unrecognized mode falls through to the per-protocol chunk frames, matching the
 // reference, since only "off" and "comment" are special-cased before the switch.

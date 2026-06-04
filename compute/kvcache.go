@@ -3,8 +3,8 @@
 package compute
 
 // KV-cache bookkeeping mirrors mlx_lm.models.cache.KVCache and RotatingKVCache.
-// These types track only the scalar index arithmetic — the offset, the
-// allocated sequence capacity, and (for the rotating cache) the write cursor —
+// These types track only the scalar index arithmetic (the offset, the
+// allocated sequence capacity, and, for the rotating cache, the write cursor)
 // that decides where each step's keys/values are written, when the backing
 // buffer must grow or rotate, and which slice is fetched for attention. That
 // arithmetic is pure and host-testable; it is the part that drives the GPU, not

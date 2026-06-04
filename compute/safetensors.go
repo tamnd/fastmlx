@@ -4,7 +4,7 @@
 // loader, KV caches, batch generator, sampler, and logits processors. The
 // tensor kernels run on MLX through the mlxgo binding (built with cgo against
 // mlx-c); the pieces in this file are the pure, host-testable parts of the
-// loader that need no GPU — parsing the safetensors container header and the
+// loader that need no GPU: parsing the safetensors container header and the
 // sharded-model index. The mmap and the per-weight mlx_array view are the one
 // MLX seam and live in the cgo path.
 package compute

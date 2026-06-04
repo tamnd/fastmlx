@@ -22,7 +22,7 @@ import "strings"
 // serialized with to_json, i.e. json.dumps(ensure_ascii=False). The reference
 // reaches to_json on values that have already passed through json.loads (or
 // arrived as native Python numbers from the adapter), so number literals are in
-// their canonical round-tripped form — canonicalizeJSONNumbers reproduces that
+// their canonical round-tripped form, and canonicalizeJSONNumbers reproduces that
 // before dump(), matching how a literal like 1e10 becomes 10000000000.0.
 func EncodeArgumentsToDSML(arguments jval) string {
 	if arguments.kind != kindObject {

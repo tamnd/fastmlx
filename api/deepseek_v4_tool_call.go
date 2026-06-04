@@ -38,8 +38,8 @@ var (
 // fails, to catch Python-style literals a model occasionally emits, and to the
 // raw string as a last resort. ast.literal_eval cannot be reproduced fully in Go
 // without a Python literal evaluator, so the fallback here covers the literals
-// the DeepSeek V4 grammar actually produces for a non-string parameter — the
-// True/False/None keywords and a single-quoted string — and otherwise returns
+// the DeepSeek V4 grammar actually produces for a non-string parameter (the
+// True/False/None keywords and a single-quoted string) and otherwise returns
 // the raw string, the same last resort the reference reaches. Exotic Python
 // literals the grammar never emits (tuples, sets, hex or underscored numbers)
 // are not evaluated; they take the raw-string path rather than the value

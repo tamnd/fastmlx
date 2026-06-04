@@ -14,7 +14,7 @@
 //     (see the `mlx` Makefile target).
 //
 // The two builds export the identical API; this file holds the parts that are
-// pure data and shared by both — the dtype enum and the unavailable-backend
+// pure data and shared by both: the dtype enum and the unavailable-backend
 // sentinel.
 package mlxgo
 

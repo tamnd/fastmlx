@@ -73,7 +73,7 @@ func Argmax(logits []float32) int {
 
 // ApplyTopP ports apply_top_p (nucleus filtering): keep the smallest set of
 // tokens whose cumulative probability mass reaches top_p, mask the rest to -inf.
-// It reproduces the reference exactly — exponentiate, sort ascending, take the
+// It reproduces the reference exactly: exponentiate, sort ascending, take the
 // running cumulative mass, scatter it back to the original positions, and keep a
 // token when its cumulative-from-the-bottom mass exceeds 1 - top_p.
 func ApplyTopP(logits []float32, topP float64) {
