@@ -105,7 +105,7 @@ func TestBuildModelMissingWeight(t *testing.T) {
 
 func TestRegisteredModelTypes(t *testing.T) {
 	got := RegisteredModelTypes()
-	want := []string{"glm4", "llama", "ministral3", "phi3", "qwen3"}
+	want := []string{"gemma4_text", "glm4", "llama", "ministral3", "phi3", "qwen3"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("RegisteredModelTypes = %v, want %v", got, want)
 	}
