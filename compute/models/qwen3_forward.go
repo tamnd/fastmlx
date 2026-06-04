@@ -197,11 +197,28 @@ func (b *fb) sdpa(q, k, v *mlxgo.Array, scale float32, maskMode string) *mlxgo.A
 // KVTensorCache per layer (from a per-sequence allocation); each layer reads its
 // pre-step offset for RoPE, then appends its keys and values.
 func (m *Qwen3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for batch sequences at once and returns the
+// logits, shaped [batch, 1, vocab_size]. tokens holds the batch's single tokens
+// in row order, the [batch, 1] decode input the reference forms with
+// inputs[:, None]. Every sequence shares the same cache length (a synchronized
+// batch), so with L == 1 the step needs no mask and one kernel launch serves the
+// whole batch.
+func (m *Qwen3Model) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the batch-polymorphic forward shared by Forward and BatchDecode.
+// tokens is the row-major [batch, L] token matrix flattened to batch*L values
+// and the result is [batch, L, vocab_size]; batch == 1 reproduces the
+// single-sequence shapes and L == 1 is the batched decode step.
+func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("qwen3: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	theta := float32(a.RopeTheta)
 	scale := float32(a.Scale())
@@ -211,8 +228,8 @@ func (m *Qwen3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 
 	b := &fb{s: s}
 
-	// Embedding lookup, then a leading batch axis: [L, D] -> [1, L, D].
-	idx, err := mlxgo.NewInt32(tokens, L)
+	// Embedding lookup, then a leading batch axis: [batch*L, D] -> [batch, L, D].
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +237,7 @@ func (m *Qwen3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	maskMode := ""
 	if L > 1 {
@@ -236,13 +253,13 @@ func (m *Qwen3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 		q := b.linear(x, layer.qProj)
 		k := b.linear(x, layer.kProj)
 		v := b.linear(x, layer.vProj)
-		q = b.reshape(q, []int{1, L, nh, hd})
+		q = b.reshape(q, []int{batch, L, nh, hd})
 		q = b.rmsNorm(q, layer.qNorm, eps)
 		q = b.transpose(q, []int{0, 2, 1, 3})
-		k = b.reshape(k, []int{1, L, nkv, hd})
+		k = b.reshape(k, []int{batch, L, nkv, hd})
 		k = b.rmsNorm(k, layer.kNorm, eps)
 		k = b.transpose(k, []int{0, 2, 1, 3})
-		v = b.reshape(v, []int{1, L, nkv, hd})
+		v = b.reshape(v, []int{batch, L, nkv, hd})
 		v = b.transpose(v, []int{0, 2, 1, 3})
 		offset := cache.Offset
 		q = b.rope(q, hd, theta, offset)
@@ -252,7 +269,7 @@ func (m *Qwen3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 		}
 		attn := b.sdpa(q, k, v, scale, maskMode)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})
-		attn = b.reshape(attn, []int{1, L, nh * hd})
+		attn = b.reshape(attn, []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		h = b.add(h, attn)
 

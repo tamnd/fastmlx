@@ -122,3 +122,63 @@ func TestLlamaForwardCacheCountMismatch(t *testing.T) {
 		t.Error("expected a cache-count mismatch error")
 	}
 }
+
+func llamaCaches(t *testing.T, n int) []*KVTensorCache {
+	t.Helper()
+	caches := make([]*KVTensorCache, n)
+	for i := range caches {
+		caches[i] = &KVTensorCache{}
+	}
+	return caches
+}
+
+func TestLlamaBatchDecodeGraceful(t *testing.T) {
+	// The batched decode step type-checks and runs against the stub up to the
+	// first kernel (the embedding take over the [batch, 1] input), then reports
+	// the missing backend. One token per row, several batch sizes.
+	a := tinyLlamaArgs(t, true, false)
+	m, err := NewLlamaModel(a, dummyLlamaWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewLlamaModel: %v", err)
+	}
+	for _, batch := range []int{1, 2, 5} {
+		tokens := make([]int32, batch)
+		for i := range tokens {
+			tokens[i] = int32(i + 1)
+		}
+		_, err := m.BatchDecode(tokens, batch, llamaCaches(t, a.NumHiddenLayers), mlxgo.DefaultStream())
+		if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("BatchDecode(batch=%d) err = %v, want ErrMLXUnavailable", batch, err)
+		}
+	}
+}
+
+func TestLlamaBatchDecodeCacheMismatch(t *testing.T) {
+	// The cache-count guard rejects a wrong-length cache list before any kernel,
+	// the same as the single-sequence forward.
+	a := tinyLlamaArgs(t, true, false)
+	m, err := NewLlamaModel(a, dummyLlamaWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewLlamaModel: %v", err)
+	}
+	if _, err := m.BatchDecode([]int32{1, 2}, 2, llamaCaches(t, 1), mlxgo.DefaultStream()); err == nil {
+		t.Error("expected a cache-count mismatch error")
+	}
+}
+
+// TestLlamaBatchDecodeMatchesForwardForOneRow pins the batch=1 decode to the
+// single-sequence forward: both feed one token through identical shapes and
+// surface the same backend-missing error, so the batched path is a strict
+// generalization of the path that already serves single sequences.
+func TestLlamaBatchDecodeMatchesForwardForOneRow(t *testing.T) {
+	a := tinyLlamaArgs(t, true, false)
+	m, err := NewLlamaModel(a, dummyLlamaWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewLlamaModel: %v", err)
+	}
+	_, fwdErr := m.Forward([]int32{7}, llamaCaches(t, a.NumHiddenLayers), mlxgo.DefaultStream())
+	_, batErr := m.BatchDecode([]int32{7}, 1, llamaCaches(t, a.NumHiddenLayers), mlxgo.DefaultStream())
+	if !errors.Is(fwdErr, mlxgo.ErrMLXUnavailable) || !errors.Is(batErr, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("Forward err = %v, BatchDecode err = %v, want both ErrMLXUnavailable", fwdErr, batErr)
+	}
+}

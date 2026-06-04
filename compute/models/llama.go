@@ -318,13 +318,36 @@ func (b *fb) linearBias(x, w, bias *mlxgo.Array) *mlxgo.Array {
 
 // Forward runs one sequence of tokens through the model and returns the logits,
 // shaped [1, len(tokens), vocab_size]. It mirrors the Qwen3 forward without the
-// per-head q/k norms and with optional projection biases.
+// per-head q/k norms and with optional projection biases. It is the batch=1 view
+// of forwardBL: the whole prompt on the prefill step, then one token per decode.
 func (m *LlamaModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for batch sequences at once and returns the
+// logits, shaped [batch, 1, vocab_size]. tokens is the batch's single tokens in
+// row order ([batch] values, one per sequence), the [batch, 1] decode input the
+// reference forms with inputs[:, None]. Every sequence in the batch must share
+// the same cache length (a synchronized batch), so the step needs no padding
+// mask: with L == 1 the lone query attends to the whole cached history, which is
+// the throughput path where one kernel launch serves the batch instead of one
+// launch per sequence. caches are the batched per-layer caches whose key/value
+// tensors carry the batch on axis 0.
+func (m *LlamaModel) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the batch-polymorphic forward shared by Forward and BatchDecode.
+// tokens is the row-major [batch, L] token matrix flattened to batch*L values;
+// the result is [batch, L, vocab_size]. With batch == 1 it reproduces the
+// single-sequence shapes exactly; with L == 1 it is the batched decode step. A
+// causal mask is applied only when L > 1 (a multi-token prefill); the L == 1
+// decode needs none.
+func (m *LlamaModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("llama: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	theta := float32(a.RopeTheta)
 	scale := float32(a.Scale())
@@ -334,7 +357,7 @@ func (m *LlamaModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 
 	b := &fb{s: s}
 
-	idx, err := mlxgo.NewInt32(tokens, L)
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +365,7 @@ func (m *LlamaModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	maskMode := ""
 	if L > 1 {
@@ -357,9 +380,9 @@ func (m *LlamaModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 		q := b.linearBias(x, layer.qProj, layer.qBias)
 		k := b.linearBias(x, layer.kProj, layer.kBias)
 		v := b.linearBias(x, layer.vProj, layer.vBias)
-		q = b.transpose(b.reshape(q, []int{1, L, nh, hd}), []int{0, 2, 1, 3})
-		k = b.transpose(b.reshape(k, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
-		v = b.transpose(b.reshape(v, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
+		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
+		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
+		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		offset := cache.Offset
 		q = b.rope(q, hd, theta, offset)
 		k = b.rope(k, hd, theta, offset)
@@ -367,7 +390,7 @@ func (m *LlamaModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.S
 			k, v, b.err = cache.Update(k, v, s)
 		}
 		attn := b.sdpa(q, k, v, scale, maskMode)
-		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{1, L, nh * hd})
+		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
 		attn = b.linearBias(attn, layer.oProj, layer.oBias)
 		h = b.add(h, attn)
 

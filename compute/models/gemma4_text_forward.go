@@ -232,25 +232,42 @@ type gemma4Intermediate struct {
 // layer; only the KV-owning layers (the first FirstKVShared) append to theirs,
 // and each KV-shared layer reads the cache its PreviousKVs entry points at.
 func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for batch sequences at once and returns the
+// logits, shaped [batch, 1, vocab_size]. tokens holds the batch's single tokens
+// in row order, the [batch, 1] decode input the reference forms with
+// inputs[:, None]. Every sequence shares the same cache length (a synchronized
+// batch), so with L == 1 the step needs no mask and the [1, 1, 1, total] sliding
+// window mask broadcasts across the batch.
+func (m *Gemma4TextModel) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the batch-polymorphic forward shared by Forward and BatchDecode.
+// tokens is the row-major [batch, L] token matrix flattened to batch*L values
+// and the result is [batch, L, vocab_size]; batch == 1 reproduces the
+// single-sequence shapes and L == 1 is the batched decode step.
+func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("gemma4_text: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	nh := a.NumAttentionHeads
 	prev := a.PreviousKVs()
 
 	b := &fb{s: s}
 
-	ids, err := mlxgo.NewInt32(tokens, L)
+	ids, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
 
 	// Token embedding, scaled by sqrt(hidden_size), with a leading batch axis.
 	h := b.take(m.embedTokens, ids, 0)
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 	h = b.scalarMul(h, float32(a.EmbedScale()))
 
 	// Per-layer inputs: the per-layer embedding table and a projection of the
@@ -262,12 +279,12 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		embedScale, gateScale, projScale := a.PerLayerInputScales()
 
 		pin := b.take(m.embedTokensPerLayer, ids, 0)
-		pin = b.reshape(pin, []int{1, L, nl, hp})
+		pin = b.reshape(pin, []int{batch, L, nl, hp})
 		pin = b.scalarMul(pin, float32(embedScale))
 
 		proj := b.linear(h, m.perLayerModelProjection)
 		proj = b.scalarMul(proj, float32(projScale))
-		proj = b.reshape(proj, []int{1, L, nl, hp})
+		proj = b.reshape(proj, []int{batch, L, nl, hp})
 		proj = b.rmsNorm(proj, m.perLayerProjectionNorm, eps)
 
 		perLayerInputs = b.scalarMul(b.add(proj, pin), float32(gateScale))
@@ -296,7 +313,7 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		// Attention.
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
 		q := b.linear(x, layer.qProj)
-		q = b.reshape(q, []int{1, L, nh, hd})
+		q = b.reshape(q, []int{batch, L, nh, hd})
 		q = b.rmsNorm(q, layer.qNorm, eps)
 		q = b.transpose(q, []int{0, 2, 1, 3})
 
@@ -305,7 +322,7 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		if a.HasKV(i) {
 			offset = caches[i].Offset
 			k := b.linear(x, layer.kProj)
-			k = b.reshape(k, []int{1, L, nkv, hd})
+			k = b.reshape(k, []int{batch, L, nkv, hd})
 			k = b.rmsNorm(k, layer.kNorm, eps)
 			k = b.transpose(k, []int{0, 2, 1, 3})
 			k = m.ropeLayer(b, i, k, hd, offset)
@@ -317,7 +334,7 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 			} else {
 				v = b.linear(x, vSrc)
 			}
-			v = b.reshape(v, []int{1, L, nkv, hd})
+			v = b.reshape(v, []int{batch, L, nkv, hd})
 			v = b.rmsNorm(v, nil, eps) // v_norm is scale-free (no weight).
 			v = b.transpose(v, []int{0, 2, 1, 3})
 
@@ -341,7 +358,7 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		}
 		attn := b.sdpaWith(q, keys, values, 1.0, maskMode, mask)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})
-		attn = b.reshape(attn, []int{1, L, nh * hd})
+		attn = b.reshape(attn, []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		attn = b.rmsNorm(attn, layer.postAttentionLayernorm, eps)
 		h = b.add(h, attn)
@@ -356,7 +373,7 @@ func (m *Gemma4TextModel) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		// Per-layer input gating.
 		if a.HasPerLayerInputs() {
 			pli := b.takeAt(perLayerInputs, i, 2)
-			pli = b.reshape(pli, []int{1, L, a.HiddenSizePerLayerIn})
+			pli = b.reshape(pli, []int{batch, L, a.HiddenSizePerLayerIn})
 			gate := b.geluApprox(b.linear(h, layer.perLayerInputGate))
 			gate = b.mul(gate, pli)
 			gate = b.linear(gate, layer.perLayerProjection)

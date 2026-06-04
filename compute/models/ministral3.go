@@ -335,11 +335,28 @@ func NewMinistral3Model(args *MinistralArgs, weights map[string]*mlxgo.Array) (*
 // are the remaining backend seam; a full-attention causal mask is requested here
 // and the per-layer rotating bookkeeping bounds the window for decode.
 func (m *Ministral3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for batch sequences at once and returns the
+// logits, shaped [batch, 1, vocab_size]. tokens holds the batch's single tokens
+// in row order, the [batch, 1] decode input the reference forms with
+// inputs[:, None]. Every sequence shares the same cache length (a synchronized
+// batch), so with L == 1 the step needs no mask and the [1, 1, 1, 1] query scale
+// broadcasts across the batch.
+func (m *Ministral3Model) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the batch-polymorphic forward shared by Forward and BatchDecode.
+// tokens is the row-major [batch, L] token matrix flattened to batch*L values
+// and the result is [batch, L, vocab_size]; batch == 1 reproduces the
+// single-sequence shapes and L == 1 is the batched decode step.
+func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("ministral3: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	theta := float32(a.RopeTheta)
 	scale := float32(a.Scale())
@@ -349,7 +366,7 @@ func (m *Ministral3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 
 	b := &fb{s: s}
 
-	idx, err := mlxgo.NewInt32(tokens, L)
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +374,7 @@ func (m *Ministral3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	maskMode := ""
 	if L > 1 {
@@ -372,14 +389,14 @@ func (m *Ministral3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		q := b.linear(x, layer.qProj)
 		k := b.linear(x, layer.kProj)
 		v := b.linear(x, layer.vProj)
-		q = b.transpose(b.reshape(q, []int{1, L, nh, hd}), []int{0, 2, 1, 3})
-		k = b.transpose(b.reshape(k, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
-		v = b.transpose(b.reshape(v, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
+		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
+		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
+		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		offset := cache.Offset
 		q = b.rope(q, hd, theta, offset)
 		k = b.rope(k, hd, theta, offset)
 		// llama4 position-dependent query scale, shaped [1, 1, L, 1] to broadcast
-		// over heads and head_dim.
+		// over batch, heads, and head_dim.
 		if b.err == nil {
 			as, aerr := mlxgo.NewFloat32(a.AttnScale(L, offset), 1, 1, L, 1)
 			if aerr != nil {
@@ -392,7 +409,7 @@ func (m *Ministral3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 			k, v, b.err = cache.Update(k, v, s)
 		}
 		attn := b.sdpa(q, k, v, scale, maskMode)
-		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{1, L, nh * hd})
+		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		h = b.add(h, attn)
 

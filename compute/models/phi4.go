@@ -377,6 +377,24 @@ func NewPhi4Model(args *Phi4Args, weights map[string]*mlxgo.Array) (*Phi4Model, 
 // query, key, and value bands. The longrope/su SuScaledRoPE path is staged behind
 // a seam; the standard and linear rope paths run here.
 func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for batch sequences at once and returns the
+// logits, shaped [batch, 1, vocab_size]. tokens holds the batch's single tokens
+// in row order, the [batch, 1] decode input the reference forms with
+// inputs[:, None]. Every sequence shares the same cache length (a synchronized
+// batch), so with L == 1 the step needs no mask and one kernel launch serves the
+// whole batch.
+func (m *Phi4Model) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the batch-polymorphic forward shared by Forward and BatchDecode.
+// tokens is the row-major [batch, L] token matrix flattened to batch*L values
+// and the result is [batch, L, vocab_size]; batch == 1 reproduces the
+// single-sequence shapes and L == 1 is the batched decode step.
+func (m *Phi4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("phi4: got %d caches, want %d", len(caches), len(m.layers))
 	}
@@ -384,7 +402,6 @@ func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.St
 	if a.UsesSuRope() {
 		return nil, fmt.Errorf("phi4: SuScaledRoPE (longrope/su) forward is staged behind a seam")
 	}
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	theta := float32(a.RopeTheta)
 	scale := float32(a.Scale())
@@ -399,7 +416,7 @@ func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.St
 
 	b := &fb{s: s}
 
-	idx, err := mlxgo.NewInt32(tokens, L)
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -407,7 +424,7 @@ func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.St
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	maskMode := ""
 	if L > 1 {
@@ -421,9 +438,9 @@ func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.St
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
 		qkv := b.linear(x, layer.qkvProj)
 		q, k, v := b.splitQKV(qkv, qpos, kvsz)
-		q = b.transpose(b.reshape(q, []int{1, L, nh, hd}), []int{0, 2, 1, 3})
-		k = b.transpose(b.reshape(k, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
-		v = b.transpose(b.reshape(v, []int{1, L, nkv, hd}), []int{0, 2, 1, 3})
+		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
+		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
+		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		offset := cache.Offset
 		q = b.ropeScaled(q, ropeDims, trad, theta, ropeScale, offset)
 		k = b.ropeScaled(k, ropeDims, trad, theta, ropeScale, offset)
@@ -431,7 +448,7 @@ func (m *Phi4Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.St
 			k, v, b.err = cache.Update(k, v, s)
 		}
 		attn := b.sdpa(q, k, v, scale, maskMode)
-		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{1, L, nh * hd})
+		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		h = b.add(h, attn)
 
