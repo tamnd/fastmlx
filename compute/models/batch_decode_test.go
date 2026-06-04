@@ -108,6 +108,45 @@ func TestGemma4BatchDecodeGraceful(t *testing.T) {
 	}
 }
 
+// TestDeepseekV3BatchDecodeGraceful drives the routed MoE model's batched decode
+// to the backend seam. DeepSeek-V3 carries two singleton attention axes (the MQA
+// latent head and the rotary key head) that are not the batch axis, so the test
+// confirms generalizing only the leading batch dimension keeps the multi-head
+// latent attention and the router degrading gracefully across batch widths.
+func TestDeepseekV3BatchDecodeGraceful(t *testing.T) {
+	a := parseDeepseek(t, nil)
+	m, err := NewDeepseekV3Model(a, dummyDeepseekWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewDeepseekV3Model: %v", err)
+	}
+	for _, batch := range []int{1, 2, 5} {
+		_, err := m.BatchDecode(batchTokens(batch), batch, batchCaches(a.NumLayers()), mlxgo.DefaultStream())
+		if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("BatchDecode(batch=%d) err = %v, want ErrMLXUnavailable", batch, err)
+		}
+	}
+}
+
+// TestQwen3NextBatchDecodeGraceful drives the hybrid model's batched decode to
+// the backend seam. Qwen3-Next is the hardest batch generalization: a linear
+// layer carries a recurrent state and a convolution window that now lead with the
+// batch axis, and the one-timestep recurrence advances every row in parallel. The
+// test runs batch 1, 2, and 5 so the gated delta net, the gated attention, and the
+// mixture all degrade gracefully with the batch dimension threaded through.
+func TestQwen3NextBatchDecodeGraceful(t *testing.T) {
+	a := parseQwen3Next(t, nil)
+	m, err := NewQwen3NextModel(a, fabricateWeights(t, a.WeightNames()))
+	if err != nil {
+		t.Fatalf("NewQwen3NextModel: %v", err)
+	}
+	for _, batch := range []int{1, 2, 5} {
+		_, err := m.BatchDecode(batchTokens(batch), batch, batchCaches(a.NumLayers()), mlxgo.DefaultStream())
+		if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("BatchDecode(batch=%d) err = %v, want ErrMLXUnavailable", batch, err)
+		}
+	}
+}
+
 // TestBatchDecodeMatchesForwardForOneRow pins every dense model's batch=1 decode
 // to its single-sequence forward: both feed one token through identical shapes
 // and surface the same backend-missing error, so the batched path is a strict

@@ -225,7 +225,7 @@ func TestGatedDeltaNetGraceful(t *testing.T) {
 		b := &fb{}
 		x := hostArray(t, 1, L, a.HiddenSize)
 		cache := &KVTensorCache{}
-		if got := b.gatedDeltaNet(x, linear, a, cache, L); got != nil {
+		if got := b.gatedDeltaNet(x, linear, a, cache, 1, L); got != nil {
 			t.Fatalf("L=%d gatedDeltaNet result = %v, want nil on the stub", L, got)
 		}
 		if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {
@@ -254,7 +254,7 @@ func TestQwen3NextAttentionGraceful(t *testing.T) {
 	L := 2
 	x := hostArray(t, 1, L, a.HiddenSize)
 	cache := &KVTensorCache{}
-	if got := b.qwen3NextAttention(x, attn, a, cache, "causal", L); got != nil {
+	if got := b.qwen3NextAttention(x, attn, a, cache, "causal", 1, L); got != nil {
 		t.Fatalf("qwen3NextAttention result = %v, want nil on the stub", got)
 	}
 	if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {
@@ -275,7 +275,7 @@ func TestQwen3NextMoEGraceful(t *testing.T) {
 	b := &fb{}
 	L := 2
 	x := hostArray(t, 1, L, a.HiddenSize)
-	if got := b.qwen3NextMoE(x, mlp, a, L); got != nil {
+	if got := b.qwen3NextMoE(x, mlp, a, 1, L); got != nil {
 		t.Fatalf("qwen3NextMoE result = %v, want nil on the stub", got)
 	}
 	if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {

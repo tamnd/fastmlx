@@ -208,11 +208,31 @@ func NewDeepseekV3Model(args *DeepseekV3Args, weights map[string]*mlxgo.Array) (
 // call (L>1, the prefill path) and then single tokens (L==1, the decode path),
 // so both branches of the MLA absorption run.
 func (m *DeepseekV3Model) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for a synchronized batch of sequences and
+// returns the logits, shaped [batch, 1, vocab_size]. tokens is the row-major
+// [batch, 1] block of one token per row; the rows share an offset (a right-padded
+// prefill plus finalize aligns them), so the L==1 step adds no attention mask and
+// the per-layer cache, already [batch, latentHeads, seq, dim] on its key and
+// value tensors, needs no change. The multi-head latent attention and the routed
+// mixture both broadcast over the batch axis, so this issues one kernel launch per
+// step instead of one per sequence. The two singleton axes the single-sequence
+// path carries (the MQA latent and rotary-key head) stay at their own axes; only
+// the leading batch axis generalizes away from a hardcoded 1.
+func (m *DeepseekV3Model) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the shared body: batch rows of L tokens each (row-major, batch*L
+// values) through the decoder, returning [batch, L, vocab_size]. Forward calls it
+// with batch 1 and L the prompt length, BatchDecode with L 1 and the batch width.
+func (m *DeepseekV3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("deepseekv3: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	scale := float32(a.AttentionScale())
 	nh := a.NumAttentionHeads
@@ -224,7 +244,7 @@ func (m *DeepseekV3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 
 	b := &fb{s: s}
 
-	idx, err := mlxgo.NewInt32(tokens, L)
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +252,7 @@ func (m *DeepseekV3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	for i := range m.layers {
 		layer := &m.layers[i]
@@ -249,16 +269,19 @@ func (m *DeepseekV3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 		} else {
 			q = b.linear(x, layer.qProj)
 		}
-		q = b.transpose(b.reshape(q, []int{1, L, nh, qHead}), []int{0, 2, 1, 3})
+		q = b.transpose(b.reshape(q, []int{batch, L, nh, qHead}), []int{0, 2, 1, 3})
 		qParts := b.splitLast(q, []int{qNope})
 		qn, qpe := qParts[0], qParts[1]
 
 		compressed := b.linearBias(x, layer.kvAProj, layer.kvAProjBias)
 		cParts := b.splitLast(compressed, []int{kvLora})
 		comp, kpe := cParts[0], cParts[1]
-		kpe = b.transpose(b.reshape(kpe, []int{1, L, 1, qRope}), []int{0, 2, 1, 3})
+		// The third axis stays 1: the single rotary key head of the latent
+		// attention (MQA), distinct from the leading batch axis.
+		kpe = b.transpose(b.reshape(kpe, []int{batch, L, 1, qRope}), []int{0, 2, 1, 3})
 		kvLatent := b.rmsNorm(comp, layer.kvALayernorm, mlaLayernormEps)
-		kvLatent = b.reshape(kvLatent, []int{1, 1, L, kvLora})
+		// The second axis stays 1: the single latent head, again distinct from batch.
+		kvLatent = b.reshape(kvLatent, []int{batch, 1, L, kvLora})
 
 		qpe = m.applyRope(b, qpe, offset)
 		kpe = m.applyRope(b, kpe, offset)
@@ -284,14 +307,14 @@ func (m *DeepseekV3Model) Forward(tokens []int32, caches []*KVTensorCache, s *ml
 			vv := b.multiLinear(kvLatent, layer.unembedOut, true)
 			out = b.sdpaWith(qn, kk, vv, scale, "", peScores)
 		}
-		out = b.reshape(b.transpose(out, []int{0, 2, 1, 3}), []int{1, L, nh * vHead})
+		out = b.reshape(b.transpose(out, []int{0, 2, 1, 3}), []int{batch, L, nh * vHead})
 		out = b.linearBias(out, layer.oProj, layer.oProjBias)
 		h = b.add(h, out)
 
 		// Dense or routed MLP.
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
 		if layer.isMoE {
-			y = b.deepseekMoE(y, layer, a, L)
+			y = b.deepseekMoE(y, layer, a, batch, L)
 		} else {
 			y = b.deepseekMLP(y, layer.gateProj, layer.upProj, layer.downProj)
 		}
@@ -351,16 +374,16 @@ func (b *fb) deepseekMLP(x, gateW, upW, downW *mlxgo.Array) *mlxgo.Array {
 // deepseekMoE runs the routed mixture: the router picks the per-token experts
 // and weights, the SwitchGLU runs the expert MLPs, the outputs are weighted and
 // summed over the selection, and the optional shared expert runs on every token.
-func (b *fb) deepseekMoE(x *mlxgo.Array, layer *deepseekV3Layer, a *DeepseekV3Args, L int) *mlxgo.Array {
+func (b *fb) deepseekMoE(x *mlxgo.Array, layer *deepseekV3Layer, a *DeepseekV3Args, batch, L int) *mlxgo.Array {
 	if b.err != nil {
 		return nil
 	}
 	gates := b.linear(x, layer.gateW)
-	inds, weights := b.routeExperts(gates, layer.eScoreBias, a, L)
+	inds, weights := b.routeExperts(gates, layer.eScoreBias, a, batch, L)
 	y := b.switchGLU(x, layer.switchGate, layer.switchUp, layer.switchDown, inds)
 	// (y * scores[..., None]).sum(axis=-2): weight each expert output, then sum
 	// over the top_k axis back to one hidden vector per token.
-	wr := b.reshape(weights, []int{1, L, a.NumExpertsPerTok, 1})
+	wr := b.reshape(weights, []int{batch, L, a.NumExpertsPerTok, 1})
 	y = b.sumAxis(b.mul(y, wr), 2, false)
 	if layer.sharedGate != nil {
 		y = b.add(y, b.deepseekMLP(x, layer.sharedGate, layer.sharedUp, layer.sharedDown))
@@ -374,9 +397,9 @@ func (b *fb) deepseekMoE(x *mlxgo.Array, layer *deepseekV3Layer, a *DeepseekV3Ar
 // experts), takes the top_k experts by biased score, gathers the original
 // pre-bias scores at those experts, optionally normalizes across the selection,
 // and scales by routed_scaling_factor. The routing stays on the device so the
-// forward never reads back mid-graph. gates is [1, L, n_routed_experts]; the
-// returned indices and weights are [1, L, num_experts_per_tok].
-func (b *fb) routeExperts(gates, bias *mlxgo.Array, a *DeepseekV3Args, L int) (inds, weights *mlxgo.Array) {
+// forward never reads back mid-graph. gates is [batch, L, n_routed_experts]; the
+// returned indices and weights are [batch, L, num_experts_per_tok].
+func (b *fb) routeExperts(gates, bias *mlxgo.Array, a *DeepseekV3Args, batch, L int) (inds, weights *mlxgo.Array) {
 	if b.err != nil {
 		return nil, nil
 	}
@@ -393,7 +416,7 @@ func (b *fb) routeExperts(gates, bias *mlxgo.Array, a *DeepseekV3Args, L int) (i
 	if nGroup > 1 {
 		per := E / nGroup
 		const groupAxis, innerAxis = 2, 3
-		sc := b.reshape(scores, []int{1, L, nGroup, per})
+		sc := b.reshape(scores, []int{batch, L, nGroup, per})
 		// group score = sum of the two best biased experts in the group.
 		top2 := b.takeAlongAxis(sc, b.sliceFirst(b.argpartition(b.scalarMul(sc, -1), 1, innerAxis), 2, innerAxis), innerAxis)
 		groupScores := b.sumAxis(top2, innerAxis, true)
@@ -402,7 +425,7 @@ func (b *fb) routeExperts(gates, bias *mlxgo.Array, a *DeepseekV3Args, L int) (i
 			groupIdx := b.sliceFirst(b.argpartition(groupScores, k-1, groupAxis), k, groupAxis)
 			sc = b.putAlongAxis(sc, groupIdx, b.scalar(0), groupAxis)
 		}
-		scores = b.reshape(sc, []int{1, L, E})
+		scores = b.reshape(sc, []int{batch, L, E})
 	}
 
 	inds = b.sliceFirst(b.argpartition(b.scalarMul(scores, -1), topK-1, lastAxis), topK, lastAxis)

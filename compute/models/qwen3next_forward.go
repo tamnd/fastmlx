@@ -176,15 +176,36 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 // embedding gather, so under the stub build Forward returns ErrMLXUnavailable
 // there, which confirms the wiring on a host without MLX.
 func (m *Qwen3NextModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, 1, len(tokens), caches, s)
+}
+
+// BatchDecode runs one decode step for a synchronized batch of sequences and
+// returns the logits, shaped [batch, 1, vocab_size]. tokens is the row-major
+// [batch, 1] block of one token per row. The rows share an offset, so the L==1
+// step adds no attention mask. The hybrid stack handles the batch the same way
+// the dense models do, with one extra subtlety: a linear (gated delta net) layer
+// carries a recurrent state and a convolution window, which now lead with the
+// batch axis ([batch, num_v_heads, v_dim, k_dim] and [batch, kernel-1, conv_dim]),
+// and the one-timestep recurrence advances every row in parallel by broadcasting
+// over that axis. With L==1 the per-step loop runs once, so each row takes exactly
+// one recurrent step, the decode the throughput path needs.
+func (m *Qwen3NextModel) BatchDecode(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	return m.forwardBL(tokens, batch, 1, caches, s)
+}
+
+// forwardBL is the shared body: batch rows of L tokens each (row-major, batch*L
+// values) through the hybrid decoder, returning [batch, L, vocab_size]. Forward
+// calls it with batch 1 and L the prompt length, BatchDecode with L 1 and the
+// batch width.
+func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 	if len(caches) != len(m.layers) {
 		return nil, fmt.Errorf("qwen3next: got %d caches, want %d", len(caches), len(m.layers))
 	}
 	a := m.args
-	L := len(tokens)
 	eps := float32(a.RMSNormEps)
 	b := &fb{s: s}
 
-	idx, err := mlxgo.NewInt32(tokens, L)
+	idx, err := mlxgo.NewInt32(tokens, batch*L)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +213,7 @@ func (m *Qwen3NextModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlx
 	if err != nil {
 		return nil, err
 	}
-	h = b.reshape(h, []int{1, L, a.HiddenSize})
+	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	maskMode := ""
 	if L > 1 {
@@ -206,15 +227,15 @@ func (m *Qwen3NextModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlx
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
 		var r *mlxgo.Array
 		if layer.isLinear {
-			r = b.gatedDeltaNet(x, &layer.linear, a, cache, L)
+			r = b.gatedDeltaNet(x, &layer.linear, a, cache, batch, L)
 		} else {
-			r = b.qwen3NextAttention(x, &layer.attn, a, cache, maskMode, L)
+			r = b.qwen3NextAttention(x, &layer.attn, a, cache, maskMode, batch, L)
 		}
 		h = b.add(h, r)
 
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
 		if layer.mlp.isMoE {
-			y = b.qwen3NextMoE(y, &layer.mlp, a, L)
+			y = b.qwen3NextMoE(y, &layer.mlp, a, batch, L)
 		} else {
 			y = b.swiglu(y, layer.mlp.gateProj, layer.mlp.upProj, layer.mlp.downProj)
 		}
@@ -236,7 +257,7 @@ func (m *Qwen3NextModel) Forward(tokens []int32, caches []*KVTensorCache, s *mlx
 // qwen3NextAttention is the gated full-attention block. The query projection is
 // split into the query proper and an output gate; the gate multiplies the
 // attention result (after a sigmoid) before the output projection.
-func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3NextArgs, cache *KVTensorCache, maskMode string, L int) *mlxgo.Array {
+func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3NextArgs, cache *KVTensorCache, maskMode string, batch, L int) *mlxgo.Array {
 	nh := a.NumAttentionHeads
 	nkv := a.NumKeyValueHeads
 	hd := a.HeadDim
@@ -247,20 +268,20 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 	offset := cache.Offset
 
 	qpo := b.linearBias(x, attn.qProj, attn.qBias)
-	qpo = b.reshape(qpo, []int{1, L, nh, 2 * hd})
+	qpo = b.reshape(qpo, []int{batch, L, nh, 2 * hd})
 	parts := b.splitLast(qpo, []int{hd})
 	queries := parts[0]
-	gate := b.reshape(parts[1], []int{1, L, nh * hd})
+	gate := b.reshape(parts[1], []int{batch, L, nh * hd})
 
 	keys := b.linearBias(x, attn.kProj, attn.kBias)
 	values := b.linearBias(x, attn.vProj, attn.vBias)
 
 	queries = b.rmsNorm(queries, attn.qNorm, eps)
 	queries = b.transpose(queries, []int{0, 2, 1, 3})
-	keys = b.reshape(keys, []int{1, L, nkv, hd})
+	keys = b.reshape(keys, []int{batch, L, nkv, hd})
 	keys = b.rmsNorm(keys, attn.kNorm, eps)
 	keys = b.transpose(keys, []int{0, 2, 1, 3})
-	values = b.reshape(values, []int{1, L, nkv, hd})
+	values = b.reshape(values, []int{batch, L, nkv, hd})
 	values = b.transpose(values, []int{0, 2, 1, 3})
 
 	queries = b.rope(queries, ropeDims, theta, offset)
@@ -271,7 +292,7 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 
 	out := b.sdpa(queries, keys, values, scale, maskMode)
 	out = b.transpose(out, []int{0, 2, 1, 3})
-	out = b.reshape(out, []int{1, L, nh * hd})
+	out = b.reshape(out, []int{batch, L, nh * hd})
 	out = b.mul(out, b.sigmoidArr(gate))
 	return b.linearBias(out, attn.oProj, attn.oBias)
 }
@@ -280,10 +301,12 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 // query, key, value, and gate streams, runs a depthwise causal convolution over
 // the q/k/v bands, then advances a per-head recurrent state one timestep at a
 // time. This is the ops-based recurrence; the fused metal kernel the reference
-// also offers is a later throughput optimization. Single sequence per call (batch
-// one), so the sequence mask the batched reference applies is the identity and is
-// dropped.
-func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextArgs, cache *KVTensorCache, L int) *mlxgo.Array {
+// also offers is a later throughput optimization. The leading axis of every
+// stream and of the carried state is the batch axis: a synchronized decode step
+// (L==1) advances every row's recurrent state in parallel by broadcasting over it.
+// The reference's batched sequence mask only matters for a padded multi-row
+// prefill, which the engine drives per sequence, so it stays the identity here.
+func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextArgs, cache *KVTensorCache, batch, L int) *mlxgo.Array {
 	nk := a.LinearNumKeyHeads
 	nv := a.LinearNumValueHeads
 	dk := a.LinearKeyHeadDim
@@ -297,38 +320,38 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 	// Fused input projections, then fix_query_key_value_ordering: carve the
 	// per-key-head qkvz block into q, k, v, and the output gate z.
 	qkvz := b.linear(x, layer.inProjQKVZ)
-	qkvz = b.reshape(qkvz, []int{1, L, nk, 2*dk + 2*vPerK*dv})
+	qkvz = b.reshape(qkvz, []int{batch, L, nk, 2*dk + 2*vPerK*dv})
 	qkvzParts := b.splitLast(qkvz, []int{dk, 2 * dk, 2*dk + vPerK*dv})
 	q := qkvzParts[0]
 	k := qkvzParts[1]
-	v := b.reshape(qkvzParts[2], []int{1, L, nv, dv})
-	z := b.reshape(qkvzParts[3], []int{1, L, nv, dv})
+	v := b.reshape(qkvzParts[2], []int{batch, L, nv, dv})
+	z := b.reshape(qkvzParts[3], []int{batch, L, nv, dv})
 
 	ba := b.linear(x, layer.inProjBA)
-	ba = b.reshape(ba, []int{1, L, nk, 2 * vPerK})
+	ba = b.reshape(ba, []int{batch, L, nk, 2 * vPerK})
 	baParts := b.splitLast(ba, []int{vPerK})
-	betaPre := b.reshape(baParts[0], []int{1, L, nv})
-	alpha := b.reshape(baParts[1], []int{1, L, nv})
+	betaPre := b.reshape(baParts[0], []int{batch, L, nv})
+	alpha := b.reshape(baParts[1], []int{batch, L, nv})
 
 	// Depthwise causal convolution over the concatenated q/k/v bands. The conv
 	// state carries the kernel-1 trailing timesteps across decode steps.
 	mixedQKV := b.concat([]*mlxgo.Array{
-		b.reshape(q, []int{1, L, keyDim}),
-		b.reshape(k, []int{1, L, keyDim}),
-		b.reshape(v, []int{1, L, valueDim}),
+		b.reshape(q, []int{batch, L, keyDim}),
+		b.reshape(k, []int{batch, L, keyDim}),
+		b.reshape(v, []int{batch, L, valueDim}),
 	}, 2)
 	convState := cache.ConvState()
 	if convState == nil {
-		convState = b.zeros([]int{1, kSize - 1, convDim})
+		convState = b.zeros([]int{batch, kSize - 1, convDim})
 	}
 	convInput := b.concat([]*mlxgo.Array{convState, mixedQKV}, 1)
 	newConvState := b.sliceAxis(convInput, L, kSize-1, 1)
 	convOut := b.silu(b.depthwiseConv1d(convInput, layer.conv1d, convDim, kSize, L))
 
 	convParts := b.splitLast(convOut, []int{keyDim, 2 * keyDim})
-	q = b.reshape(convParts[0], []int{1, L, nk, dk})
-	k = b.reshape(convParts[1], []int{1, L, nk, dk})
-	v = b.reshape(convParts[2], []int{1, L, nv, dv})
+	q = b.reshape(convParts[0], []int{batch, L, nk, dk})
+	k = b.reshape(convParts[1], []int{batch, L, nk, dk})
+	v = b.reshape(convParts[2], []int{batch, L, nv, dv})
 
 	// Per-head query/key normalization with the fixed scale the reference folds
 	// into q and k before the recurrence.
@@ -345,29 +368,31 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 
 	state := cache.SSMState()
 	if state == nil {
-		state = b.zeros([]int{1, nv, dv, dk})
+		state = b.zeros([]int{batch, nv, dv, dk})
 	}
 	ys := make([]*mlxgo.Array, 0, L)
 	for t := range L {
-		qt := b.reshape(b.takeAt(q, t, 1), []int{1, nv, 1, dk})
-		kt := b.reshape(b.takeAt(k, t, 1), []int{1, nv, 1, dk})
-		vt := b.reshape(b.takeAt(v, t, 1), []int{1, nv, dv})
-		gt := b.reshape(b.takeAt(g, t, 1), []int{1, nv, 1, 1})
-		bt := b.reshape(b.takeAt(beta, t, 1), []int{1, nv, 1})
+		// Each takeAt drops the seq axis; the leading axis stays batch and the
+		// remaining singleton axes are the one-timestep broadcast dims.
+		qt := b.reshape(b.takeAt(q, t, 1), []int{batch, nv, 1, dk})
+		kt := b.reshape(b.takeAt(k, t, 1), []int{batch, nv, 1, dk})
+		vt := b.reshape(b.takeAt(v, t, 1), []int{batch, nv, dv})
+		gt := b.reshape(b.takeAt(g, t, 1), []int{batch, nv, 1, 1})
+		bt := b.reshape(b.takeAt(beta, t, 1), []int{batch, nv, 1})
 
 		state = b.mul(state, gt)
 		kvMem := b.sumAxis(b.mul(state, kt), 3, false)
 		delta := b.mul(b.sub(vt, kvMem), bt)
-		state = b.add(state, b.mul(kt, b.reshape(delta, []int{1, nv, dv, 1})))
+		state = b.add(state, b.mul(kt, b.reshape(delta, []int{batch, nv, dv, 1})))
 		yt := b.sumAxis(b.mul(state, qt), 3, false)
-		ys = append(ys, b.reshape(yt, []int{1, 1, nv, dv}))
+		ys = append(ys, b.reshape(yt, []int{batch, 1, nv, dv}))
 	}
 	out := b.concat(ys, 1)
 
 	cache.SetState(newConvState, state, L)
 
 	out = b.mul(b.silu(z), b.rmsNorm(out, layer.norm, gatedDeltaEps))
-	out = b.reshape(out, []int{1, L, valueDim})
+	out = b.reshape(out, []int{batch, L, valueDim})
 	return b.linear(out, layer.outProj)
 }
 
@@ -404,7 +429,7 @@ func (b *fb) computeG(aLog, alpha, dtBias *mlxgo.Array) *mlxgo.Array {
 // qwen3NextMoE is the sparse mixture block: a softmax router picks the top-k
 // experts, the stacked SwitchGLU runs them, their outputs are score-weighted and
 // summed, and a sigmoid-gated shared expert is added.
-func (b *fb) qwen3NextMoE(x *mlxgo.Array, mlp *qwen3NextMLP, a *Qwen3NextArgs, L int) *mlxgo.Array {
+func (b *fb) qwen3NextMoE(x *mlxgo.Array, mlp *qwen3NextMLP, a *Qwen3NextArgs, batch, L int) *mlxgo.Array {
 	ne := a.NumExperts
 	k := a.NumExpertsPerTok
 	gates := b.softmax(b.linear(x, mlp.gate), -1)
@@ -414,7 +439,7 @@ func (b *fb) qwen3NextMoE(x *mlxgo.Array, mlp *qwen3NextMLP, a *Qwen3NextArgs, L
 		scores = b.div(scores, b.sumAxis(scores, 2, true))
 	}
 	y := b.switchGLU(x, mlp.switchGate, mlp.switchUp, mlp.switchDown, inds)
-	y = b.sumAxis(b.mul(y, b.reshape(scores, []int{1, L, k, 1})), 2, false)
+	y = b.sumAxis(b.mul(y, b.reshape(scores, []int{batch, L, k, 1})), 2, false)
 
 	shared := b.swiglu(x, mlp.sharedGate, mlp.sharedUp, mlp.sharedDown)
 	shared = b.mul(b.sigmoidArr(b.linear(x, mlp.sharedExpertGate)), shared)

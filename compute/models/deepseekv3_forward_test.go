@@ -180,7 +180,7 @@ func TestRouteExpertsGraceful(t *testing.T) {
 			t.Fatalf("NewFloat32: %v", err)
 		}
 		b := &fb{s: mlxgo.DefaultStream()}
-		inds, weights := b.routeExperts(gates, bias, a, 1)
+		inds, weights := b.routeExperts(gates, bias, a, 1, 1)
 		if inds != nil || weights != nil {
 			t.Errorf("nGroup=%d: routeExperts = (%v,%v), want (nil,nil) on the stub", nGroup, inds, weights)
 		}
