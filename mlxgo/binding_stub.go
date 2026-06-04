@@ -246,6 +246,21 @@ func FloorDivide(a, b *Array, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 
+// Sum reduces a along axis, keeping that dimension as size 1 when keepDims is set.
+// The mixture-of-experts router sums each group's two best scores, the
+// normalization denominator over the selected experts, and the weighted expert
+// outputs along the expert axis with this reduction.
+func Sum(a *Array, axis int, keepDims bool, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// PutAlongAxis scatters values into a at the positions indices names along axis
+// (the inverse of TakeAlongAxis). The group-limited router uses it to zero the
+// scores of the expert groups it did not keep before the final top-k pick.
+func PutAlongAxis(a, indices, values *Array, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // RoPE applies rotary position embedding with a single base frequency.
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable

@@ -563,6 +563,25 @@ func FloorDivide(a, b *Array, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func Sum(a *Array, axis int, keepDims bool, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	ax := C.int(axis)
+	if C.mlx_sum_axes(&out, a.c, &ax, 1, C._Bool(keepDims), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func PutAlongAxis(a, indices, values *Array, axis int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_put_along_axis(&out, a.c, indices.c, values.c, C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	freq := C.mlx_array_new()
