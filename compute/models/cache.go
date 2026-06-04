@@ -32,6 +32,14 @@ type KVTensorCache struct {
 	// both mixer kinds so the per-layer cache list stays a single slice.
 	convState *mlxgo.Array
 	ssmState  *mlxgo.Array
+	// leftPad carries the per-row left padding of a ragged cohort merged into
+	// this batched cache: leftPad[b] is how many padding tokens were prepended to
+	// row b so a short prompt's real tokens align, at the right edge, with the
+	// longest prompt's. It is nil for a single sequence and for a uniform
+	// (equal-length) cohort, the synchronized path that needs neither per-row
+	// RoPE offsets nor an explicit attention mask. SetLeftPad records it once, at
+	// admission, before the batched prefill.
+	leftPad []int
 }
 
 // Update appends keys and values to the cache and returns the full cached
@@ -72,6 +80,69 @@ func (c *KVTensorCache) SetState(conv, ssm *mlxgo.Array, advance int) {
 	c.convState = conv
 	c.ssmState = ssm
 	c.Offset += advance
+}
+
+// SetLeftPad records a ragged cohort's per-row left padding on the batched cache.
+// A nil slice, or one whose entries are all zero, marks a uniform cohort and is
+// normalized to nil so the uniform fast paths (scalar RoPE, built-in causal mask)
+// stay engaged. The generator calls this once, at admission, after merging the
+// cohort's caches and before the batched prefill, so every layer of the batched
+// set shares the same padding description.
+func (c *KVTensorCache) SetLeftPad(leftPad []int) {
+	c.leftPad = nil
+	for _, p := range leftPad {
+		if p != 0 {
+			c.leftPad = leftPad
+			return
+		}
+	}
+}
+
+// LeftPad returns the per-row left padding recorded on the cache, or nil for a
+// single sequence or uniform cohort.
+func (c *KVTensorCache) LeftPad() []int { return c.leftPad }
+
+// RopeOffsets returns the per-row RoPE position offset for a block decoded at the
+// cache's current Offset, or nil when the cohort is uniform (every row shares the
+// scalar Offset, the single-kernel RoPE fast path). For a left-padded cohort row b
+// sits leftPad[b] positions behind the padded fill cursor, so its rope offset is
+// Offset-leftPad[b]: the padding tokens prepended to a short prompt occupy the low
+// positions that the real tokens must skip, which is the reference's per-row cache
+// offset of -leftPad advanced by the tokens seen so far.
+func (c *KVTensorCache) RopeOffsets() []int {
+	if c.leftPad == nil {
+		return nil
+	}
+	off := make([]int, len(c.leftPad))
+	for b, pad := range c.leftPad {
+		off[b] = c.Offset - pad
+	}
+	return off
+}
+
+// AttnMask returns what the attention SDPA should use for a block of L queries at
+// this cache's offset: a mask mode string for SDPA's built-in path and an optional
+// explicit additive mask. A uniform cohort reproduces the hardcoded behavior,
+// ("causal", nil) for a multi-token prefill and ("", nil) for a single-token decode
+// step. A left-padded cohort returns ("", mask) with a per-row additive mask built
+// host-side: the [batch, 1, L, offset+L] left-padded causal mask for a prefill
+// (L > 1), the [batch, 1, 1, offset] front-padding mask for a decode step (L == 1).
+// The explicit mask carries both the causal structure and the padding skip, so the
+// forward feeds it through sdpaWith with an empty mode in place of the built-in
+// causal path.
+func (c *KVTensorCache) AttnMask(batch, L int, s *mlxgo.Stream) (mode string, mask *mlxgo.Array, err error) {
+	if c.leftPad == nil {
+		if L > 1 {
+			return "causal", nil, nil
+		}
+		return "", nil, nil
+	}
+	if L > 1 {
+		mask, err = batchLeftPadCausalMask(c.leftPad, L, c.Offset, s)
+	} else {
+		mask, err = batchLeftPadKeyMask(c.leftPad, c.Offset, s)
+	}
+	return "", mask, err
 }
 
 // concatAlongBatch concatenates per-sequence arrays along the batch axis (axis 0)
