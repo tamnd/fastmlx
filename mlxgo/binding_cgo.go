@@ -627,3 +627,27 @@ func QuantizedMatMul(x, w, scales, biases *Array, transpose bool, groupSize, bit
 	}
 	return wrap(out), nil
 }
+
+func Exp(a *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_exp(&out, a.c, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Logaddexp(a, b *Array, s *Stream) (*Array, error) {
+	return binaryOp(func(o *C.mlx_array, x, y C.mlx_array, st C.mlx_stream) C.int {
+		return C.mlx_logaddexp(o, x, y, st)
+	}, a, b, s)
+}
+
+func Repeat(a *Array, repeats, axis int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_repeat(&out, a.c, C.int(repeats), C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}

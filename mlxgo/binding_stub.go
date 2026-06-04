@@ -289,6 +289,23 @@ func QuantizedMatMul(x, w, scales, biases *Array, transpose bool, groupSize, bit
 	return nil, ErrMLXUnavailable
 }
 
+// Exp is the elementwise natural exponential. The Qwen3-Next gated-delta
+// recurrence builds its decay gate from it: compute_g is the exp of a negated,
+// softplus-shaped term.
+func Exp(a *Array, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
+
+// Logaddexp is the elementwise log(exp(a)+exp(b)). It is the numerically stable
+// form of softplus the gated-delta gate needs, since softplus(x) is exactly
+// logaddexp(x, 0).
+func Logaddexp(a, b *Array, s *Stream) (*Array, error) { return nil, ErrMLXUnavailable }
+
+// Repeat tiles a along axis, repeating each slice `repeats` times in place. The
+// gated-delta recurrence repeats the key heads up to the value-head count when a
+// layer has more value heads than key heads.
+func Repeat(a *Array, repeats, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 func cloneShape(shape []int) []int {
 	if len(shape) == 0 {
 		return nil

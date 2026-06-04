@@ -156,6 +156,9 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return RoPEWithFreqs(a, 2, false, 1, 0, b, s) },
 		func() (*Array, error) { return ScaledDotProductAttention(a, a, a, 1, "causal", nil, s) },
 		func() (*Array, error) { return QuantizedMatMul(a, b, a, b, true, 64, 4, s) },
+		func() (*Array, error) { return Exp(a, s) },
+		func() (*Array, error) { return Logaddexp(a, b, s) },
+		func() (*Array, error) { return Repeat(a, 2, 0, s) },
 	}
 	for i, op := range ops {
 		if _, err := op(); !errors.Is(err, ErrMLXUnavailable) {
