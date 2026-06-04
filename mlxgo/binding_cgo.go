@@ -381,7 +381,14 @@ func Tanh(a *Array, s *Stream) (*Array, error) {
 
 func RMSNorm(x, w *Array, eps float32, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
-	if C.mlx_fast_rms_norm(&out, x.c, w.c, C.float(eps), s.stream()) != 0 {
+	var wc C.mlx_array
+	if w != nil {
+		wc = w.c
+	} else {
+		wc = C.mlx_array_new()
+		defer C.mlx_array_free(wc)
+	}
+	if C.mlx_fast_rms_norm(&out, x.c, wc, C.float(eps), s.stream()) != 0 {
 		C.mlx_array_free(out)
 		return nil, ErrMLXUnavailable
 	}
@@ -520,6 +527,15 @@ func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, off
 	freq := C.mlx_array_new()
 	defer C.mlx_array_free(freq)
 	if C.mlx_fast_rope(&out, x.c, C.int(dims), C._Bool(traditional), C.optional_float{value: C.float(base), has_value: true}, C.float(scale), C.int(offset), freq, s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func RoPEWithFreqs(x *Array, dims int, traditional bool, scale float32, offset int, freqs *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_fast_rope(&out, x.c, C.int(dims), C._Bool(traditional), C.optional_float{has_value: false}, C.float(scale), C.int(offset), freqs.c, s.stream()) != 0 {
 		C.mlx_array_free(out)
 		return nil, ErrMLXUnavailable
 	}

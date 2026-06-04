@@ -222,8 +222,18 @@ func Argpartition(a *Array, kth, axis int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 
-// RoPE applies rotary position embedding.
+// RoPE applies rotary position embedding with a single base frequency.
 func RoPE(x *Array, dims int, traditional bool, base float32, scale float32, offset int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// RoPEWithFreqs applies rotary position embedding from an explicit per-dimension
+// frequency table instead of a single base. It is the scaled-rope path: partial
+// rotary (Gemma3 proportional, Phi SuScaledRoPE) and the long-context schemes
+// (llama3, yarn) all precompute a frequency vector on the host and pass it here.
+// A frequency of +Inf leaves that dimension pair unrotated, which is how partial
+// rotary rotates only the leading dimensions.
+func RoPEWithFreqs(x *Array, dims int, traditional bool, scale float32, offset int, freqs *Array, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 
