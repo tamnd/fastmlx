@@ -25,6 +25,13 @@ type KVTensorCache struct {
 	Offset int
 	keys   *mlxgo.Array
 	values *mlxgo.Array
+	// convState and ssmState hold a recurrent (gated delta net) layer's two
+	// pieces of carried state: the depthwise convolution window and the per-head
+	// recurrent state. Attention layers leave them nil and use keys/values; a
+	// linear layer leaves keys/values nil and uses these. One cache type serves
+	// both mixer kinds so the per-layer cache list stays a single slice.
+	convState *mlxgo.Array
+	ssmState  *mlxgo.Array
 }
 
 // Update appends keys and values to the cache and returns the full cached
@@ -51,3 +58,18 @@ func (c *KVTensorCache) Update(keys, values *mlxgo.Array, s *mlxgo.Stream) (k, v
 // Update).
 func (c *KVTensorCache) Keys() *mlxgo.Array   { return c.keys }
 func (c *KVTensorCache) Values() *mlxgo.Array { return c.values }
+
+// ConvState and SSMState expose a gated delta net layer's carried state (both
+// nil before its first step).
+func (c *KVTensorCache) ConvState() *mlxgo.Array { return c.convState }
+func (c *KVTensorCache) SSMState() *mlxgo.Array  { return c.ssmState }
+
+// SetState records a gated delta net step's new convolution window and recurrent
+// state and advances the running sequence length by the step length. The linear
+// mixer has no key/value tensors, so Offset is maintained here the way Update
+// maintains it for an attention layer.
+func (c *KVTensorCache) SetState(conv, ssm *mlxgo.Array, advance int) {
+	c.convState = conv
+	c.ssmState = ssm
+	c.Offset += advance
+}

@@ -20,10 +20,21 @@ type ModelBuilder func(configJSON []byte, weights map[string]*mlxgo.Array, eos i
 
 // modelBuilders maps a checkpoint's config.json model_type to its builder. The
 // keys are the exact strings the reference dispatches on (the module it imports
-// for that model_type). Only the families whose numeric Forward has landed are
-// registered; the surface-only family (qwen3_next) joins once its forward
-// lands, with no change to BuildModel or the engine.
+// for that model_type). Every supported family's numeric Forward has landed and
+// is registered here; adding a family is a single entry, with no change to
+// BuildModel or the engine.
 var modelBuilders = map[string]ModelBuilder{
+	"qwen3_next": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
+		args, err := ParseQwen3NextArgs(cfg)
+		if err != nil {
+			return nil, err
+		}
+		m, err := NewQwen3NextModel(args, args.Sanitize(w))
+		if err != nil {
+			return nil, err
+		}
+		return NewAdapter(args.NumLayers(), eos, m.Forward), nil
+	},
 	"gemma4_text": func(cfg []byte, w map[string]*mlxgo.Array, eos int) (compute.Model, error) {
 		args, err := ParseGemma4TextArgs(cfg)
 		if err != nil {
