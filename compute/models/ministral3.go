@@ -215,6 +215,21 @@ func (a *MinistralArgs) AttnScale(size, offset int) []float32 {
 	return out
 }
 
+// AttnScaleBatch is the per-row llama4 query scale a left-padded ragged cohort
+// needs: row b's queries sit at logical positions starting at offsets[b] (the
+// cache's per-row RoPE offset, the padded cursor minus that row's left padding),
+// so each row gets its own AttnScale. The result is the rows concatenated into a
+// flat batch*size buffer, shaped [batch, 1, size, 1] by the caller to broadcast
+// over heads and head_dim. A padding query (logical position before zero) lands
+// in the masked region and its scale value is never read.
+func (a *MinistralArgs) AttnScaleBatch(size int, offsets []int) []float32 {
+	out := make([]float32, len(offsets)*size)
+	for b, off := range offsets {
+		copy(out[b*size:(b+1)*size], a.AttnScale(size, off))
+	}
+	return out
+}
+
 // WeightNames returns the sorted parameter key set: the four attention and three
 // MLP projections (no bias) plus the two layernorms per layer, then the
 // embedding, the final norm, and an untied lm_head.
@@ -376,10 +391,11 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	}
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
-	maskMode := ""
-	if L > 1 {
-		maskMode = "causal"
+	mode, mask, err := caches[0].AttnMask(batch, L, s)
+	if err != nil {
+		return nil, err
 	}
+	ropeOff := caches[0].RopeOffsets()
 
 	for i := range m.layers {
 		layer := &m.layers[i]
@@ -393,12 +409,25 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		offset := cache.Offset
-		q = b.rope(q, hd, theta, offset)
-		k = b.rope(k, hd, theta, offset)
-		// llama4 position-dependent query scale, shaped [1, 1, L, 1] to broadcast
-		// over batch, heads, and head_dim.
+		if ropeOff == nil {
+			q = b.rope(q, hd, theta, offset)
+			k = b.rope(k, hd, theta, offset)
+		} else {
+			q = b.ropePerRow(q, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, hd, theta, o) })
+			k = b.ropePerRow(k, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, hd, theta, o) })
+		}
+		// llama4 position-dependent query scale. A uniform cohort shares the offset
+		// and broadcasts a [1, 1, L, 1] scale over batch; a left-padded cohort needs
+		// a per-row [batch, 1, L, 1] because each row's queries sit at a different
+		// logical position. Both broadcast over heads and head_dim.
 		if b.err == nil {
-			as, aerr := mlxgo.NewFloat32(a.AttnScale(L, offset), 1, 1, L, 1)
+			var as *mlxgo.Array
+			var aerr error
+			if ropeOff == nil {
+				as, aerr = mlxgo.NewFloat32(a.AttnScale(L, offset), 1, 1, L, 1)
+			} else {
+				as, aerr = mlxgo.NewFloat32(a.AttnScaleBatch(L, ropeOff), batch, 1, L, 1)
+			}
 			if aerr != nil {
 				b.err = aerr
 			} else {
@@ -408,7 +437,7 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		if b.err == nil {
 			k, v, b.err = cache.Update(k, v, s)
 		}
-		attn := b.sdpa(q, k, v, scale, maskMode)
+		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		h = b.add(h, attn)

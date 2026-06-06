@@ -153,6 +153,43 @@ func (b *fb) ropeScaled(x *mlxgo.Array, dims int, traditional bool, base, scale 
 	return r
 }
 
+// ropePerRow applies RoPE with a per-row position offset, the path a left-padded
+// ragged cohort needs: every row's real tokens start at a different position
+// (leftPad[b] tokens behind the padded cursor), so each row rotates at its own
+// offset. The binding's mlx_fast_rope takes a scalar offset, so this splits the
+// batch on axis 0, ropes each row at its offset through apply (the same scalar
+// rope variant the uniform path uses, closed over its dims, base, scale, and
+// traditional flag), and concatenates the rows back. The caller engages it only
+// when the cache reports per-row offsets; a uniform cohort keeps the single
+// scalar-offset rope launch. offsets has one entry per batch row.
+func (b *fb) ropePerRow(x *mlxgo.Array, offsets []int, apply func(row *mlxgo.Array, offset int) *mlxgo.Array) *mlxgo.Array {
+	if b.err != nil {
+		return nil
+	}
+	batch := len(offsets)
+	if batch == 1 {
+		return apply(x, offsets[0])
+	}
+	rows, err := mlxgo.Split(x, batch, 0, b.s)
+	if err != nil {
+		b.err = err
+		return nil
+	}
+	out := make([]*mlxgo.Array, batch)
+	for i, row := range rows {
+		out[i] = apply(row, offsets[i])
+		if b.err != nil {
+			return nil
+		}
+	}
+	r, err := mlxgo.Concatenate(out, 0, b.s)
+	if err != nil {
+		b.err = err
+		return nil
+	}
+	return r
+}
+
 func (b *fb) add(x, y *mlxgo.Array) *mlxgo.Array {
 	if b.err != nil {
 		return nil
@@ -239,10 +276,11 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 	}
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
-	maskMode := ""
-	if L > 1 {
-		maskMode = "causal"
+	mode, mask, err := caches[0].AttnMask(batch, L, s)
+	if err != nil {
+		return nil, err
 	}
+	ropeOff := caches[0].RopeOffsets()
 
 	for i := range m.layers {
 		layer := &m.layers[i]
@@ -262,12 +300,17 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 		v = b.reshape(v, []int{batch, L, nkv, hd})
 		v = b.transpose(v, []int{0, 2, 1, 3})
 		offset := cache.Offset
-		q = b.rope(q, hd, theta, offset)
-		k = b.rope(k, hd, theta, offset)
+		if ropeOff == nil {
+			q = b.rope(q, hd, theta, offset)
+			k = b.rope(k, hd, theta, offset)
+		} else {
+			q = b.ropePerRow(q, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, hd, theta, o) })
+			k = b.ropePerRow(k, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, hd, theta, o) })
+		}
 		if b.err == nil {
 			k, v, b.err = cache.Update(k, v, s)
 		}
-		attn := b.sdpa(q, k, v, scale, maskMode)
+		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})
 		attn = b.reshape(attn, []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)

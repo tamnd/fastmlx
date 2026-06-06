@@ -321,10 +321,11 @@ func (m *Glm4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 	}
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
-	maskMode := ""
-	if L > 1 {
-		maskMode = "causal"
+	mode, mask, err := caches[0].AttnMask(batch, L, s)
+	if err != nil {
+		return nil, err
 	}
+	ropeOff := caches[0].RopeOffsets()
 
 	for i := range m.layers {
 		layer := &m.layers[i]
@@ -338,12 +339,17 @@ func (m *Glm4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		offset := cache.Offset
-		q = b.ropeTrad(q, ropeDims, trad, theta, offset)
-		k = b.ropeTrad(k, ropeDims, trad, theta, offset)
+		if ropeOff == nil {
+			q = b.ropeTrad(q, ropeDims, trad, theta, offset)
+			k = b.ropeTrad(k, ropeDims, trad, theta, offset)
+		} else {
+			q = b.ropePerRow(q, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.ropeTrad(r, ropeDims, trad, theta, o) })
+			k = b.ropePerRow(k, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.ropeTrad(r, ropeDims, trad, theta, o) })
+		}
 		if b.err == nil {
 			k, v, b.err = cache.Update(k, v, s)
 		}
-		attn := b.sdpa(q, k, v, scale, maskMode)
+		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
 		attn = b.linear(attn, layer.oProj)
 		// Sandwich norm: normalize the attention output before the residual add.
