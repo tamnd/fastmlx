@@ -76,6 +76,83 @@ func TestNewLlamaModelWiresWeights(t *testing.T) {
 	}
 }
 
+// tinyLlamaQuantArgs is tinyLlamaArgs with a top-level affine quantization block.
+func tinyLlamaQuantArgs(t *testing.T, tie, bias bool) *LlamaArgs {
+	t.Helper()
+	cfg := `{"model_type":"llama","hidden_size":8,"num_hidden_layers":2,"intermediate_size":16,` +
+		`"num_attention_heads":4,"rms_norm_eps":1e-6,"vocab_size":32,"num_key_value_heads":2,` +
+		`"max_position_embeddings":128,"rope_theta":500000.0,"head_dim":2,"tie_word_embeddings":` +
+		boolStr(tie) + `,"attention_bias":` + boolStr(bias) + `,"mlp_bias":` + boolStr(bias) +
+		`,"quantization":{"group_size":64,"bits":4,"mode":"affine"}}`
+	a, err := ParseLlamaArgs([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseLlamaArgs: %v", err)
+	}
+	return a
+}
+
+// dummyLlamaQuantWeights builds the dense weights (including the additive .bias
+// keys) plus a scales/biases affine sibling for every quantizable module. The
+// additive ".bias" and the affine ".biases" are distinct keys and coexist.
+func dummyLlamaQuantWeights(t *testing.T, a *LlamaArgs) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyLlamaWeights(t, a)
+	for _, name := range a.WeightNames() {
+		if !quantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestNewLlamaModelQuantizedWiring(t *testing.T) {
+	// A quantized checkpoint with additive biases: the projections load
+	// quantized, the additive biases stay dense, both present at once.
+	a := tinyLlamaQuantArgs(t, false, true)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Fatalf("quant = %+v, want {64 4}", a.quant)
+	}
+	m, err := NewLlamaModel(a, dummyLlamaQuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewLlamaModel: %v", err)
+	}
+	if !m.embedTokens.isQuantized() || !m.lmHead.isQuantized() {
+		t.Error("embedding / head not loaded quantized")
+	}
+	for i := range m.layers {
+		l := &m.layers[i]
+		for _, q := range []*qLinear{l.qProj, l.kProj, l.vProj, l.oProj, l.gateProj, l.upProj, l.downProj} {
+			if !q.isQuantized() || q.groupSize != 64 || q.bits != 4 {
+				t.Fatalf("layer %d projection not quantized at 64/4", i)
+			}
+		}
+		if l.qBias == nil || l.gateBias == nil {
+			t.Errorf("layer %d additive biases dropped", i)
+		}
+	}
+}
+
+func TestLlamaQuantizedForwardReachesSeam(t *testing.T) {
+	for _, bias := range []bool{false, true} {
+		a := tinyLlamaQuantArgs(t, true, bias)
+		m, err := NewLlamaModel(a, dummyLlamaQuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewLlamaModel: %v", err)
+		}
+		if _, err := m.Forward([]int32{1, 2, 3}, llamaCaches(t, a.NumHiddenLayers), mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("Forward(bias=%v) err = %v, want ErrMLXUnavailable", bias, err)
+		}
+	}
+}
+
 func TestNewLlamaModelMissingWeight(t *testing.T) {
 	a := tinyLlamaArgs(t, false, false)
 	w := dummyLlamaWeights(t, a)

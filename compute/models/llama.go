@@ -37,6 +37,10 @@ type LlamaArgs struct {
 	AttentionBias         bool
 	MLPBias               bool
 	TieWordEmbeddings     bool
+
+	// quant is the affine quantization geometry from the top-level
+	// "quantization" block, zero when the checkpoint is dense.
+	quant quantConfig
 }
 
 // llamaConfig is the raw JSON shape, with pointers for the fields whose absence
@@ -104,6 +108,11 @@ func ParseLlamaArgs(configJSON []byte) (*LlamaArgs, error) {
 	} else {
 		a.TieWordEmbeddings = true
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("llama: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}
@@ -207,15 +216,18 @@ func (a *LlamaArgs) Sanitize(weights map[string]*mlxgo.Array) map[string]*mlxgo.
 }
 
 // llamaLayer holds one decoder block's weights, with optional projection biases.
+// The projections may be affine-quantized (qLinear); the additive nn.Linear
+// biases (the ".bias" siblings, distinct from the affine ".biases" the qLinear
+// carries) and the norms are never quantized and stay plain arrays.
 type llamaLayer struct {
 	inputLayernorm         *mlxgo.Array
 	postAttentionLayernorm *mlxgo.Array
-	qProj, kProj, vProj    *mlxgo.Array
-	oProj                  *mlxgo.Array
+	qProj, kProj, vProj    *qLinear
+	oProj                  *qLinear
 	qBias, kBias, vBias    *mlxgo.Array
 	oBias                  *mlxgo.Array
-	gateProj, upProj       *mlxgo.Array
-	downProj               *mlxgo.Array
+	gateProj, upProj       *qLinear
+	downProj               *qLinear
 	gateBias, upBias       *mlxgo.Array
 	downBias               *mlxgo.Array
 }
@@ -223,10 +235,10 @@ type llamaLayer struct {
 // LlamaModel is an assembled Llama dense model.
 type LlamaModel struct {
 	args        *LlamaArgs
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	layers      []llamaLayer
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when tied
+	lmHead      *qLinear // nil when tied
 }
 
 // NewLlamaModel wires a sanitized weight map into a runnable model.
@@ -238,9 +250,12 @@ func NewLlamaModel(args *LlamaArgs, weights map[string]*mlxgo.Array) (*LlamaMode
 		}
 		return w, nil
 	}
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 	m := &LlamaModel{args: args, layers: make([]llamaLayer, args.NumHiddenLayers)}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
@@ -248,22 +263,32 @@ func NewLlamaModel(args *LlamaArgs, weights map[string]*mlxgo.Array) (*LlamaMode
 	}
 	for i := range m.layers {
 		p := fmt.Sprintf("model.layers.%d.", i)
-		req := []struct {
+		norms := []struct {
 			name string
 			dst  **mlxgo.Array
 		}{
 			{p + "input_layernorm.weight", &m.layers[i].inputLayernorm},
 			{p + "post_attention_layernorm.weight", &m.layers[i].postAttentionLayernorm},
-			{p + "self_attn.q_proj.weight", &m.layers[i].qProj},
-			{p + "self_attn.k_proj.weight", &m.layers[i].kProj},
-			{p + "self_attn.v_proj.weight", &m.layers[i].vProj},
-			{p + "self_attn.o_proj.weight", &m.layers[i].oProj},
-			{p + "mlp.gate_proj.weight", &m.layers[i].gateProj},
-			{p + "mlp.up_proj.weight", &m.layers[i].upProj},
-			{p + "mlp.down_proj.weight", &m.layers[i].downProj},
 		}
-		for _, f := range req {
+		for _, f := range norms {
 			if *f.dst, err = get(f.name); err != nil {
+				return nil, err
+			}
+		}
+		projs := []struct {
+			name string
+			dst  **qLinear
+		}{
+			{p + "self_attn.q_proj", &m.layers[i].qProj},
+			{p + "self_attn.k_proj", &m.layers[i].kProj},
+			{p + "self_attn.v_proj", &m.layers[i].vProj},
+			{p + "self_attn.o_proj", &m.layers[i].oProj},
+			{p + "mlp.gate_proj", &m.layers[i].gateProj},
+			{p + "mlp.up_proj", &m.layers[i].upProj},
+			{p + "mlp.down_proj", &m.layers[i].downProj},
+		}
+		for _, f := range projs {
+			if *f.dst, err = getQ(f.name); err != nil {
 				return nil, err
 			}
 		}
@@ -301,7 +326,7 @@ func NewLlamaModel(args *LlamaArgs, weights map[string]*mlxgo.Array) (*LlamaMode
 	}
 	if args.TieWordEmbeddings {
 		m.lmHead = nil
-	} else if m.lmHead, err = get("lm_head.weight"); err != nil {
+	} else if m.lmHead, err = getQ("lm_head"); err != nil {
 		return nil, err
 	}
 	return m, nil
@@ -361,10 +386,7 @@ func (m *LlamaModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 	if err != nil {
 		return nil, err
 	}
-	h, err := mlxgo.Take(m.embedTokens, idx, 0, s)
-	if err != nil {
-		return nil, err
-	}
+	h := b.qembed(m.embedTokens, idx)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	mode, mask, err := caches[0].AttnMask(batch, L, s)
@@ -378,9 +400,9 @@ func (m *LlamaModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 		cache := caches[i]
 
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
-		q := b.linearBias(x, layer.qProj, layer.qBias)
-		k := b.linearBias(x, layer.kProj, layer.kBias)
-		v := b.linearBias(x, layer.vProj, layer.vBias)
+		q := b.qlinearBias(x, layer.qProj, layer.qBias)
+		k := b.qlinearBias(x, layer.kProj, layer.kBias)
+		v := b.qlinearBias(x, layer.vProj, layer.vBias)
 		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
 		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
@@ -397,13 +419,13 @@ func (m *LlamaModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 		}
 		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
-		attn = b.linearBias(attn, layer.oProj, layer.oBias)
+		attn = b.qlinearBias(attn, layer.oProj, layer.oBias)
 		h = b.add(h, attn)
 
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
-		gate := b.silu(b.linearBias(y, layer.gateProj, layer.gateBias))
-		up := b.linearBias(y, layer.upProj, layer.upBias)
-		y = b.linearBias(b.mul(gate, up), layer.downProj, layer.downBias)
+		gate := b.silu(b.qlinearBias(y, layer.gateProj, layer.gateBias))
+		up := b.qlinearBias(y, layer.upProj, layer.upBias)
+		y = b.qlinearBias(b.mul(gate, up), layer.downProj, layer.downBias)
 		h = b.add(h, y)
 	}
 
@@ -412,7 +434,7 @@ func (m *LlamaModel) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 	if head == nil {
 		head = m.embedTokens
 	}
-	logits := b.linear(h, head)
+	logits := b.qlinear(h, head)
 	if b.err != nil {
 		return nil, b.err
 	}
