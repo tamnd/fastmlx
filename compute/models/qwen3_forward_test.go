@@ -100,7 +100,7 @@ func quantizableModule(name string) bool {
 	for _, suffix := range []string{
 		"embed_tokens.weight", "q_proj.weight", "k_proj.weight", "v_proj.weight",
 		"o_proj.weight", "gate_proj.weight", "up_proj.weight", "down_proj.weight",
-		"lm_head.weight",
+		"gate_up_proj.weight", "qkv_proj.weight", "lm_head.weight",
 	} {
 		if len(name) >= len(suffix) && name[len(name)-len(suffix):] == suffix {
 			return true

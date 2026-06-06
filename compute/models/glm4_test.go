@@ -235,6 +235,104 @@ func TestGlm4ForwardCacheCountGuard(t *testing.T) {
 	}
 }
 
+// tinyGlm4QuantArgs is the assembly config with a top-level affine quantization
+// block, so the loader runs the fused projections through the packed path.
+func tinyGlm4QuantArgs(t *testing.T, bias bool) *Glm4Args {
+	t.Helper()
+	cfg := `{"model_type":"glm4","hidden_size":8,"num_hidden_layers":2,"intermediate_size":16,` +
+		`"num_attention_heads":4,"attention_bias":` + boolStr(bias) + `,"head_dim":4,"rms_norm_eps":1e-6,` +
+		`"vocab_size":32,"num_key_value_heads":2,"partial_rotary_factor":0.5,"rope_theta":10000.0,` +
+		`"quantization":{"group_size":64,"bits":4,"mode":"affine"}}`
+	a, err := ParseGlm4Args([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseGlm4Args: %v", err)
+	}
+	return a
+}
+
+func dummyGlm4QuantWeights(t *testing.T, a *Glm4Args) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyGlm4Weights(t, a)
+	for _, name := range a.WeightNames() {
+		if !quantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestParseGlm4ArgsCapturesQuantization(t *testing.T) {
+	a := tinyGlm4QuantArgs(t, true)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Errorf("quant = %+v, want {64 4}", a.quant)
+	}
+	if d := tinyGlm4Args(t, true).quant; d.quantized() {
+		t.Errorf("dense config reported quantized: %+v", d)
+	}
+}
+
+func TestNewGlm4ModelQuantizedWiring(t *testing.T) {
+	for _, bias := range []bool{false, true} {
+		a := tinyGlm4QuantArgs(t, bias)
+		m, err := NewGlm4Model(a, dummyGlm4QuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewGlm4Model(bias=%v): %v", bias, err)
+		}
+		if !m.embedTokens.isQuantized() || !m.lmHead.isQuantized() {
+			t.Error("embedding / head not loaded quantized")
+		}
+		for i := range m.layers {
+			l := &m.layers[i]
+			// The fused gate-up projection is one quantized module; the down
+			// projection and the four attention projections are the rest.
+			for _, q := range []*qLinear{l.qProj, l.kProj, l.vProj, l.oProj, l.gateUpProj, l.downProj} {
+				if !q.isQuantized() {
+					t.Fatalf("layer %d projection not loaded quantized", i)
+				}
+				if q.groupSize != 64 || q.bits != 4 {
+					t.Fatalf("layer %d geometry = gs%d/b%d, want 64/4", i, q.groupSize, q.bits)
+				}
+			}
+			// The additive qkv biases coexist with the affine packing.
+			if hasBias := l.qBias != nil; hasBias != bias {
+				t.Errorf("layer %d qBias present = %v, want %v", i, hasBias, bias)
+			}
+		}
+	}
+}
+
+func TestNewGlm4ModelQuantizedMissingBiases(t *testing.T) {
+	a := tinyGlm4QuantArgs(t, false)
+	w := dummyGlm4QuantWeights(t, a)
+	delete(w, "model.layers.0.mlp.gate_up_proj.biases")
+	if _, err := NewGlm4Model(a, w); err == nil {
+		t.Error("expected an error for a quantized module missing its biases")
+	}
+}
+
+func TestGlm4QuantizedForwardReachesSeam(t *testing.T) {
+	a := tinyGlm4QuantArgs(t, true)
+	m, err := NewGlm4Model(a, dummyGlm4QuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewGlm4Model: %v", err)
+	}
+	caches := make([]*KVTensorCache, a.NumLayers())
+	for i := range caches {
+		caches[i] = &KVTensorCache{}
+	}
+	if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Errorf("Forward err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
 func BenchmarkParseGlm4Args(b *testing.B) {
 	b.ReportAllocs()
 	cfg := []byte(`{"model_type":"glm4","hidden_size":4096,"num_hidden_layers":40,"intermediate_size":13696,` +
