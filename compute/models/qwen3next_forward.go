@@ -215,10 +215,18 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 	}
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
-	maskMode := ""
-	if L > 1 {
-		maskMode = "causal"
+	// The full-attention layers read their mask and per-row rope offset from the
+	// batch-aware cache, the same as the dense forwards; the linear (gated delta)
+	// layers take the cohort's per-row left padding so a ragged prefill can drop the
+	// padding positions from the convolution and the recurrence. Both fold to the
+	// uniform fast path when the cohort is not left-padded. The owning offset is
+	// uniform across layers, so all three are read once from caches[0].
+	mode, mask, err := caches[0].AttnMask(batch, L, s)
+	if err != nil {
+		return nil, err
 	}
+	ropeOff := caches[0].RopeOffsets()
+	leftPad := caches[0].LeftPad()
 
 	for i := range m.layers {
 		layer := &m.layers[i]
@@ -227,9 +235,9 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
 		var r *mlxgo.Array
 		if layer.isLinear {
-			r = b.gatedDeltaNet(x, &layer.linear, a, cache, batch, L)
+			r = b.gatedDeltaNet(x, &layer.linear, a, cache, leftPad, batch, L)
 		} else {
-			r = b.qwen3NextAttention(x, &layer.attn, a, cache, maskMode, batch, L)
+			r = b.qwen3NextAttention(x, &layer.attn, a, cache, mode, mask, ropeOff, batch, L)
 		}
 		h = b.add(h, r)
 
@@ -257,7 +265,7 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 // qwen3NextAttention is the gated full-attention block. The query projection is
 // split into the query proper and an output gate; the gate multiplies the
 // attention result (after a sigmoid) before the output projection.
-func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3NextArgs, cache *KVTensorCache, maskMode string, batch, L int) *mlxgo.Array {
+func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3NextArgs, cache *KVTensorCache, mode string, mask *mlxgo.Array, ropeOff []int, batch, L int) *mlxgo.Array {
 	nh := a.NumAttentionHeads
 	nkv := a.NumKeyValueHeads
 	hd := a.HeadDim
@@ -284,13 +292,18 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 	values = b.reshape(values, []int{batch, L, nkv, hd})
 	values = b.transpose(values, []int{0, 2, 1, 3})
 
-	queries = b.rope(queries, ropeDims, theta, offset)
-	keys = b.rope(keys, ropeDims, theta, offset)
+	if ropeOff == nil {
+		queries = b.rope(queries, ropeDims, theta, offset)
+		keys = b.rope(keys, ropeDims, theta, offset)
+	} else {
+		queries = b.ropePerRow(queries, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, ropeDims, theta, o) })
+		keys = b.ropePerRow(keys, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return b.rope(r, ropeDims, theta, o) })
+	}
 	if b.err == nil {
 		keys, values, b.err = cache.Update(keys, values, b.s)
 	}
 
-	out := b.sdpa(queries, keys, values, scale, maskMode)
+	out := b.sdpaWith(queries, keys, values, scale, mode, mask)
 	out = b.transpose(out, []int{0, 2, 1, 3})
 	out = b.reshape(out, []int{batch, L, nh * hd})
 	out = b.mul(out, b.sigmoidArr(gate))
@@ -304,9 +317,14 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 // also offers is a later throughput optimization. The leading axis of every
 // stream and of the carried state is the batch axis: a synchronized decode step
 // (L==1) advances every row's recurrent state in parallel by broadcasting over it.
-// The reference's batched sequence mask only matters for a padded multi-row
-// prefill, which the engine drives per sequence, so it stays the identity here.
-func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextArgs, cache *KVTensorCache, batch, L int) *mlxgo.Array {
+// For a left-padded ragged prefill the per-position SSM mask (pos >= leftPad[b],
+// the reference's conv-cache make_mask) drops the front padding two ways: it zeros
+// the padding positions of the convolution input so they do not leak into a real
+// position's causal window, and it restores the prior state at each padding timestep
+// so the recurrence skips it. The mask only matters on a prefill (L > 1); a decode
+// step carries one real token per row, so a uniform or decoding cohort keeps the
+// identity path.
+func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextArgs, cache *KVTensorCache, leftPad []int, batch, L int) *mlxgo.Array {
 	nk := a.LinearNumKeyHeads
 	nv := a.LinearNumValueHeads
 	dk := a.LinearKeyHeadDim
@@ -340,6 +358,19 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 		b.reshape(k, []int{batch, L, keyDim}),
 		b.reshape(v, []int{batch, L, valueDim}),
 	}, 2)
+
+	// The SSM mask is built only for a left-padded prefill; nil keeps the identity
+	// path. It is a [batch, L, 1] float buffer of 1 at real positions and 0 at the
+	// front padding, so the convolution zeroing and the per-step state restore are
+	// plain multiplies and need no boolean-where kernel.
+	var ssmMask *mlxgo.Array
+	if leftPad != nil && L > 1 && b.err == nil {
+		ssmMask, b.err = ssmLeftPadMask(leftPad, L, b.s)
+	}
+	if ssmMask != nil {
+		mixedQKV = b.mul(mixedQKV, ssmMask)
+	}
+
 	convState := cache.ConvState()
 	if convState == nil {
 		convState = b.zeros([]int{batch, kSize - 1, convDim})
@@ -380,11 +411,18 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 		gt := b.reshape(b.takeAt(g, t, 1), []int{batch, nv, 1, 1})
 		bt := b.reshape(b.takeAt(beta, t, 1), []int{batch, nv, 1})
 
+		oldState := state
 		state = b.mul(state, gt)
 		kvMem := b.sumAxis(b.mul(state, kt), 3, false)
 		delta := b.mul(b.sub(vt, kvMem), bt)
 		state = b.add(state, b.mul(kt, b.reshape(delta, []int{batch, nv, dv, 1})))
 		yt := b.sumAxis(b.mul(state, qt), 3, false)
+		if ssmMask != nil {
+			// Restore the prior state at a padding timestep (mask 0), so the
+			// recurrence skips it: state = old + mask*(state-old).
+			mt := b.reshape(b.takeAt(ssmMask, t, 1), []int{batch, 1, 1, 1})
+			state = b.add(oldState, b.mul(mt, b.sub(state, oldState)))
+		}
 		ys = append(ys, b.reshape(yt, []int{batch, 1, nv, dv}))
 	}
 	out := b.concat(ys, 1)
@@ -394,6 +432,27 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 	out = b.mul(b.silu(z), b.rmsNorm(out, layer.norm, gatedDeltaEps))
 	out = b.reshape(out, []int{batch, L, valueDim})
 	return b.linear(out, layer.outProj)
+}
+
+// ssmLeftPadMask builds the gated delta net's per-position validity mask for a
+// left-padded prefill block, a [batch, L, 1] float buffer with 1 at a real position
+// and 0 at the front padding. It is the reference conv-cache make_mask, pos >=
+// leftPad[b] over pos in [0, L), cast to the multiplicative form the convolution
+// zeroing and the per-step state restore use. The trailing singleton broadcasts over
+// the convolution channels, and each timestep slices its column to a [batch, 1, 1, 1]
+// gate. The array is host-built (not a kernel), so it materializes on the default
+// stub too.
+func ssmLeftPadMask(leftPad []int, L int, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	batch := len(leftPad)
+	data := make([]float32, batch*L)
+	for b, pad := range leftPad {
+		for t := range L {
+			if t >= pad {
+				data[b*L+t] = 1
+			}
+		}
+	}
+	return mlxgo.NewFloat32(data, batch, L, 1)
 }
 
 // depthwiseConv1d is the per-channel causal convolution the gated delta net runs

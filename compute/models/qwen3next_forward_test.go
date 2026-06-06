@@ -225,11 +225,48 @@ func TestGatedDeltaNetGraceful(t *testing.T) {
 		b := &fb{}
 		x := hostArray(t, 1, L, a.HiddenSize)
 		cache := &KVTensorCache{}
-		if got := b.gatedDeltaNet(x, linear, a, cache, 1, L); got != nil {
+		if got := b.gatedDeltaNet(x, linear, a, cache, nil, 1, L); got != nil {
 			t.Fatalf("L=%d gatedDeltaNet result = %v, want nil on the stub", L, got)
 		}
 		if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {
 			t.Fatalf("L=%d gatedDeltaNet err = %v, want ErrMLXUnavailable", L, b.err)
+		}
+	}
+}
+
+func TestSSMLeftPadMask(t *testing.T) {
+	// A two-row ragged prefill: row 0 unpadded, row 1 left-padded by 2, block length
+	// 4. The mask is 1 at a real position (pos >= leftPad) and 0 at the front padding,
+	// shaped [batch, L, 1] so it broadcasts over the convolution channels.
+	leftPad := []int{0, 2}
+	const L = 4
+	m, err := ssmLeftPadMask(leftPad, L, mlxgo.DefaultStream())
+	if err != nil {
+		t.Fatalf("ssmLeftPadMask: %v", err)
+	}
+	want := []int{2, L, 1}
+	got := m.Shape()
+	if len(got) != len(want) {
+		t.Fatalf("shape = %v, want %v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("shape = %v, want %v", got, want)
+		}
+	}
+	data, err := m.ToFloat32()
+	if err != nil {
+		t.Fatalf("ToFloat32: %v", err)
+	}
+	for b, pad := range leftPad {
+		for pos := range L {
+			want := float32(0)
+			if pos >= pad {
+				want = 1
+			}
+			if data[b*L+pos] != want {
+				t.Errorf("row %d pos %d = %g, want %g", b, pos, data[b*L+pos], want)
+			}
 		}
 	}
 }
@@ -254,7 +291,7 @@ func TestQwen3NextAttentionGraceful(t *testing.T) {
 	L := 2
 	x := hostArray(t, 1, L, a.HiddenSize)
 	cache := &KVTensorCache{}
-	if got := b.qwen3NextAttention(x, attn, a, cache, "causal", 1, L); got != nil {
+	if got := b.qwen3NextAttention(x, attn, a, cache, "causal", nil, nil, 1, L); got != nil {
 		t.Fatalf("qwen3NextAttention result = %v, want nil on the stub", got)
 	}
 	if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {
