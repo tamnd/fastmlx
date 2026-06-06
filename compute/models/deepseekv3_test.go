@@ -342,6 +342,55 @@ func TestStackExperts(t *testing.T) {
 	}
 }
 
+// remapInt4 folds a compressed-tensors int4 triple into the affine weight/scales/
+// biases the quantized kernels read. A full triple reaches the unavailable error at
+// the View kernel; a weight_shape missing its packed sibling is caught host-side; a
+// map with no weight_shape touches no kernel, dropping orphan scale/packed keys
+// while keeping the fp8 scale_inv and the plain weights.
+func TestRemapInt4(t *testing.T) {
+	mk := func() *mlxgo.Array {
+		arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+		if err != nil {
+			t.Fatalf("NewFloat32: %v", err)
+		}
+		return arr
+	}
+	base := "model.layers.0.mlp.gate_proj."
+
+	full := map[string]*mlxgo.Array{
+		base + "weight_packed": mk(),
+		base + "weight_scale":  mk(),
+		base + "weight_shape":  mk(),
+	}
+	if err := remapInt4(full, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("remapInt4 on the stub: err = %v, want ErrMLXUnavailable at the View kernel", err)
+	}
+
+	missing := map[string]*mlxgo.Array{
+		base + "weight_scale": mk(),
+		base + "weight_shape": mk(),
+	}
+	if err := remapInt4(missing, mlxgo.DefaultStream()); err == nil || errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("remapInt4 missing packed: err = %v, want a host-side missing-key error", err)
+	}
+
+	// No weight_shape: no kernel fires. Orphan scale/packed keys are dropped, the
+	// fp8 scale_inv keeps its suffix, and the plain weight passes through.
+	noShape := map[string]*mlxgo.Array{
+		base + "weight_scale":                  mk(),
+		base + "weight_packed":                 mk(),
+		"model.layers.0.attn.weight_scale_inv": mk(),
+		"model.embed_tokens.weight":            mk(),
+	}
+	if err := remapInt4(noShape, mlxgo.DefaultStream()); err != nil {
+		t.Fatalf("remapInt4 with no weight_shape: %v", err)
+	}
+	want := []string{"model.embed_tokens.weight", "model.layers.0.attn.weight_scale_inv"}
+	if got := keysOf(noShape); !reflect.DeepEqual(got, want) {
+		t.Errorf("remapInt4 orphan cleanup: got %v, want %v", got, want)
+	}
+}
+
 func keysOf(m map[string]*mlxgo.Array) []string {
 	out := make([]string, 0, len(m))
 	for k := range m {

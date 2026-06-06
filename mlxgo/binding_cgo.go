@@ -694,6 +694,24 @@ func Quantize(w *Array, groupSize, bits int, s *Stream) (packed, scales, biases 
 	return wrap(pc), wrap(sc), wrap(bc), nil
 }
 
+func View(a *Array, dtype Dtype, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_view(&out, a.c, dtypeToC(dtype), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Astype(a *Array, dtype Dtype, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_astype(&out, a.c, dtypeToC(dtype), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func Exp(a *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_exp(&out, a.c, s.stream()) != 0 {

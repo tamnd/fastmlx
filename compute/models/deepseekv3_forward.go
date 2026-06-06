@@ -78,9 +78,13 @@ func NewDeepseekV3Model(args *DeepseekV3Args, weights map[string]*mlxgo.Array) (
 	}
 	opt := func(name string) *mlxgo.Array { return weights[name] }
 
-	// Stack any per-expert MLP tensors into the switch_mlp tensors the routed
-	// forward reads, the backend half of the pre-load patch. A checkpoint that
-	// already carries stacked experts is left untouched.
+	// Run the backend half of the pre-load patch in the reference order: remap an
+	// int4 checkpoint into the affine triple, then stack the per-expert MLP tensors
+	// into the switch_mlp tensors the routed forward reads. A checkpoint that
+	// carries neither (a plain bf16, already-stacked weight map) is left untouched.
+	if err := remapInt4(weights, mlxgo.DefaultStream()); err != nil {
+		return nil, err
+	}
 	if args.IsMoE() {
 		if err := stackExperts(weights, args.NumLayers(), args.NRoutedExperts, mlxgo.DefaultStream()); err != nil {
 			return nil, err

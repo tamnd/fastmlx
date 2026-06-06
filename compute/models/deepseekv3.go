@@ -483,6 +483,74 @@ func (a *DeepseekV3Args) Sanitize(weights map[string]*mlxgo.Array) map[string]*m
 	return out
 }
 
+// remapInt4 rewrites a compressed-tensors int4 checkpoint into the affine triple
+// the quantized kernels read, the "remap for int4" step of the reference sanitize.
+// A quantized weight arrives as three keys: BASEweight_packed (the bit-packed
+// values as uint8), BASEweight_scale (the per-group scale) and BASEweight_shape
+// (the logical shape, which only marks the group). For each weight_shape it views
+// the packed bytes back as uint32 (the dtype the quantized kernels index), keeps
+// the scale as scales, derives biases as -8*scale (the int4 zero point folded into
+// the affine bias), and drops the three source keys. The fp8 scale_inv keys end in
+// a different suffix and are left for the fp8 dequant pass. A checkpoint with no
+// weight_shape key passes through untouched. The view and the bias arithmetic are
+// the backend ops; on the stub the first surfaces the unavailable error.
+func remapInt4(weights map[string]*mlxgo.Array, s *mlxgo.Stream) error {
+	var bases []string
+	for k := range weights {
+		if strings.HasSuffix(k, "weight_shape") {
+			bases = append(bases, strings.TrimSuffix(k, "weight_shape"))
+		}
+	}
+	for _, base := range bases {
+		packed, ok := weights[base+"weight_packed"]
+		if !ok {
+			return fmt.Errorf("deepseekv3: int4 remap missing %q", base+"weight_packed")
+		}
+		scale, ok := weights[base+"weight_scale"]
+		if !ok {
+			return fmt.Errorf("deepseekv3: int4 remap missing %q", base+"weight_scale")
+		}
+		w, err := mlxgo.View(packed, mlxgo.Uint32, s)
+		if err != nil {
+			return err
+		}
+		biases, err := scaleNeg8(scale, s)
+		if err != nil {
+			return err
+		}
+		delete(weights, base+"weight_shape")
+		delete(weights, base+"weight_packed")
+		delete(weights, base+"weight_scale")
+		weights[base+"weight"] = w
+		weights[base+"scales"] = scale
+		weights[base+"biases"] = biases
+	}
+	// The reference drops every weight_scale and weight_packed key, so clear any
+	// orphan that carried no weight_shape sibling (fp8 weight_scale_inv keeps its
+	// own suffix and is not matched here).
+	for k := range weights {
+		if strings.HasSuffix(k, "weight_scale") || strings.HasSuffix(k, "weight_packed") {
+			delete(weights, k)
+		}
+	}
+	return nil
+}
+
+// scaleNeg8 computes -8*scale in the scale's own dtype, the int4 affine bias. The
+// product promotes to float32 against the scalar, so it is cast back to the scale
+// dtype to match the reference, whose weak-typed -8*scale stays in the scale type.
+func scaleNeg8(scale *mlxgo.Array, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	neg8, err := mlxgo.NewFloat32([]float32{-8}, 1)
+	if err != nil {
+		return nil, err
+	}
+	prod, err := mlxgo.Mul(scale, neg8, s)
+	if err != nil {
+		return nil, err
+	}
+	return mlxgo.Astype(prod, scale.Dtype(), s)
+}
+
 // stackExperts rewrites the per-expert MLP tensors a routed DeepSeek checkpoint
 // carries (model.layers.L.mlp.experts.E.PROJ.COMP) into the stacked switch_mlp
 // tensors the routed forward reads (model.layers.L.mlp.switch_mlp.PROJ.COMP), the

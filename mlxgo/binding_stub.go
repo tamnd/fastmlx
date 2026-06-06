@@ -325,6 +325,21 @@ func Quantize(w *Array, groupSize, bits int, s *Stream) (packed, scales, biases 
 	return nil, nil, nil, ErrMLXUnavailable
 }
 
+// View reinterprets an array's bytes as another dtype without copying, the
+// bitcast the int4 DeepSeek remap uses to read a packed uint8 weight back as the
+// uint32 the quantized kernels expect. The trailing axis grows or shrinks by the
+// dtype size ratio.
+func View(a *Array, dtype Dtype, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// Astype casts an array to another dtype with a value conversion (unlike View,
+// which only reinterprets bytes). The int4 remap uses it to return the computed
+// bias in the scale's dtype.
+func Astype(a *Array, dtype Dtype, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // Exp is the elementwise natural exponential. The Qwen3-Next gated-delta
 // recurrence builds its decay gate from it: compute_g is the exp of a negated,
 // softplus-shaped term.
