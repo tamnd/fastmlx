@@ -140,6 +140,7 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Reshape(a, []int{2, 1}, s) },
 		func() (*Array, error) { return Transpose(a, nil, s) },
 		func() (*Array, error) { return Concatenate([]*Array{a, b}, 0, s) },
+		func() (*Array, error) { return Stack([]*Array{a, b}, 0, s) },
 		func() (*Array, error) { return Take(a, b, 0, s) },
 		func() (*Array, error) { return Argmax(a, -1, s) },
 		func() (*Array, error) { return Where(a, a, b, s) },

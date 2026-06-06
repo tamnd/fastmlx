@@ -429,6 +429,20 @@ func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func Stack(arrs []*Array, axis int, s *Stream) (*Array, error) {
+	vec := C.mlx_vector_array_new()
+	defer C.mlx_vector_array_free(vec)
+	for _, a := range arrs {
+		C.mlx_vector_array_append_value(vec, a.c)
+	}
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_stack_axis(&out, vec, C.int(axis), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 // Split divides a into `parts` equal sections along axis.
 func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
 	vec := C.mlx_vector_array_new()

@@ -180,6 +180,14 @@ func Transpose(a *Array, axes []int, s *Stream) (*Array, error)   { return nil, 
 func Concatenate(arrs []*Array, axis int, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
+
+// Stack joins arrays along a new axis, every input sharing one shape and gaining
+// a leading (axis 0) dimension of len(arrs). The DeepSeek pre-load patch stacks
+// the per-expert weight tensors into the [num_experts, out, in] switch_mlp tensors
+// the routed forward reads.
+func Stack(arrs []*Array, axis int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
 func Split(a *Array, parts, axis int, s *Stream) ([]*Array, error) {
 	return nil, ErrMLXUnavailable
 }
