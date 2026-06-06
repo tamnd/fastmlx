@@ -254,6 +254,13 @@ func (m *DeepseekV3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	}
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
+	// A left-padded ragged cohort rotates the rotary band per row at Offset-leftPad[b]
+	// and adds the per-row left-padded causal mask to pe_scores; a uniform cohort keeps
+	// the scalar-offset rope and the single-sequence causal mask. The owning offset is
+	// uniform across layers, so leftPad and ropeOff are read once from caches[0].
+	leftPad := caches[0].LeftPad()
+	ropeOff := caches[0].RopeOffsets()
+
 	for i := range m.layers {
 		layer := &m.layers[i]
 		cache := caches[i]
@@ -283,18 +290,29 @@ func (m *DeepseekV3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		// The second axis stays 1: the single latent head, again distinct from batch.
 		kvLatent = b.reshape(kvLatent, []int{batch, 1, L, kvLora})
 
-		qpe = m.applyRope(b, qpe, offset)
-		kpe = m.applyRope(b, kpe, offset)
+		qpe = m.ropeBand(b, qpe, offset, ropeOff)
+		kpe = m.ropeBand(b, kpe, offset, ropeOff)
 		if b.err == nil {
 			kvLatent, kpe, b.err = cache.Update(kvLatent, kpe, s)
 		}
 
-		// pe_scores carries the rotary band contribution and, for the prefill,
-		// the causal mask. It becomes the additive mask the SDPA softmax adds to
-		// the latent (nope-band) scores, so both bands share the one scale.
+		// pe_scores carries the rotary band contribution and the attention mask. It
+		// becomes the additive mask the SDPA softmax adds to the latent (nope-band)
+		// scores, so both bands share the one scale. A uniform cohort adds the
+		// single-sequence causal mask on a prefill and nothing on a decode step; a
+		// left-padded cohort adds the per-row left-padded causal mask on both, since
+		// the front padding keys stay masked through the whole sequence.
 		peScores := b.matmul(b.scalarMul(qpe, scale), b.transpose(kpe, []int{0, 1, 3, 2}))
-		if L > 1 {
-			peScores = b.add(peScores, m.causalMask(b, L, offset))
+		if leftPad == nil {
+			if L > 1 {
+				peScores = b.add(peScores, m.causalMask(b, L, offset))
+			}
+		} else {
+			msk, merr := batchLeftPadCausalMask(leftPad, L, offset, s)
+			if b.err == nil {
+				b.err = merr
+			}
+			peScores = b.add(peScores, msk)
 		}
 
 		var out *mlxgo.Array
@@ -327,6 +345,19 @@ func (m *DeepseekV3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		return nil, b.err
 	}
 	return logits, nil
+}
+
+// ropeBand rotates the rotary band x at the step's offset, per row when the cohort
+// is left-padded. A uniform cohort (ropeOff nil) applies the model's scalar-offset
+// schedule directly, the single-kernel fast path; a ragged cohort splits the batch
+// and rotates each row at its own Offset-leftPad[b] through the same schedule. The
+// band carries the batch on axis 0 for both the query (qk_rope) and the single
+// rotary key head, so the split is the same axis ropePerRow uses.
+func (m *DeepseekV3Model) ropeBand(b *fb, x *mlxgo.Array, offset int, ropeOff []int) *mlxgo.Array {
+	if ropeOff == nil {
+		return m.applyRope(b, x, offset)
+	}
+	return b.ropePerRow(x, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return m.applyRope(b, r, o) })
 }
 
 // applyRope rotates the rotary key band x with the model's configured schedule.
