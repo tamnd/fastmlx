@@ -162,6 +162,8 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return Dequantize(a, b, a, 64, 4, s) },
 		func() (*Array, error) { return View(a, Uint32, s) },
 		func() (*Array, error) { return Astype(a, BFloat16, s) },
+		func() (*Array, error) { return Swapaxes(a, -1, -2, s) },
+		func() (*Array, error) { return Contiguous(a, s) },
 		func() (*Array, error) { return Exp(a, s) },
 		func() (*Array, error) { return Logaddexp(a, b, s) },
 		func() (*Array, error) { return Repeat(a, 2, 0, s) },

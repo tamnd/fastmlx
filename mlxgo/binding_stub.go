@@ -340,6 +340,18 @@ func Astype(a *Array, dtype Dtype, s *Stream) (*Array, error) {
 	return nil, ErrMLXUnavailable
 }
 
+// Swapaxes exchanges two axes of an array. The DeepSeek kv_b_proj absorption uses
+// it to transpose the per-head nope band into the embed_q weight layout.
+func Swapaxes(a *Array, axis1, axis2 int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// Contiguous returns a row-major copy of an array, materializing the strided view
+// a swapaxes or slice leaves behind so the downstream matmul reads it directly.
+func Contiguous(a *Array, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // Exp is the elementwise natural exponential. The Qwen3-Next gated-delta
 // recurrence builds its decay gate from it: compute_g is the exp of a negated,
 // softplus-shaped term.

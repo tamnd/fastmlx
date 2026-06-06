@@ -90,6 +90,12 @@ func NewDeepseekV3Model(args *DeepseekV3Args, weights map[string]*mlxgo.Array) (
 			return nil, err
 		}
 	}
+	// Absorb each layer's kv_b_proj into the embed_q and unembed_out projections the
+	// latent attention forward reads. A checkpoint that already carries the absorbed
+	// projections has no kv_b_proj key and is left untouched.
+	if err := absorbKVB(weights, args, mlxgo.DefaultStream()); err != nil {
+		return nil, err
+	}
 
 	m := &DeepseekV3Model{args: args, layers: make([]deepseekV3Layer, args.NumLayers())}
 	var err error

@@ -712,6 +712,24 @@ func Astype(a *Array, dtype Dtype, s *Stream) (*Array, error) {
 	return wrap(out), nil
 }
 
+func Swapaxes(a *Array, axis1, axis2 int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_swapaxes(&out, a.c, C.int(axis1), C.int(axis2), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Contiguous(a *Array, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_contiguous(&out, a.c, C.bool(false), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func Exp(a *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_exp(&out, a.c, s.stream()) != 0 {

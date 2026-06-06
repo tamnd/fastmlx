@@ -590,3 +590,91 @@ func stackExperts(weights map[string]*mlxgo.Array, numLayers, numExperts int, s 
 	}
 	return nil
 }
+
+// absorbKVB folds each layer's kv_b_proj into the embed_q and unembed_out
+// projections the latent attention forward reads, the "kv_b_proj" step of the
+// reference sanitize. The fused kv_b_proj maps the kv_lora compression to every
+// head's nope-plus-value width; the forward instead wants two per-head matrices,
+// embed_q that lifts the compressed key into the nope query space and unembed_out
+// that lifts the compressed value, so the absorption reshapes kv_b_proj to
+// [num_heads, head_dim, kv_lora], splits the head_dim axis at qk_nope_head_dim into
+// the nope and value bands, transposes the nope band into the embed_q layout, and
+// makes both contiguous. A quantized kv_b_proj is dequantized first (its bits and
+// group size inferred from the packed and scale shapes the way the reference does)
+// and the two results requantized, so embed_q and unembed_out carry their own
+// scales and biases. A checkpoint that already carries embed_q and unembed_out has
+// no kv_b_proj key and passes through untouched. The reshape (or the dequant for a
+// quantized layer) is the first backend op; on the stub it surfaces the unavailable
+// error.
+func absorbKVB(weights map[string]*mlxgo.Array, a *DeepseekV3Args, s *mlxgo.Stream) error {
+	headDim := a.QKNopeHeadDim + a.VHeadDim
+	for l := 0; l < a.NumLayers(); l++ {
+		prefix := fmt.Sprintf("model.layers.%d.self_attn", l)
+		v, ok := weights[prefix+".kv_b_proj.weight"]
+		if !ok {
+			continue
+		}
+		delete(weights, prefix+".kv_b_proj.weight")
+
+		quantized := false
+		bits, groupSize := 0, 0
+		if scales, ok := weights[prefix+".kv_b_proj.scales"]; ok {
+			quantized = true
+			biases := weights[prefix+".kv_b_proj.biases"]
+			if biases == nil {
+				return fmt.Errorf("deepseekv3: kv_b_proj absorption missing %q", prefix+".kv_b_proj.biases")
+			}
+			delete(weights, prefix+".kv_b_proj.scales")
+			delete(weights, prefix+".kv_b_proj.biases")
+			vShape := v.Shape()
+			sShape := scales.Shape()
+			bits = (vShape[len(vShape)-1] * 32) / a.KVLoraRank
+			groupSize = a.KVLoraRank / sShape[len(sShape)-1]
+			dv, err := mlxgo.Dequantize(v, scales, biases, groupSize, bits, s)
+			if err != nil {
+				return err
+			}
+			v = dv
+		}
+
+		v, err := mlxgo.Reshape(v, []int{a.NumAttentionHeads, headDim, -1}, s)
+		if err != nil {
+			return err
+		}
+		bands, err := mlxgo.SplitSections(v, []int{a.QKNopeHeadDim}, 1, s)
+		if err != nil {
+			return err
+		}
+		swapped, err := mlxgo.Swapaxes(bands[0], -1, -2, s)
+		if err != nil {
+			return err
+		}
+		wk, err := mlxgo.Contiguous(swapped, s)
+		if err != nil {
+			return err
+		}
+		wv, err := mlxgo.Contiguous(bands[1], s)
+		if err != nil {
+			return err
+		}
+
+		if quantized {
+			wkP, wkS, wkB, err := mlxgo.Quantize(wk, groupSize, bits, s)
+			if err != nil {
+				return err
+			}
+			wvP, wvS, wvB, err := mlxgo.Quantize(wv, groupSize, bits, s)
+			if err != nil {
+				return err
+			}
+			weights[prefix+".embed_q.scales"] = wkS
+			weights[prefix+".unembed_out.scales"] = wvS
+			weights[prefix+".embed_q.biases"] = wkB
+			weights[prefix+".unembed_out.biases"] = wvB
+			wk, wv = wkP, wvP
+		}
+		weights[prefix+".embed_q.weight"] = wk
+		weights[prefix+".unembed_out.weight"] = wv
+	}
+	return nil
+}

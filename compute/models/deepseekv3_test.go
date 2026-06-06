@@ -391,6 +391,62 @@ func TestRemapInt4(t *testing.T) {
 	}
 }
 
+// absorbKVB folds each layer's kv_b_proj into the embed_q and unembed_out
+// projections. A non-quantized layer reaches the unavailable error at the Reshape
+// kernel; a quantized layer reaches it at the Dequantize kernel; a quantized layer
+// missing its biases is caught host-side; a checkpoint with no kv_b_proj key touches
+// no kernel and passes through untouched.
+func TestAbsorbKVB(t *testing.T) {
+	a, err := ParseDeepseekV3Args(baseDeepseekConfig(map[string]any{"num_hidden_layers": 1}))
+	if err != nil {
+		t.Fatalf("ParseDeepseekV3Args: %v", err)
+	}
+	mk := func() *mlxgo.Array {
+		arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+		if err != nil {
+			t.Fatalf("NewFloat32: %v", err)
+		}
+		return arr
+	}
+	prefix := "model.layers.0.self_attn"
+
+	dense := map[string]*mlxgo.Array{prefix + ".kv_b_proj.weight": mk()}
+	if err := absorbKVB(dense, a, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("absorbKVB dense on the stub: err = %v, want ErrMLXUnavailable at the Reshape kernel", err)
+	}
+
+	quant := map[string]*mlxgo.Array{
+		prefix + ".kv_b_proj.weight": mk(),
+		prefix + ".kv_b_proj.scales": mk(),
+		prefix + ".kv_b_proj.biases": mk(),
+	}
+	if err := absorbKVB(quant, a, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("absorbKVB quantized on the stub: err = %v, want ErrMLXUnavailable at the Dequantize kernel", err)
+	}
+
+	missing := map[string]*mlxgo.Array{
+		prefix + ".kv_b_proj.weight": mk(),
+		prefix + ".kv_b_proj.scales": mk(),
+	}
+	if err := absorbKVB(missing, a, mlxgo.DefaultStream()); err == nil || errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("absorbKVB missing biases: err = %v, want a host-side missing-key error", err)
+	}
+
+	// No kv_b_proj: the layer already carries the absorbed projections, so no kernel
+	// fires and the map is unchanged.
+	absorbed := map[string]*mlxgo.Array{
+		prefix + ".embed_q.weight":     mk(),
+		prefix + ".unembed_out.weight": mk(),
+	}
+	before := keysOf(absorbed)
+	if err := absorbKVB(absorbed, a, mlxgo.DefaultStream()); err != nil {
+		t.Fatalf("absorbKVB on an absorbed checkpoint: %v", err)
+	}
+	if after := keysOf(absorbed); !reflect.DeepEqual(before, after) {
+		t.Errorf("absorbed checkpoint mutated: %v -> %v", before, after)
+	}
+}
+
 func keysOf(m map[string]*mlxgo.Array) []string {
 	out := make([]string, 0, len(m))
 	for k := range m {
