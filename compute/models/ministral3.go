@@ -40,6 +40,10 @@ type MinistralArgs struct {
 	RopeTheta                     float64
 	Llama4ScalingBeta             float64
 	OriginalMaxPositionEmbeddings int
+
+	// quant is the affine quantization geometry from the top-level
+	// "quantization" block, zero when the checkpoint is dense.
+	quant quantConfig
 }
 
 const (
@@ -124,6 +128,11 @@ func ParseMinistralArgs(configJSON []byte) (*MinistralArgs, error) {
 	if omp, ok := ropeFloat(c.RopeParameters, "original_max_position_embeddings"); ok {
 		a.OriginalMaxPositionEmbeddings = int(omp)
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("ministral3: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}
@@ -275,24 +284,25 @@ func (a *MinistralArgs) Sanitize(weights map[string]*mlxgo.Array) map[string]*ml
 	return weights
 }
 
-// ministralLayer holds one decoder block's weights plus its attention kind.
+// ministralLayer holds one decoder block's weights plus its attention kind. The
+// projections may be affine-quantized (qLinear); the norms are never quantized.
 type ministralLayer struct {
 	sliding                bool
 	inputLayernorm         *mlxgo.Array
 	postAttentionLayernorm *mlxgo.Array
-	qProj, kProj, vProj    *mlxgo.Array
-	oProj                  *mlxgo.Array
-	gateProj, upProj       *mlxgo.Array
-	downProj               *mlxgo.Array
+	qProj, kProj, vProj    *qLinear
+	oProj                  *qLinear
+	gateProj, upProj       *qLinear
+	downProj               *qLinear
 }
 
 // Ministral3Model is an assembled Ministral 3 text model.
 type Ministral3Model struct {
 	args        *MinistralArgs
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	layers      []ministralLayer
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when tied
+	lmHead      *qLinear // nil when tied
 }
 
 // NewMinistral3Model wires a sanitized weight map into a runnable model.
@@ -304,9 +314,12 @@ func NewMinistral3Model(args *MinistralArgs, weights map[string]*mlxgo.Array) (*
 		}
 		return w, nil
 	}
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 	m := &Ministral3Model{args: args, layers: make([]ministralLayer, args.NumLayers())}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
@@ -315,29 +328,39 @@ func NewMinistral3Model(args *MinistralArgs, weights map[string]*mlxgo.Array) (*
 	for i := range m.layers {
 		m.layers[i].sliding = args.IsSliding(i)
 		p := fmt.Sprintf("model.layers.%d.", i)
-		req := []struct {
+		norms := []struct {
 			name string
 			dst  **mlxgo.Array
 		}{
 			{p + "input_layernorm.weight", &m.layers[i].inputLayernorm},
 			{p + "post_attention_layernorm.weight", &m.layers[i].postAttentionLayernorm},
-			{p + "self_attn.q_proj.weight", &m.layers[i].qProj},
-			{p + "self_attn.k_proj.weight", &m.layers[i].kProj},
-			{p + "self_attn.v_proj.weight", &m.layers[i].vProj},
-			{p + "self_attn.o_proj.weight", &m.layers[i].oProj},
-			{p + "mlp.gate_proj.weight", &m.layers[i].gateProj},
-			{p + "mlp.up_proj.weight", &m.layers[i].upProj},
-			{p + "mlp.down_proj.weight", &m.layers[i].downProj},
 		}
-		for _, f := range req {
+		for _, f := range norms {
 			if *f.dst, err = get(f.name); err != nil {
+				return nil, err
+			}
+		}
+		projs := []struct {
+			name string
+			dst  **qLinear
+		}{
+			{p + "self_attn.q_proj", &m.layers[i].qProj},
+			{p + "self_attn.k_proj", &m.layers[i].kProj},
+			{p + "self_attn.v_proj", &m.layers[i].vProj},
+			{p + "self_attn.o_proj", &m.layers[i].oProj},
+			{p + "mlp.gate_proj", &m.layers[i].gateProj},
+			{p + "mlp.up_proj", &m.layers[i].upProj},
+			{p + "mlp.down_proj", &m.layers[i].downProj},
+		}
+		for _, f := range projs {
+			if *f.dst, err = getQ(f.name); err != nil {
 				return nil, err
 			}
 		}
 	}
 	if args.TieWordEmbeddings {
 		m.lmHead = nil
-	} else if m.lmHead, err = get("lm_head.weight"); err != nil {
+	} else if m.lmHead, err = getQ("lm_head"); err != nil {
 		return nil, err
 	}
 	return m, nil
@@ -385,10 +408,7 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	if err != nil {
 		return nil, err
 	}
-	h, err := mlxgo.Take(m.embedTokens, idx, 0, s)
-	if err != nil {
-		return nil, err
-	}
+	h := b.qembed(m.embedTokens, idx)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	mode, mask, err := caches[0].AttnMask(batch, L, s)
@@ -402,9 +422,9 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		cache := caches[i]
 
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
-		q := b.linear(x, layer.qProj)
-		k := b.linear(x, layer.kProj)
-		v := b.linear(x, layer.vProj)
+		q := b.qlinear(x, layer.qProj)
+		k := b.qlinear(x, layer.kProj)
+		v := b.qlinear(x, layer.vProj)
 		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
 		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
 		v = b.transpose(b.reshape(v, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
@@ -439,13 +459,13 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		}
 		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
-		attn = b.linear(attn, layer.oProj)
+		attn = b.qlinear(attn, layer.oProj)
 		h = b.add(h, attn)
 
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
-		gate := b.silu(b.linear(y, layer.gateProj))
-		up := b.linear(y, layer.upProj)
-		y = b.linear(b.mul(gate, up), layer.downProj)
+		gate := b.silu(b.qlinear(y, layer.gateProj))
+		up := b.qlinear(y, layer.upProj)
+		y = b.qlinear(b.mul(gate, up), layer.downProj)
 		h = b.add(h, y)
 	}
 
@@ -454,7 +474,7 @@ func (m *Ministral3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	if head == nil {
 		head = m.embedTokens
 	}
-	logits := b.linear(h, head)
+	logits := b.qlinear(h, head)
 	if b.err != nil {
 		return nil, b.err
 	}

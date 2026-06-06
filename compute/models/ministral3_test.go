@@ -312,6 +312,78 @@ func TestNewMinistral3ModelWiresWeights(t *testing.T) {
 	}
 }
 
+func tinyMinistralQuantArgs(t *testing.T, tie bool) *MinistralArgs {
+	t.Helper()
+	cfg := `{"model_type":"ministral3","hidden_size":8,"num_hidden_layers":2,"intermediate_size":16,` +
+		`"num_attention_heads":4,"rms_norm_eps":1e-6,"vocab_size":32,"num_key_value_heads":2,` +
+		`"max_position_embeddings":128,"sliding_window":4,` +
+		`"layer_types":["full_attention","sliding_attention"],` +
+		`"rope_parameters":{"rope_theta":100000000.0,"llama_4_scaling_beta":0.5,"original_max_position_embeddings":128},` +
+		`"quantization":{"group_size":64,"bits":4,"mode":"affine"},` +
+		`"tie_word_embeddings":` + boolStr(tie) + `}`
+	a, err := ParseMinistralArgs([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseMinistralArgs: %v", err)
+	}
+	return a
+}
+
+func dummyMinistralQuantWeights(t *testing.T, a *MinistralArgs) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyMinistralWeights(t, a)
+	for _, name := range a.WeightNames() {
+		if !quantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestNewMinistral3ModelQuantizedWiring(t *testing.T) {
+	a := tinyMinistralQuantArgs(t, false)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Fatalf("quant = %+v, want {64 4}", a.quant)
+	}
+	m, err := NewMinistral3Model(a, dummyMinistralQuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewMinistral3Model: %v", err)
+	}
+	if !m.embedTokens.isQuantized() || !m.lmHead.isQuantized() {
+		t.Error("embedding / head not loaded quantized")
+	}
+	for i := range m.layers {
+		l := &m.layers[i]
+		for _, q := range []*qLinear{l.qProj, l.kProj, l.vProj, l.oProj, l.gateProj, l.upProj, l.downProj} {
+			if !q.isQuantized() || q.groupSize != 64 || q.bits != 4 {
+				t.Fatalf("layer %d projection not quantized at 64/4", i)
+			}
+		}
+	}
+}
+
+func TestMinistral3QuantizedForwardReachesSeam(t *testing.T) {
+	a := tinyMinistralQuantArgs(t, true)
+	m, err := NewMinistral3Model(a, dummyMinistralQuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewMinistral3Model: %v", err)
+	}
+	caches := make([]*KVTensorCache, a.NumLayers())
+	for i := range caches {
+		caches[i] = &KVTensorCache{}
+	}
+	if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Errorf("Forward err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
 func TestMinistral3ForwardGracefulWithoutBackend(t *testing.T) {
 	a := tinyMinistralArgs(t, true)
 	m, err := NewMinistral3Model(a, dummyMinistralWeights(t, a))
