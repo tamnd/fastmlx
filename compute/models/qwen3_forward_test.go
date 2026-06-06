@@ -78,6 +78,117 @@ func TestNewQwen3ModelWiresWeights(t *testing.T) {
 	}
 }
 
+// tinyQwen3QuantArgs is tinyQwen3Args with a top-level affine quantization block,
+// the config a packed checkpoint ships.
+func tinyQwen3QuantArgs(t *testing.T, tie bool) *Qwen3Args {
+	t.Helper()
+	cfg := `{"model_type":"qwen3","hidden_size":8,"num_hidden_layers":2,"intermediate_size":16,` +
+		`"num_attention_heads":4,"rms_norm_eps":1e-6,"vocab_size":32,"num_key_value_heads":2,` +
+		`"max_position_embeddings":128,"rope_theta":1000000.0,"head_dim":2,"tie_word_embeddings":` +
+		boolStr(tie) + `,"quantization":{"group_size":64,"bits":4,"mode":"affine"}}`
+	a, err := ParseQwen3Args([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseQwen3Args: %v", err)
+	}
+	return a
+}
+
+// quantizableModule reports whether a "*.weight" key names a module that the
+// reference packs (the projections, the embedding, and the untied head), as
+// opposed to a never-quantized norm weight.
+func quantizableModule(name string) bool {
+	for _, suffix := range []string{
+		"embed_tokens.weight", "q_proj.weight", "k_proj.weight", "v_proj.weight",
+		"o_proj.weight", "gate_proj.weight", "up_proj.weight", "down_proj.weight",
+		"lm_head.weight",
+	} {
+		if len(name) >= len(suffix) && name[len(name)-len(suffix):] == suffix {
+			return true
+		}
+	}
+	return false
+}
+
+// dummyQuantWeights builds the dense weights plus a scales/biases sibling for
+// every quantizable module, the key layout a packed checkpoint loads from.
+func dummyQuantWeights(t *testing.T, a *Qwen3Args) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyWeights(t, a)
+	for _, name := range a.WeightNames() {
+		if !quantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestParseQwen3ArgsCapturesQuantization(t *testing.T) {
+	a := tinyQwen3QuantArgs(t, true)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Errorf("quant = %+v, want {64 4}", a.quant)
+	}
+	// The default unquantized config leaves the geometry zero.
+	if d := tinyQwen3Args(t, true).quant; d.quantized() {
+		t.Errorf("dense config reported quantized: %+v", d)
+	}
+}
+
+func TestNewQwen3ModelQuantizedWiring(t *testing.T) {
+	a := tinyQwen3QuantArgs(t, false)
+	m, err := NewQwen3Model(a, dummyQuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewQwen3Model: %v", err)
+	}
+	if !m.embedTokens.isQuantized() || !m.lmHead.isQuantized() {
+		t.Error("embedding / head not loaded quantized")
+	}
+	for i := range m.layers {
+		l := &m.layers[i]
+		for _, q := range []*qLinear{l.qProj, l.kProj, l.vProj, l.oProj, l.gateProj, l.upProj, l.downProj} {
+			if !q.isQuantized() {
+				t.Fatalf("layer %d projection not loaded quantized", i)
+			}
+			if q.groupSize != 64 || q.bits != 4 {
+				t.Fatalf("layer %d geometry = gs%d/b%d, want 64/4", i, q.groupSize, q.bits)
+			}
+		}
+	}
+}
+
+func TestNewQwen3ModelQuantizedMissingBiases(t *testing.T) {
+	a := tinyQwen3QuantArgs(t, true)
+	w := dummyQuantWeights(t, a)
+	delete(w, "model.layers.0.self_attn.q_proj.biases")
+	if _, err := NewQwen3Model(a, w); err == nil {
+		t.Error("expected an error for a quantized module missing its biases")
+	}
+}
+
+func TestQwen3QuantizedForwardReachesSeam(t *testing.T) {
+	// A quantized model type-checks and routes through the quantized kernels,
+	// reaching ErrMLXUnavailable at the first one under the stub.
+	a := tinyQwen3QuantArgs(t, true)
+	m, err := NewQwen3Model(a, dummyQuantWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewQwen3Model: %v", err)
+	}
+	caches := make([]*KVTensorCache, a.NumHiddenLayers)
+	for i := range caches {
+		caches[i] = &KVTensorCache{}
+	}
+	if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Errorf("Forward err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
 func TestNewQwen3ModelMissingWeight(t *testing.T) {
 	a := tinyQwen3Args(t, false)
 	w := dummyWeights(t, a)

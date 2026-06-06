@@ -57,10 +57,10 @@ func TestLoadQwen3EndToEnd(t *testing.T) {
 		t.Error("tied checkpoint should leave lmHead nil")
 	}
 	// The loaded weights keep their on-disk bfloat16 dtype and real shapes.
-	if got := m.embedTokens.Dtype(); got != mlxgo.BFloat16 {
+	if got := m.embedTokens.w.Dtype(); got != mlxgo.BFloat16 {
 		t.Errorf("embed dtype = %v, want bfloat16", got)
 	}
-	if shape := m.embedTokens.Shape(); len(shape) != 2 || shape[0] != 32 || shape[1] != 8 {
+	if shape := m.embedTokens.w.Shape(); len(shape) != 2 || shape[0] != 32 || shape[1] != 8 {
 		t.Errorf("embed shape = %v, want [32 8]", shape)
 	}
 }

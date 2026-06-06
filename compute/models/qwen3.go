@@ -42,6 +42,12 @@ type Qwen3Args struct {
 	HeadDim               int         `json:"head_dim"`
 	TieWordEmbeddings     bool        `json:"tie_word_embeddings"`
 	RopeScaling           RopeScaling `json:"rope_scaling"`
+
+	// quant is the affine quantization geometry the checkpoint was packed with,
+	// read from the top-level "quantization" block. A zero value loads every
+	// weight dense; a non-zero value routes each module that ships its scales
+	// through the quantized kernels.
+	quant quantConfig
 }
 
 // RopeScaling carries the optional RoPE scaling block. It stays a free-form map
@@ -66,6 +72,11 @@ func ParseQwen3Args(configJSON []byte) (*Qwen3Args, error) {
 	if a.NumKeyValueHeads == 0 {
 		a.NumKeyValueHeads = a.NumAttentionHeads
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("qwen3: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}

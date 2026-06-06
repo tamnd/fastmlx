@@ -8,15 +8,18 @@ import (
 	"github.com/tamnd/fastmlx/mlxgo"
 )
 
-// qwen3Layer holds one decoder block's weight tensors.
+// qwen3Layer holds one decoder block's weight tensors. The projections and the
+// MLP weights may be affine-quantized (loaded as qLinear, dense when the
+// checkpoint ships no scales for them); the per-head RMSNorm weights are never
+// quantized and stay plain arrays.
 type qwen3Layer struct {
 	inputLayernorm         *mlxgo.Array
 	postAttentionLayernorm *mlxgo.Array
-	qProj, kProj, vProj    *mlxgo.Array
-	oProj                  *mlxgo.Array
+	qProj, kProj, vProj    *qLinear
+	oProj                  *qLinear
 	qNorm, kNorm           *mlxgo.Array
-	gateProj, upProj       *mlxgo.Array
-	downProj               *mlxgo.Array
+	gateProj, upProj       *qLinear
+	downProj               *qLinear
 }
 
 // Qwen3Model is an assembled Qwen3 dense model: the decoded args plus the
@@ -25,10 +28,10 @@ type qwen3Layer struct {
 // constructor pulls each tensor into place and resolves the tied head.
 type Qwen3Model struct {
 	args        *Qwen3Args
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	layers      []qwen3Layer
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when the head is tied to the embedding table
+	lmHead      *qLinear // nil when the head is tied to the embedding table
 }
 
 // NewQwen3Model wires a sanitized weight map into a runnable model. Every key in
@@ -42,9 +45,14 @@ func NewQwen3Model(args *Qwen3Args, weights map[string]*mlxgo.Array) (*Qwen3Mode
 		}
 		return w, nil
 	}
+	// getQ resolves a possibly-quantized weight by its module name (no ".weight"
+	// suffix); a module that ships scales loads quantized at the config geometry.
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 	m := &Qwen3Model{args: args, layers: make([]qwen3Layer, args.NumHiddenLayers)}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
@@ -52,31 +60,41 @@ func NewQwen3Model(args *Qwen3Args, weights map[string]*mlxgo.Array) (*Qwen3Mode
 	}
 	for i := range m.layers {
 		p := fmt.Sprintf("model.layers.%d.", i)
-		fields := []struct {
+		norms := []struct {
 			name string
 			dst  **mlxgo.Array
 		}{
 			{p + "input_layernorm.weight", &m.layers[i].inputLayernorm},
 			{p + "post_attention_layernorm.weight", &m.layers[i].postAttentionLayernorm},
-			{p + "self_attn.q_proj.weight", &m.layers[i].qProj},
-			{p + "self_attn.k_proj.weight", &m.layers[i].kProj},
-			{p + "self_attn.v_proj.weight", &m.layers[i].vProj},
-			{p + "self_attn.o_proj.weight", &m.layers[i].oProj},
 			{p + "self_attn.q_norm.weight", &m.layers[i].qNorm},
 			{p + "self_attn.k_norm.weight", &m.layers[i].kNorm},
-			{p + "mlp.gate_proj.weight", &m.layers[i].gateProj},
-			{p + "mlp.up_proj.weight", &m.layers[i].upProj},
-			{p + "mlp.down_proj.weight", &m.layers[i].downProj},
 		}
-		for _, f := range fields {
+		for _, f := range norms {
 			if *f.dst, err = get(f.name); err != nil {
+				return nil, err
+			}
+		}
+		projs := []struct {
+			name string
+			dst  **qLinear
+		}{
+			{p + "self_attn.q_proj", &m.layers[i].qProj},
+			{p + "self_attn.k_proj", &m.layers[i].kProj},
+			{p + "self_attn.v_proj", &m.layers[i].vProj},
+			{p + "self_attn.o_proj", &m.layers[i].oProj},
+			{p + "mlp.gate_proj", &m.layers[i].gateProj},
+			{p + "mlp.up_proj", &m.layers[i].upProj},
+			{p + "mlp.down_proj", &m.layers[i].downProj},
+		}
+		for _, f := range projs {
+			if *f.dst, err = getQ(f.name); err != nil {
 				return nil, err
 			}
 		}
 	}
 	if args.TieWordEmbeddings {
 		m.lmHead = nil
-	} else if m.lmHead, err = get("lm_head.weight"); err != nil {
+	} else if m.lmHead, err = getQ("lm_head"); err != nil {
 		return nil, err
 	}
 	return m, nil
@@ -270,10 +288,7 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 	if err != nil {
 		return nil, err
 	}
-	h, err := mlxgo.Take(m.embedTokens, idx, 0, s)
-	if err != nil {
-		return nil, err
-	}
+	h := b.qembed(m.embedTokens, idx)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	mode, mask, err := caches[0].AttnMask(batch, L, s)
@@ -288,9 +303,9 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 
 		// Attention.
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
-		q := b.linear(x, layer.qProj)
-		k := b.linear(x, layer.kProj)
-		v := b.linear(x, layer.vProj)
+		q := b.qlinear(x, layer.qProj)
+		k := b.qlinear(x, layer.kProj)
+		v := b.qlinear(x, layer.vProj)
 		q = b.reshape(q, []int{batch, L, nh, hd})
 		q = b.rmsNorm(q, layer.qNorm, eps)
 		q = b.transpose(q, []int{0, 2, 1, 3})
@@ -313,14 +328,14 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})
 		attn = b.reshape(attn, []int{batch, L, nh * hd})
-		attn = b.linear(attn, layer.oProj)
+		attn = b.qlinear(attn, layer.oProj)
 		h = b.add(h, attn)
 
 		// SwiGLU MLP.
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
-		gate := b.silu(b.linear(y, layer.gateProj))
-		up := b.linear(y, layer.upProj)
-		y = b.linear(b.mul(gate, up), layer.downProj)
+		gate := b.silu(b.qlinear(y, layer.gateProj))
+		up := b.qlinear(y, layer.upProj)
+		y = b.qlinear(b.mul(gate, up), layer.downProj)
 		h = b.add(h, y)
 	}
 
@@ -329,7 +344,7 @@ func (m *Qwen3Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorC
 	if head == nil {
 		head = m.embedTokens
 	}
-	logits := b.linear(h, head)
+	logits := b.qlinear(h, head)
 	if b.err != nil {
 		return nil, b.err
 	}
