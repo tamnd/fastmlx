@@ -219,6 +219,34 @@ func slidingWindowMask(qLen, offset, window int) (*mlxgo.Array, error) {
 	return mlxgo.NewFloat32(data, 1, 1, qLen, total)
 }
 
+// batchLeftPadSlidingWindowMask is the per-row sliding-window mask for a
+// left-padded ragged cohort, shaped [batch, 1, qLen, offset+qLen]. It adds the
+// left-padding term to slidingWindowMask: row b's query position p = offset+i may
+// attend key j only when j is at or before p (causal), within the window
+// (p-j < window), and at or after that row's left padding (j >= leftPad[b]), so
+// the padding keys prepended to a short prompt stay masked here exactly as in the
+// full-attention mask. A row with no padding reduces byte for byte to the
+// single-sequence slidingWindowMask, so this is a strict generalization, and it
+// uses the same negative infinity so the reduction is exact.
+func batchLeftPadSlidingWindowMask(leftPad []int, qLen, offset, window int) (*mlxgo.Array, error) {
+	total := offset + qLen
+	data := make([]float32, len(leftPad)*qLen*total)
+	neg := float32(math.Inf(-1))
+	for b, pad := range leftPad {
+		base := b * qLen * total
+		for i := range qLen {
+			p := offset + i
+			row := base + i*total
+			for j := range total {
+				if j > p || p-j >= window || j < pad {
+					data[row+j] = neg
+				}
+			}
+		}
+	}
+	return mlxgo.NewFloat32(data, len(leftPad), 1, qLen, total)
+}
+
 // gemma4Intermediate carries one owning layer's post-rope, post-cache keys and
 // values plus the rope offset, so a later KV-shared layer of the same kind can
 // reuse them exactly as the reference threads previous_kvs.
@@ -293,11 +321,25 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	// The sliding-window mask depends only on the step (query length and the
 	// pre-step offset), so build it once and share it across sliding layers. The
 	// owning offset is uniform because every owning cache grows by L each step.
+	// For a left-padded ragged cohort both masks gain a per-row term: the full
+	// layers read the left-padded causal mask from the cache, and the sliding
+	// layers use the per-row sliding-window mask so prepended padding stays masked.
 	stepOffset := caches[0].Offset
+	leftPad := caches[0].LeftPad()
+	ropeOff := caches[0].RopeOffsets()
+	fullMode, fullMask, err := caches[0].AttnMask(batch, L, s)
+	if err != nil {
+		return nil, err
+	}
 	var slideMask *mlxgo.Array
 	for i := range m.layers {
 		if a.IsSliding(i) {
-			if slideMask, err = slidingWindowMask(L, stepOffset, a.SlidingWindow); err != nil {
+			if leftPad == nil {
+				slideMask, err = slidingWindowMask(L, stepOffset, a.SlidingWindow)
+			} else {
+				slideMask, err = batchLeftPadSlidingWindowMask(leftPad, L, stepOffset, a.SlidingWindow)
+			}
+			if err != nil {
 				return nil, err
 			}
 			break
@@ -325,7 +367,11 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 			k = b.reshape(k, []int{batch, L, nkv, hd})
 			k = b.rmsNorm(k, layer.kNorm, eps)
 			k = b.transpose(k, []int{0, 2, 1, 3})
-			k = m.ropeLayer(b, i, k, hd, offset)
+			if ropeOff == nil {
+				k = m.ropeLayer(b, i, k, hd, offset)
+			} else {
+				k = b.ropePerRow(k, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return m.ropeLayer(b, i, r, hd, o) })
+			}
 
 			vSrc := layer.vProj
 			var v *mlxgo.Array
@@ -347,14 +393,15 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 			keys, values, offset = shared.keys, shared.values, shared.offset
 		}
 
-		q = m.ropeLayer(b, i, q, hd, offset)
+		if ropeOff == nil {
+			q = m.ropeLayer(b, i, q, hd, offset)
+		} else {
+			q = b.ropePerRow(q, ropeOff, func(r *mlxgo.Array, o int) *mlxgo.Array { return m.ropeLayer(b, i, r, hd, o) })
+		}
 
 		maskMode, mask := "", slideMask
 		if !a.IsSliding(i) {
-			mask = nil
-			if L > 1 {
-				maskMode = "causal"
-			}
+			maskMode, mask = fullMode, fullMask
 		}
 		attn := b.sdpaWith(q, keys, values, 1.0, maskMode, mask)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})

@@ -124,6 +124,49 @@ func TestSlidingWindowMaskWithOffset(t *testing.T) {
 	}
 }
 
+func TestBatchLeftPadSlidingWindowMask(t *testing.T) {
+	// Two rows of a ragged cohort: row 0 has no padding, row 1 was left-padded by 2.
+	// qLen 2, offset 3, window 2. Row 0 must reproduce slidingWindowMask byte for
+	// byte; row 1 must also drop the two padding keys (j < 2) on top of the window.
+	leftPad := []int{0, 2}
+	const qLen, offset, window = 2, 3, 2
+	m, err := batchLeftPadSlidingWindowMask(leftPad, qLen, offset, window)
+	if err != nil {
+		t.Fatalf("batchLeftPadSlidingWindowMask: %v", err)
+	}
+	total := offset + qLen
+	if want := []int{2, 1, qLen, total}; !reflect.DeepEqual(m.Shape(), want) {
+		t.Fatalf("shape = %v, want %v", m.Shape(), want)
+	}
+	data, err := m.ToFloat32()
+	if err != nil {
+		t.Fatalf("ToFloat32: %v", err)
+	}
+	allow := func(b, i, j int) bool { return data[(b*qLen+i)*total+j] == 0 }
+	for b, pad := range leftPad {
+		for i := range qLen {
+			p := offset + i
+			for j := range total {
+				want := j <= p && p-j < window && j >= pad
+				if allow(b, i, j) != want {
+					t.Errorf("row %d mask[%d,%d] allow=%v, want %v", b, i, j, allow(b, i, j), want)
+				}
+			}
+		}
+	}
+	// The zero-padding row must equal the single-sequence builder exactly.
+	single, err := slidingWindowMask(qLen, offset, window)
+	if err != nil {
+		t.Fatalf("slidingWindowMask: %v", err)
+	}
+	sdata, _ := single.ToFloat32()
+	for k := range sdata {
+		if data[k] != sdata[k] && !(math.IsInf(float64(data[k]), -1) && math.IsInf(float64(sdata[k]), -1)) {
+			t.Errorf("row 0 elem %d = %g, want %g", k, data[k], sdata[k])
+		}
+	}
+}
+
 func TestNewGemma4TextModelWiresWeights(t *testing.T) {
 	for _, tie := range []bool{true, false} {
 		a := tinyGemma4Args(t, tie, 4)
