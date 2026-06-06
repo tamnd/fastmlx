@@ -78,6 +78,15 @@ func NewDeepseekV3Model(args *DeepseekV3Args, weights map[string]*mlxgo.Array) (
 	}
 	opt := func(name string) *mlxgo.Array { return weights[name] }
 
+	// Stack any per-expert MLP tensors into the switch_mlp tensors the routed
+	// forward reads, the backend half of the pre-load patch. A checkpoint that
+	// already carries stacked experts is left untouched.
+	if args.IsMoE() {
+		if err := stackExperts(weights, args.NumLayers(), args.NRoutedExperts, mlxgo.DefaultStream()); err != nil {
+			return nil, err
+		}
+	}
+
 	m := &DeepseekV3Model{args: args, layers: make([]deepseekV3Layer, args.NumLayers())}
 	var err error
 	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {

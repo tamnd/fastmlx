@@ -4,6 +4,8 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"maps"
 	"math"
 	"os"
@@ -253,15 +255,100 @@ func TestParseDeepseekV3Errors(t *testing.T) {
 	}
 }
 
-func TestDeepseekV3SanitizeIdentity(t *testing.T) {
-	a, err := ParseDeepseekV3Args(baseDeepseekConfig(map[string]any{}))
+// Sanitize drops the multi-token-prediction layer (the index past the decoder
+// stack) and any rotary inverse-frequency buffer, and keeps every other key.
+func TestDeepseekV3SanitizeDrops(t *testing.T) {
+	a, err := ParseDeepseekV3Args(baseDeepseekConfig(map[string]any{"num_hidden_layers": 4}))
 	if err != nil {
 		t.Fatalf("ParseDeepseekV3Args: %v", err)
 	}
-	w := map[string]*mlxgo.Array{}
-	if got := a.Sanitize(w); !reflect.DeepEqual(got, w) {
-		t.Error("Sanitize should pass the patched weights through unchanged at this stage")
+	mk := func() *mlxgo.Array {
+		arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+		if err != nil {
+			t.Fatalf("NewFloat32: %v", err)
+		}
+		return arr
 	}
+	w := map[string]*mlxgo.Array{
+		"model.embed_tokens.weight":                     mk(),
+		"model.layers.0.input_layernorm.weight":         mk(),
+		"model.layers.0.self_attn.rotary_emb.inv_freq":  mk(), // dropped
+		"model.layers.4.input_layernorm.weight":         mk(), // MTP layer, dropped
+		"model.layers.4.mlp.experts.0.gate_proj.weight": mk(), // MTP layer, dropped
+		"lm_head.weight":                                mk(),
+	}
+	got := a.Sanitize(w)
+	want := []string{
+		"model.embed_tokens.weight",
+		"model.layers.0.input_layernorm.weight",
+		"lm_head.weight",
+	}
+	if len(got) != len(want) {
+		t.Fatalf("Sanitize kept %d keys, want %d (%v)", len(got), len(want), keysOf(got))
+	}
+	for _, k := range want {
+		if _, ok := got[k]; !ok {
+			t.Errorf("Sanitize dropped %q, want kept", k)
+		}
+	}
+}
+
+// stackExperts joins the per-expert MLP tensors along a new expert axis. The stub
+// reaches the unavailable error at the Stack kernel, a fully-stacked checkpoint
+// passes through with no kernel, and a cohort missing an expert is caught host-side
+// before any kernel.
+func TestStackExperts(t *testing.T) {
+	mk := func() *mlxgo.Array {
+		arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+		if err != nil {
+			t.Fatalf("NewFloat32: %v", err)
+		}
+		return arr
+	}
+
+	// One MoE layer with all three projections present for every expert.
+	const numExperts = 3
+	perExpert := map[string]*mlxgo.Array{}
+	for _, proj := range []string{"gate_proj", "down_proj", "up_proj"} {
+		for e := 0; e < numExperts; e++ {
+			perExpert[fmt.Sprintf("model.layers.0.mlp.experts.%d.%s.weight", e, proj)] = mk()
+		}
+	}
+	if err := stackExperts(perExpert, 1, numExperts, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("stackExperts on the stub: err = %v, want ErrMLXUnavailable at the Stack kernel", err)
+	}
+
+	// A checkpoint already carrying stacked switch_mlp tensors has no per-expert
+	// key, so stackExperts touches no kernel and leaves the map unchanged.
+	stacked := map[string]*mlxgo.Array{
+		"model.layers.0.mlp.switch_mlp.gate_proj.weight": mk(),
+	}
+	before := keysOf(stacked)
+	if err := stackExperts(stacked, 1, numExperts, mlxgo.DefaultStream()); err != nil {
+		t.Fatalf("stackExperts on a stacked checkpoint: %v", err)
+	}
+	if after := keysOf(stacked); !reflect.DeepEqual(before, after) {
+		t.Errorf("stacked checkpoint mutated: %v -> %v", before, after)
+	}
+
+	// Expert 0 present but the cohort incomplete: caught before the kernel.
+	missing := map[string]*mlxgo.Array{
+		"model.layers.0.mlp.experts.0.gate_proj.weight": mk(),
+		"model.layers.0.mlp.experts.1.gate_proj.weight": mk(),
+	}
+	err := stackExperts(missing, 1, numExperts, mlxgo.DefaultStream())
+	if err == nil || errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("incomplete cohort: err = %v, want a host-side missing-expert error", err)
+	}
+}
+
+func keysOf(m map[string]*mlxgo.Array) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
 }
 
 func BenchmarkParseDeepseekV3Args(b *testing.B) {

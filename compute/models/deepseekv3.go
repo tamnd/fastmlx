@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strings"
 
 	"github.com/tamnd/fastmlx/compute"
 	"github.com/tamnd/fastmlx/mlxgo"
@@ -462,12 +463,62 @@ func (a *DeepseekV3Args) mlpWeightNames(p string, idx int) []string {
 	return names
 }
 
-// Sanitize is the seam for the pre-load patch: the checkpoint carries an fp8 or
-// int4 packing, per-expert MLP tensors (experts.{e}.{w1,w2,w3}), and a fused
-// kv_b_proj, and the reference rewrites them into bf16, a stacked switch_mlp, and
-// the absorbed embed_q and unembed_out. Those are tensor operations (fp8 dequant,
-// stack, split, requantize) that need the backend, so they land with the numeric
-// forward; here Sanitize passes the already-patched weights through unchanged.
+// Sanitize runs the host-only half of the pre-load patch: it drops the keys the
+// model must not receive. The reference removes the multi-token-prediction layer
+// (the one extra layer index past the decoder stack) and any precomputed rotary
+// inverse-frequency buffers, both pure key filters. The backend half of the patch
+// (fp8 dequant, the int4 remap, the per-expert stack, and the kv_b_proj split into
+// embed_q and unembed_out) needs the GPU and lands in the constructor with the
+// numeric forward, so stackExperts and the rest run there where an error can
+// surface.
 func (a *DeepseekV3Args) Sanitize(weights map[string]*mlxgo.Array) map[string]*mlxgo.Array {
-	return weights
+	mtp := fmt.Sprintf("model.layers.%d.", a.NumLayers())
+	out := make(map[string]*mlxgo.Array, len(weights))
+	for k, v := range weights {
+		if strings.HasPrefix(k, mtp) || strings.Contains(k, "rotary_emb.inv_freq") {
+			continue
+		}
+		out[k] = v
+	}
+	return out
+}
+
+// stackExperts rewrites the per-expert MLP tensors a routed DeepSeek checkpoint
+// carries (model.layers.L.mlp.experts.E.PROJ.COMP) into the stacked switch_mlp
+// tensors the routed forward reads (model.layers.L.mlp.switch_mlp.PROJ.COMP), the
+// "stack experts" step of the reference sanitize. PROJ is gate_proj, down_proj or
+// up_proj; COMP is weight, and for a quantized checkpoint also scales and biases,
+// so the stacked triple feeds the quantized switchGLU directly. For each present
+// projection it joins the n_routed_experts per-expert arrays along a new leading
+// expert axis and pops the per-expert keys. A checkpoint that already carries the
+// stacked switch_mlp tensors has no per-expert key, so it passes through untouched.
+// The stack is the one backend op; on the stub it surfaces the unavailable error.
+func stackExperts(weights map[string]*mlxgo.Array, numLayers, numExperts int, s *mlxgo.Stream) error {
+	for l := 0; l < numLayers; l++ {
+		for _, proj := range [...]string{"gate_proj", "down_proj", "up_proj"} {
+			for _, comp := range [...]string{"weight", "scales", "biases"} {
+				if _, ok := weights[fmt.Sprintf("model.layers.%d.mlp.experts.0.%s.%s", l, proj, comp)]; !ok {
+					continue
+				}
+				parts := make([]*mlxgo.Array, numExperts)
+				for e := 0; e < numExperts; e++ {
+					key := fmt.Sprintf("model.layers.%d.mlp.experts.%d.%s.%s", l, e, proj, comp)
+					a, ok := weights[key]
+					if !ok {
+						return fmt.Errorf("deepseekv3: stack experts missing %q", key)
+					}
+					parts[e] = a
+				}
+				stacked, err := mlxgo.Stack(parts, 0, s)
+				if err != nil {
+					return err
+				}
+				for e := 0; e < numExperts; e++ {
+					delete(weights, fmt.Sprintf("model.layers.%d.mlp.experts.%d.%s.%s", l, e, proj, comp))
+				}
+				weights[fmt.Sprintf("model.layers.%d.mlp.switch_mlp.%s.%s", l, proj, comp)] = stacked
+			}
+		}
+	}
+	return nil
 }
