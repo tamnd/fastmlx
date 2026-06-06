@@ -39,6 +39,7 @@ type Phi4Args struct {
 	// RopeScaling is the validated scaling, or nil when absent or disabled by the
 	// reference's __post_init__ (an unsupported type is dropped with a warning).
 	RopeScaling *Phi4RopeScaling
+	quant       quantConfig
 }
 
 // Phi4RopeScaling is the resolved rope_scaling block.
@@ -130,6 +131,11 @@ func ParsePhi4Args(configJSON []byte) (*Phi4Args, error) {
 	if err := a.resolveRopeScaling(c.RopeScaling); err != nil {
 		return nil, err
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("phi4: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}
@@ -311,19 +317,19 @@ func (a *Phi4Args) Sanitize(weights map[string]*mlxgo.Array) map[string]*mlxgo.A
 type phi4Layer struct {
 	inputLayernorm         *mlxgo.Array
 	postAttentionLayernorm *mlxgo.Array
-	qkvProj                *mlxgo.Array
-	oProj                  *mlxgo.Array
-	gateUpProj             *mlxgo.Array
-	downProj               *mlxgo.Array
+	qkvProj                *qLinear
+	oProj                  *qLinear
+	gateUpProj             *qLinear
+	downProj               *qLinear
 }
 
 // Phi4Model is an assembled phi3-family model.
 type Phi4Model struct {
 	args        *Phi4Args
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	layers      []phi4Layer
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when tied
+	lmHead      *qLinear // nil when tied
 }
 
 // NewPhi4Model wires a sanitized weight map into a runnable model.
@@ -335,34 +341,47 @@ func NewPhi4Model(args *Phi4Args, weights map[string]*mlxgo.Array) (*Phi4Model, 
 		}
 		return w, nil
 	}
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 	m := &Phi4Model{args: args, layers: make([]phi4Layer, args.NumLayers())}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
 		return nil, err
 	}
 	if !args.TieWordEmbeddings {
-		if m.lmHead, err = get("lm_head.weight"); err != nil {
+		if m.lmHead, err = getQ("lm_head"); err != nil {
 			return nil, err
 		}
 	}
 	for i := range m.layers {
 		p := fmt.Sprintf("model.layers.%d.", i)
-		req := []struct {
+		norms := []struct {
 			name string
 			dst  **mlxgo.Array
 		}{
 			{p + "input_layernorm.weight", &m.layers[i].inputLayernorm},
 			{p + "post_attention_layernorm.weight", &m.layers[i].postAttentionLayernorm},
-			{p + "self_attn.qkv_proj.weight", &m.layers[i].qkvProj},
-			{p + "self_attn.o_proj.weight", &m.layers[i].oProj},
-			{p + "mlp.gate_up_proj.weight", &m.layers[i].gateUpProj},
-			{p + "mlp.down_proj.weight", &m.layers[i].downProj},
 		}
-		for _, f := range req {
+		for _, f := range norms {
 			if *f.dst, err = get(f.name); err != nil {
+				return nil, err
+			}
+		}
+		proj := []struct {
+			name string
+			dst  **qLinear
+		}{
+			{p + "self_attn.qkv_proj", &m.layers[i].qkvProj},
+			{p + "self_attn.o_proj", &m.layers[i].oProj},
+			{p + "mlp.gate_up_proj", &m.layers[i].gateUpProj},
+			{p + "mlp.down_proj", &m.layers[i].downProj},
+		}
+		for _, f := range proj {
+			if *f.dst, err = getQ(f.name); err != nil {
 				return nil, err
 			}
 		}
@@ -420,10 +439,7 @@ func (m *Phi4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 	if err != nil {
 		return nil, err
 	}
-	h, err := mlxgo.Take(m.embedTokens, idx, 0, s)
-	if err != nil {
-		return nil, err
-	}
+	h := b.qembed(m.embedTokens, idx)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	mode, mask, err := caches[0].AttnMask(batch, L, s)
@@ -437,7 +453,7 @@ func (m *Phi4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 		cache := caches[i]
 
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
-		qkv := b.linear(x, layer.qkvProj)
+		qkv := b.qlinear(x, layer.qkvProj)
 		q, k, v := b.splitQKV(qkv, qpos, kvsz)
 		q = b.transpose(b.reshape(q, []int{batch, L, nh, hd}), []int{0, 2, 1, 3})
 		k = b.transpose(b.reshape(k, []int{batch, L, nkv, hd}), []int{0, 2, 1, 3})
@@ -455,7 +471,7 @@ func (m *Phi4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 		}
 		attn := b.sdpaWith(q, k, v, scale, mode, mask)
 		attn = b.reshape(b.transpose(attn, []int{0, 2, 1, 3}), []int{batch, L, nh * hd})
-		attn = b.linear(attn, layer.oProj)
+		attn = b.qlinear(attn, layer.oProj)
 		h = b.add(h, attn)
 
 		y := b.rmsNorm(h, layer.postAttentionLayernorm, eps)
@@ -466,9 +482,9 @@ func (m *Phi4Model) forwardBL(tokens []int32, batch, L int, caches []*KVTensorCa
 	h = b.rmsNorm(h, m.norm, eps)
 	var logits *mlxgo.Array
 	if m.lmHead != nil {
-		logits = b.linear(h, m.lmHead)
+		logits = b.qlinear(h, m.lmHead)
 	} else {
-		logits = b.linear(h, m.embedTokens)
+		logits = b.qlinear(h, m.embedTokens)
 	}
 	if b.err != nil {
 		return nil, b.err
@@ -496,7 +512,7 @@ func (b *fb) phiMLP(x *mlxgo.Array, layer *phi4Layer) *mlxgo.Array {
 	if b.err != nil {
 		return nil
 	}
-	gu := b.linear(x, layer.gateUpProj)
+	gu := b.qlinear(x, layer.gateUpProj)
 	if b.err != nil {
 		return nil
 	}
@@ -506,7 +522,7 @@ func (b *fb) phiMLP(x *mlxgo.Array, layer *phi4Layer) *mlxgo.Array {
 		return nil
 	}
 	gate, up := parts[0], parts[1]
-	return b.linear(b.mul(b.silu(gate), up), layer.downProj)
+	return b.qlinear(b.mul(b.silu(gate), up), layer.downProj)
 }
 
 // LoadPhi4 assembles a runnable model from a checkpoint.

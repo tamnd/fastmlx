@@ -347,6 +347,111 @@ func TestPhi4ForwardCacheCountGuard(t *testing.T) {
 	}
 }
 
+// tinyPhi4QuantArgs is the assembly config with a top-level affine quantization
+// block, so the loader runs the fused qkv and gate-up projections through the
+// packed path.
+func tinyPhi4QuantArgs(t *testing.T, tie bool) *Phi4Args {
+	t.Helper()
+	cfg := `{"model_type":"phi3","hidden_size":16,"num_hidden_layers":2,"intermediate_size":32,` +
+		`"num_attention_heads":4,"rms_norm_eps":1e-5,"vocab_size":40,"num_key_value_heads":2,` +
+		`"rope_theta":250000.0,"tie_word_embeddings":` + boolStr(tie) + `,` +
+		`"quantization":{"group_size":64,"bits":4,"mode":"affine"}}`
+	a, err := ParsePhi4Args([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParsePhi4Args: %v", err)
+	}
+	return a
+}
+
+func dummyPhi4QuantWeights(t *testing.T, a *Phi4Args) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyPhi4Weights(t, a)
+	for _, name := range a.WeightNames() {
+		if !quantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestParsePhi4ArgsCapturesQuantization(t *testing.T) {
+	a := tinyPhi4QuantArgs(t, true)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Errorf("quant = %+v, want {64 4}", a.quant)
+	}
+	if d := tinyPhi4Args(t, true).quant; d.quantized() {
+		t.Errorf("dense config reported quantized: %+v", d)
+	}
+}
+
+func TestNewPhi4ModelQuantizedWiring(t *testing.T) {
+	for _, tie := range []bool{false, true} {
+		a := tinyPhi4QuantArgs(t, tie)
+		m, err := NewPhi4Model(a, dummyPhi4QuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewPhi4Model(tie=%v): %v", tie, err)
+		}
+		if !m.embedTokens.isQuantized() {
+			t.Error("embedding not loaded quantized")
+		}
+		// Tied: the head reuses the quantized embedding; untied: its own qLinear.
+		if tie && m.lmHead != nil {
+			t.Error("tied model must reuse the embedding (lmHead nil)")
+		}
+		if !tie && !m.lmHead.isQuantized() {
+			t.Error("untied head not loaded quantized")
+		}
+		for i := range m.layers {
+			l := &m.layers[i]
+			// The fused qkv and the fused gate-up are each one quantized module.
+			for _, q := range []*qLinear{l.qkvProj, l.oProj, l.gateUpProj, l.downProj} {
+				if !q.isQuantized() {
+					t.Fatalf("layer %d projection not loaded quantized", i)
+				}
+				if q.groupSize != 64 || q.bits != 4 {
+					t.Fatalf("layer %d geometry = gs%d/b%d, want 64/4", i, q.groupSize, q.bits)
+				}
+			}
+		}
+	}
+}
+
+func TestNewPhi4ModelQuantizedMissingBiases(t *testing.T) {
+	a := tinyPhi4QuantArgs(t, false)
+	w := dummyPhi4QuantWeights(t, a)
+	delete(w, "model.layers.0.self_attn.qkv_proj.biases")
+	if _, err := NewPhi4Model(a, w); err == nil {
+		t.Error("expected an error for a quantized module missing its biases")
+	}
+}
+
+func TestPhi4QuantizedForwardReachesSeam(t *testing.T) {
+	// Both the tied and untied heads route through the quantized kernels and
+	// reach ErrMLXUnavailable at the first one under the stub.
+	for _, tie := range []bool{false, true} {
+		a := tinyPhi4QuantArgs(t, tie)
+		m, err := NewPhi4Model(a, dummyPhi4QuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewPhi4Model: %v", err)
+		}
+		caches := make([]*KVTensorCache, a.NumLayers())
+		for i := range caches {
+			caches[i] = &KVTensorCache{}
+		}
+		if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("Forward(tie=%v) err = %v, want ErrMLXUnavailable", tie, err)
+		}
+	}
+}
+
 func BenchmarkParsePhi4Args(b *testing.B) {
 	b.ReportAllocs()
 	cfg := []byte(`{"model_type":"phi3","hidden_size":5120,"num_hidden_layers":40,"intermediate_size":17920,` +
