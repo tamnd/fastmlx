@@ -89,38 +89,34 @@ func TestBatchLeftPadCausalFullPaddingRow(t *testing.T) {
 	eqFloats(t, got, wantCausal(leftPad, L, offset), "full-padding row")
 }
 
-func TestBatchLeftPadKeyData(t *testing.T) {
-	// Decode masks only the front padding keys; the causal term is vacuous because
-	// the single new query sits past every cached key.
+func TestBatchLeftPadCausalDecodeStep(t *testing.T) {
+	// The L == 1 decode step reuses the one causal builder: the single new query sits
+	// past every cached key (qpos = offset), so the causal term is vacuous and only
+	// the front-padding skip survives, over the post-update key length offset+1.
 	leftPad := []int{0, 3, 1}
 	offset := 5
-	got := batchLeftPadKeyData(leftPad, offset)
+	const L = 1
+	S := offset + L
+	got := batchLeftPadCausalData(leftPad, L, offset)
+	if len(got) != len(leftPad)*L*S {
+		t.Fatalf("decode mask len %d, want %d", len(got), len(leftPad)*L*S)
+	}
 	for b, pad := range leftPad {
-		for r := range offset {
+		for r := range S {
 			want := float32(0)
 			if r < pad {
 				want = maskNegInf
 			}
-			if got[b*offset+r] != want {
-				t.Fatalf("decode mask row %d key %d = %g, want %g", b, r, got[b*offset+r], want)
+			if got[b*S+r] != want {
+				t.Fatalf("decode mask row %d key %d = %g, want %g", b, r, got[b*S+r], want)
 			}
 		}
 	}
 }
 
-func TestBatchLeftPadKeyDataNoPadding(t *testing.T) {
-	// An unpadded cohort produces an all-zero decode mask (the caller may skip it).
-	got := batchLeftPadKeyData([]int{0, 0}, 4)
-	for i, v := range got {
-		if v != 0 {
-			t.Fatalf("unpadded decode mask entry %d = %g, want 0", i, v)
-		}
-	}
-}
-
-// The mask wrappers build their arrays host-side, so they succeed on the default
-// stub (array creation is not a kernel) and carry the [batch, 1, L, S] and
-// [batch, 1, 1, offset] shapes the explicit-mask SDPA expects.
+// The mask wrapper builds its array host-side, so it succeeds on the default stub
+// (array creation is not a kernel) and carries the [batch, 1, L, offset+L] shape the
+// explicit-mask SDPA expects for both a prefill and a single-query decode step.
 func TestBatchLeftPadCausalMaskShape(t *testing.T) {
 	m, err := batchLeftPadCausalMask([]int{0, 2}, 3, 1, mlxgo.DefaultStream())
 	if err != nil {
@@ -138,19 +134,19 @@ func TestBatchLeftPadCausalMaskShape(t *testing.T) {
 	}
 }
 
-func TestBatchLeftPadKeyMaskShape(t *testing.T) {
-	m, err := batchLeftPadKeyMask([]int{1, 0, 3}, 6, mlxgo.DefaultStream())
+func TestBatchLeftPadCausalMaskDecodeShape(t *testing.T) {
+	m, err := batchLeftPadCausalMask([]int{1, 0, 3}, 1, 5, mlxgo.DefaultStream())
 	if err != nil {
-		t.Fatalf("batchLeftPadKeyMask: %v", err)
+		t.Fatalf("batchLeftPadCausalMask: %v", err)
 	}
-	want := []int{3, 1, 1, 6} // [batch, 1, 1, offset]
+	want := []int{3, 1, 1, 6} // [batch, 1, L, offset+L]
 	got := m.Shape()
 	if len(got) != len(want) {
-		t.Fatalf("key mask shape %v, want %v", got, want)
+		t.Fatalf("decode mask shape %v, want %v", got, want)
 	}
 	for i := range want {
 		if got[i] != want[i] {
-			t.Fatalf("key mask shape %v, want %v", got, want)
+			t.Fatalf("decode mask shape %v, want %v", got, want)
 		}
 	}
 }

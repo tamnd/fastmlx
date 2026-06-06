@@ -123,7 +123,7 @@ func TestAttnMaskLeftPaddedDecode(t *testing.T) {
 	if mode != "" {
 		t.Fatalf("left-padded decode mode = %q, want \"\"", mode)
 	}
-	want := []int{3, 1, 1, 5} // [batch, 1, 1, offset]
+	want := []int{3, 1, 1, 6} // [batch, 1, 1, offset+L], the post-update key length
 	got := mask.Shape()
 	if len(got) != len(want) {
 		t.Fatalf("mask shape %v, want %v", got, want)
@@ -137,5 +137,5 @@ func TestAttnMaskLeftPaddedDecode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("mask Float32s: %v", err)
 	}
-	eqFloats(t, data, batchLeftPadKeyData(leftPad, 5), "left-padded decode mask data")
+	eqFloats(t, data, batchLeftPadCausalData(leftPad, 1, 5), "left-padded decode mask data")
 }

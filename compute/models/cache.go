@@ -124,12 +124,16 @@ func (c *KVTensorCache) RopeOffsets() []int {
 // this cache's offset: a mask mode string for SDPA's built-in path and an optional
 // explicit additive mask. A uniform cohort reproduces the hardcoded behavior,
 // ("causal", nil) for a multi-token prefill and ("", nil) for a single-token decode
-// step. A left-padded cohort returns ("", mask) with a per-row additive mask built
-// host-side: the [batch, 1, L, offset+L] left-padded causal mask for a prefill
-// (L > 1), the [batch, 1, 1, offset] front-padding mask for a decode step (L == 1).
-// The explicit mask carries both the causal structure and the padding skip, so the
-// forward feeds it through sdpaWith with an empty mode in place of the built-in
-// causal path.
+// step. A left-padded cohort returns ("", mask) with the per-row additive mask built
+// host-side by batchLeftPadCausalMask, shaped [batch, 1, L, offset+L]. The offset
+// here is the pre-update offset and L is the new block, so offset+L is exactly the
+// post-update key length the SDPA scores span, matching the reference
+// create_causal_mask whose key axis is arange(offset + N). The one builder covers
+// both cases: a prefill (L > 1) gets the full causal structure, a decode step
+// (L == 1) gets a single query past every cached key so the causal term is vacuous
+// and only the front-padding skip remains. The explicit mask carries both the causal
+// structure and the padding skip, so the forward feeds it through sdpaWith with an
+// empty mode in place of the built-in causal path.
 func (c *KVTensorCache) AttnMask(batch, L int, s *mlxgo.Stream) (mode string, mask *mlxgo.Array, err error) {
 	if c.leftPad == nil {
 		if L > 1 {
@@ -137,11 +141,7 @@ func (c *KVTensorCache) AttnMask(batch, L int, s *mlxgo.Stream) (mode string, ma
 		}
 		return "", nil, nil
 	}
-	if L > 1 {
-		mask, err = batchLeftPadCausalMask(c.leftPad, L, c.Offset, s)
-	} else {
-		mask, err = batchLeftPadKeyMask(c.leftPad, c.Offset, s)
-	}
+	mask, err = batchLeftPadCausalMask(c.leftPad, L, c.Offset, s)
 	return "", mask, err
 }
 
