@@ -47,6 +47,25 @@ type BatchDecoder interface {
 	BatchDecode(tokens []int32, caches []any, s *mlxgo.Stream) (logits []any, err error)
 }
 
+// BatchPrefiller is the optional capability a Model implements to prefill a
+// ragged cohort of prompts in a single forward. Where BatchDecode handles the
+// steady state (every row one token at one offset), BatchPrefill handles
+// admission: the prompts have different lengths, so the model left-pads them to a
+// common width, runs one batched forward behind a single fill cursor, and returns
+// each row's logits at its own last real position. Left-padding is what makes the
+// cohort synchronized from the first decode step on, which is the precondition
+// BatchDecode needs, so prefilling a cohort together is the front half of the 2x
+// throughput path.
+//
+// prompts[i] and caches[i] belong to sequence i in the same order; prompts[i] is
+// the sequence's full prompt and caches[i] the fresh value NewCache produced for
+// it. BatchPrefill records each row's left padding on the merged cache, advances
+// every row by the padded width, writes the grown caches back, and returns one
+// logits row per sequence, in order, each the opaque value a Sampler consumes.
+type BatchPrefiller interface {
+	BatchPrefill(prompts [][]int32, caches []any, s *mlxgo.Stream) (logits []any, err error)
+}
+
 // ErrEmptyPrompt is returned by Insert when a request carries no prompt tokens.
 // A forward pass needs at least one token to produce its first logits row.
 var ErrEmptyPrompt = errors.New("compute: decode request has no prompt tokens")

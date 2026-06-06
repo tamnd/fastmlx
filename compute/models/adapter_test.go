@@ -104,10 +104,11 @@ func TestAdapterEOS(t *testing.T) {
 
 func TestAdapterBatchDecodeReachesSeam(t *testing.T) {
 	var gotTokens []int32
-	var gotBatch int
-	a := NewAdapter(2, 0, nil, func(tokens []int32, batch int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+	var gotBatch, gotL int
+	a := NewAdapter(2, 0, nil, func(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
 		gotTokens = tokens
 		gotBatch = batch
+		gotL = L
 		// Well-shaped [batch, 1, vocab] logits so the seam is the per-row gather,
 		// not a shape error: the empty caches merge to nils without a kernel, the
 		// forward returns this host array, and batchRows hits the first Take.
@@ -121,6 +122,9 @@ func TestAdapterBatchDecodeReachesSeam(t *testing.T) {
 	if gotBatch != 2 {
 		t.Fatalf("batched forward saw batch %d, want 2", gotBatch)
 	}
+	if gotL != 1 {
+		t.Fatalf("batched decode forward saw L %d, want 1", gotL)
+	}
 	if len(gotTokens) != 2 || gotTokens[0] != 5 || gotTokens[1] != 6 {
 		t.Fatalf("batched forward saw tokens %v, want [5 6]", gotTokens)
 	}
@@ -128,7 +132,7 @@ func TestAdapterBatchDecodeReachesSeam(t *testing.T) {
 
 func TestAdapterBatchDecodeCacheTypeGuard(t *testing.T) {
 	called := false
-	a := NewAdapter(1, 0, nil, func([]int32, int, []*KVTensorCache, *mlxgo.Stream) (*mlxgo.Array, error) {
+	a := NewAdapter(1, 0, nil, func([]int32, int, int, []*KVTensorCache, *mlxgo.Stream) (*mlxgo.Array, error) {
 		called = true
 		return nil, nil
 	})
@@ -172,6 +176,164 @@ func TestLastRowSeam(t *testing.T) {
 	}
 	if _, err := lastRow(logits, nil); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
 		t.Fatalf("lastRow err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
+// eqInts and eqInt32s report whether two integer slices are element-wise equal,
+// the small comparison the cohort-padding tests lean on.
+func eqInts(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func eqInt32s(a, b []int32) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func TestLeftPadCohort(t *testing.T) {
+	// A ragged cohort: widths 2, 4, 3. The common width is the longest (4), each
+	// shorter row carries that minus its length in leading zero pads, and the real
+	// tokens land flush against the right edge.
+	prompts := [][]int32{{7, 8}, {1, 2, 3, 4}, {9, 9, 9}}
+	padded, leftPad, width := leftPadCohort(prompts)
+	if width != 4 {
+		t.Fatalf("width = %d, want 4", width)
+	}
+	if want := []int{2, 0, 1}; !eqInts(leftPad, want) {
+		t.Fatalf("leftPad = %v, want %v", leftPad, want)
+	}
+	want := []int32{
+		0, 0, 7, 8, // row 0: two pads then its two tokens
+		1, 2, 3, 4, // row 1: full width, no pad
+		0, 9, 9, 9, // row 2: one pad then its three tokens
+	}
+	if len(padded) != len(want) {
+		t.Fatalf("padded len = %d, want %d", len(padded), len(want))
+	}
+	for i := range want {
+		if padded[i] != want[i] {
+			t.Fatalf("padded = %v, want %v", padded, want)
+		}
+	}
+}
+
+func TestLeftPadCohortUniform(t *testing.T) {
+	// Equal-length prompts pad to all-zero leftPad: the cache normalizes that to
+	// nil and the uniform fast path (scalar RoPE, built-in causal mask) stays on.
+	padded, leftPad, width := leftPadCohort([][]int32{{1, 2}, {3, 4}})
+	if width != 2 {
+		t.Fatalf("width = %d, want 2", width)
+	}
+	if want := []int{0, 0}; !eqInts(leftPad, want) {
+		t.Fatalf("leftPad = %v, want %v", leftPad, want)
+	}
+	if want := []int32{1, 2, 3, 4}; !eqInt32s(padded, want) {
+		t.Fatalf("padded = %v, want %v", padded, want)
+	}
+	c := &KVTensorCache{}
+	c.SetLeftPad(leftPad)
+	if c.LeftPad() != nil {
+		t.Fatalf("uniform cohort leftPad = %v, want nil", c.LeftPad())
+	}
+}
+
+func TestAdapterBatchPrefillReachesSeam(t *testing.T) {
+	var gotTokens []int32
+	var gotBatch, gotL int
+	a := NewAdapter(2, 0, nil, func(tokens []int32, batch, L int, caches []*KVTensorCache, s *mlxgo.Stream) (*mlxgo.Array, error) {
+		gotTokens = tokens
+		gotBatch = batch
+		gotL = L
+		// The merged caches record the cohort's left padding before the forward.
+		if len(caches) != 2 {
+			t.Fatalf("forward saw %d layer caches, want 2", len(caches))
+		}
+		if want := []int{0, 1}; !eqInts(caches[0].LeftPad(), want) {
+			t.Fatalf("merged cache leftPad = %v, want %v", caches[0].LeftPad(), want)
+		}
+		// Well-shaped [batch, L, vocab] logits so the seam is the last-position
+		// gather (lastRows), not a shape error.
+		return mlxgo.NewFloat32(make([]float32, batch*L*3), batch, L, 3)
+	})
+	caches := []any{a.NewCache(), a.NewCache()}
+	_, err := a.BatchPrefill([][]int32{{1, 2}, {9}}, caches, nil)
+	if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("BatchPrefill err = %v, want ErrMLXUnavailable from the last-row seam", err)
+	}
+	if gotBatch != 2 {
+		t.Fatalf("prefill forward saw batch %d, want 2", gotBatch)
+	}
+	if gotL != 2 {
+		t.Fatalf("prefill forward saw L %d, want 2 (the padded width)", gotL)
+	}
+	// Row 1's single token is left-padded with one zero to the common width.
+	if want := []int32{1, 2, 0, 9}; !eqInt32s(gotTokens, want) {
+		t.Fatalf("prefill forward saw tokens %v, want %v", gotTokens, want)
+	}
+}
+
+func TestAdapterBatchPrefillCacheTypeGuard(t *testing.T) {
+	called := false
+	a := NewAdapter(1, 0, nil, func([]int32, int, int, []*KVTensorCache, *mlxgo.Stream) (*mlxgo.Array, error) {
+		called = true
+		return nil, nil
+	})
+	_, err := a.BatchPrefill([][]int32{{1}, {2}}, []any{a.NewCache(), 1234}, nil) // second cache wrong type
+	if err == nil {
+		t.Fatal("BatchPrefill accepted a non-cache value")
+	}
+	if called {
+		t.Fatal("prefill forward ran despite the cache-type guard failing")
+	}
+}
+
+func TestAdapterBatchPrefillEmptyGuards(t *testing.T) {
+	a := NewAdapter(1, 0, nil, func([]int32, int, int, []*KVTensorCache, *mlxgo.Stream) (*mlxgo.Array, error) {
+		t.Fatal("forward ran on an invalid cohort")
+		return nil, nil
+	})
+	if _, err := a.BatchPrefill(nil, nil, nil); err == nil {
+		t.Fatal("BatchPrefill accepted an empty cohort")
+	}
+	if _, err := a.BatchPrefill([][]int32{{}, {}}, []any{a.NewCache(), a.NewCache()}, nil); err == nil {
+		t.Fatal("BatchPrefill accepted an all-empty-prompt cohort")
+	}
+}
+
+func TestLastRowsDimGuard(t *testing.T) {
+	flat, err := mlxgo.NewFloat32([]float32{1, 2, 3, 4}, 2, 2) // 2-D, not [batch, L, vocab]
+	if err != nil {
+		t.Fatalf("NewFloat32: %v", err)
+	}
+	if _, err := lastRows(flat, 2, nil); err == nil {
+		t.Fatal("lastRows accepted a 2-D array")
+	} else if errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("lastRows reached the kernel seam on a bad shape: %v", err)
+	}
+}
+
+func TestLastRowsSeam(t *testing.T) {
+	logits, err := mlxgo.NewFloat32(make([]float32, 2*3*4), 2, 3, 4) // [batch 2, L 3, vocab 4]
+	if err != nil {
+		t.Fatalf("NewFloat32: %v", err)
+	}
+	if _, err := lastRows(logits, 2, nil); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("lastRows err = %v, want ErrMLXUnavailable", err)
 	}
 }
 
