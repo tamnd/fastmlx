@@ -291,6 +291,143 @@ func TestGemma4ForwardCacheCountMismatch(t *testing.T) {
 	}
 }
 
+// tinyGemma4QuantArgs is the assembly config with a top-level affine
+// quantization block, so the loader runs every Linear and Embedding through the
+// packed path when the checkpoint ships its scales.
+func tinyGemma4QuantArgs(t *testing.T, tie bool, hp int) *Gemma4TextArgs {
+	t.Helper()
+	cfg := `{"model_type":"gemma4_text","hidden_size":8,"num_hidden_layers":4,` +
+		`"intermediate_size":16,"num_attention_heads":2,"head_dim":4,"global_head_dim":8,` +
+		`"rms_norm_eps":1e-6,"vocab_size":32,"num_key_value_heads":1,"num_kv_shared_layers":2,` +
+		`"hidden_size_per_layer_input":` + strconv.Itoa(hp) + `,"sliding_window":3,` +
+		`"sliding_window_pattern":2,"max_position_embeddings":128,"final_logit_softcapping":30.0,` +
+		`"tie_word_embeddings":` + boolStr(tie) + `,` +
+		`"quantization":{"group_size":64,"bits":4,"mode":"affine"}}`
+	a, err := ParseGemma4TextArgs([]byte(cfg))
+	if err != nil {
+		t.Fatalf("ParseGemma4TextArgs: %v", err)
+	}
+	return a
+}
+
+// gemma4QuantizableModule extends the shared quantizableModule with the
+// per-layer-input projections and embedding the Gemma decoder packs on top of
+// the standard projection set, the modules the reference class_predicate also
+// quantizes when their scales are present.
+func gemma4QuantizableModule(name string) bool {
+	if quantizableModule(name) {
+		return true
+	}
+	for _, suffix := range []string{
+		"embed_tokens_per_layer.weight", "per_layer_model_projection.weight",
+		"per_layer_input_gate.weight", "per_layer_projection.weight",
+	} {
+		if len(name) >= len(suffix) && name[len(name)-len(suffix):] == suffix {
+			return true
+		}
+	}
+	return false
+}
+
+func dummyGemma4QuantWeights(t *testing.T, a *Gemma4TextArgs) map[string]*mlxgo.Array {
+	t.Helper()
+	w := dummyGemma4Weights(t, a)
+	for _, name := range a.WeightNames() {
+		if !gemma4QuantizableModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+func TestParseGemma4TextArgsCapturesQuantization(t *testing.T) {
+	a := tinyGemma4QuantArgs(t, true, 4)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Errorf("quant = %+v, want {64 4}", a.quant)
+	}
+	if d := tinyGemma4Args(t, true, 4).quant; d.quantized() {
+		t.Errorf("dense config reported quantized: %+v", d)
+	}
+}
+
+func TestNewGemma4TextModelQuantizedWiring(t *testing.T) {
+	for _, tie := range []bool{false, true} {
+		a := tinyGemma4QuantArgs(t, tie, 4)
+		m, err := NewGemma4TextModel(a, dummyGemma4QuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewGemma4TextModel(tie=%v): %v", tie, err)
+		}
+		if !m.embedTokens.isQuantized() {
+			t.Error("embedding not loaded quantized")
+		}
+		// The per-layer-input embedding and projection quantize too.
+		if !m.embedTokensPerLayer.isQuantized() || !m.perLayerModelProjection.isQuantized() {
+			t.Error("per-layer-input embedding / projection not loaded quantized")
+		}
+		if tie && m.lmHead != nil {
+			t.Error("tied model must reuse the embedding (lmHead nil)")
+		}
+		if !tie && !m.lmHead.isQuantized() {
+			t.Error("untied head not loaded quantized")
+		}
+		for i := range m.layers {
+			l := &m.layers[i]
+			qs := []*qLinear{l.qProj, l.oProj, l.gateProj, l.upProj, l.downProj,
+				l.perLayerInputGate, l.perLayerProjection}
+			if a.HasKV(i) {
+				qs = append(qs, l.kProj)
+				if !a.UseKEqV(i) {
+					qs = append(qs, l.vProj)
+				}
+			}
+			for _, q := range qs {
+				if !q.isQuantized() {
+					t.Fatalf("layer %d projection not loaded quantized", i)
+				}
+				if q.groupSize != 64 || q.bits != 4 {
+					t.Fatalf("layer %d geometry = gs%d/b%d, want 64/4", i, q.groupSize, q.bits)
+				}
+			}
+		}
+	}
+}
+
+func TestNewGemma4TextModelQuantizedMissingBiases(t *testing.T) {
+	a := tinyGemma4QuantArgs(t, false, 4)
+	w := dummyGemma4QuantWeights(t, a)
+	delete(w, "model.layers.0.self_attn.q_proj.biases")
+	if _, err := NewGemma4TextModel(a, w); err == nil {
+		t.Error("expected an error for a quantized module missing its biases")
+	}
+}
+
+func TestGemma4QuantizedForwardReachesSeam(t *testing.T) {
+	// Both the per-layer-input path and the tied/untied head route through the
+	// quantized kernels and reach ErrMLXUnavailable at the first one.
+	for _, tie := range []bool{false, true} {
+		a := tinyGemma4QuantArgs(t, tie, 4)
+		m, err := NewGemma4TextModel(a, dummyGemma4QuantWeights(t, a))
+		if err != nil {
+			t.Fatalf("NewGemma4TextModel: %v", err)
+		}
+		caches := make([]*KVTensorCache, a.NumLayers())
+		for i := range caches {
+			caches[i] = &KVTensorCache{}
+		}
+		if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+			t.Errorf("Forward(tie=%v) err = %v, want ErrMLXUnavailable", tie, err)
+		}
+	}
+}
+
 func BenchmarkNewGemma4TextModel(b *testing.B) {
 	b.ReportAllocs()
 	cfg := `{"model_type":"gemma4_text","hidden_size":8,"num_hidden_layers":4,` +

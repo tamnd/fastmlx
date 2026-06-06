@@ -60,6 +60,8 @@ type Gemma4TextArgs struct {
 	// Per-attention-kind rotary parameters, keyed by layer kind.
 	RopeTheta   map[string]float64
 	RopePartial map[string]float64
+
+	quant quantConfig
 }
 
 type gemma4RopeParam struct {
@@ -163,6 +165,11 @@ func ParseGemma4TextArgs(configJSON []byte) (*Gemma4TextArgs, error) {
 		a.RopeTheta[kind] = floatOr(p.RopeTheta, 10000.0)
 		a.RopePartial[kind] = floatOr(p.PartialRotaryFactor, 1.0)
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("gemma4_text: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}

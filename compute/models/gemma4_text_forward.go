@@ -19,18 +19,18 @@ type gemma4Layer struct {
 	postAttentionLayernorm  *mlxgo.Array
 	preFeedforwardLayernorm *mlxgo.Array
 	postFeedforwardLayernrm *mlxgo.Array
-	qProj                   *mlxgo.Array
-	kProj                   *mlxgo.Array
-	vProj                   *mlxgo.Array
-	oProj                   *mlxgo.Array
+	qProj                   *qLinear
+	kProj                   *qLinear
+	vProj                   *qLinear
+	oProj                   *qLinear
 	qNorm                   *mlxgo.Array
 	kNorm                   *mlxgo.Array
-	gateProj                *mlxgo.Array
-	upProj                  *mlxgo.Array
-	downProj                *mlxgo.Array
+	gateProj                *qLinear
+	upProj                  *qLinear
+	downProj                *qLinear
 	layerScalar             *mlxgo.Array
-	perLayerInputGate       *mlxgo.Array
-	perLayerProjection      *mlxgo.Array
+	perLayerInputGate       *qLinear
+	perLayerProjection      *qLinear
 	postPerLayerInputNorm   *mlxgo.Array
 }
 
@@ -41,13 +41,13 @@ type gemma4Layer struct {
 // the constructor pulls only the tensors each layer actually owns.
 type Gemma4TextModel struct {
 	args        *Gemma4TextArgs
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when the head is tied to the embedding table
+	lmHead      *qLinear // nil when the head is tied to the embedding table
 
 	// Per-layer-input gating tensors, nil when that path is off.
-	embedTokensPerLayer     *mlxgo.Array
-	perLayerModelProjection *mlxgo.Array
+	embedTokensPerLayer     *qLinear
+	perLayerModelProjection *qLinear
 	perLayerProjectionNorm  *mlxgo.Array
 
 	layers []gemma4Layer
@@ -78,20 +78,23 @@ func NewGemma4TextModel(args *Gemma4TextArgs, weights map[string]*mlxgo.Array) (
 		}
 		return w, nil
 	}
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 
 	m := &Gemma4TextModel{args: args, layers: make([]gemma4Layer, args.NumLayers())}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
 		return nil, err
 	}
 	if args.HasPerLayerInputs() {
-		if m.embedTokensPerLayer, err = get("model.embed_tokens_per_layer.weight"); err != nil {
+		if m.embedTokensPerLayer, err = getQ("model.embed_tokens_per_layer"); err != nil {
 			return nil, err
 		}
-		if m.perLayerModelProjection, err = get("model.per_layer_model_projection.weight"); err != nil {
+		if m.perLayerModelProjection, err = getQ("model.per_layer_model_projection"); err != nil {
 			return nil, err
 		}
 		if m.perLayerProjectionNorm, err = get("model.per_layer_projection_norm.weight"); err != nil {
@@ -102,7 +105,7 @@ func NewGemma4TextModel(args *Gemma4TextArgs, weights map[string]*mlxgo.Array) (
 	for i := range m.layers {
 		p := fmt.Sprintf("model.layers.%d.", i)
 		L := &m.layers[i]
-		required := []struct {
+		norms := []struct {
 			name string
 			dst  **mlxgo.Array
 		}{
@@ -110,37 +113,47 @@ func NewGemma4TextModel(args *Gemma4TextArgs, weights map[string]*mlxgo.Array) (
 			{p + "post_attention_layernorm.weight", &L.postAttentionLayernorm},
 			{p + "pre_feedforward_layernorm.weight", &L.preFeedforwardLayernorm},
 			{p + "post_feedforward_layernorm.weight", &L.postFeedforwardLayernrm},
-			{p + "self_attn.q_proj.weight", &L.qProj},
-			{p + "self_attn.o_proj.weight", &L.oProj},
 			{p + "self_attn.q_norm.weight", &L.qNorm},
-			{p + "mlp.gate_proj.weight", &L.gateProj},
-			{p + "mlp.up_proj.weight", &L.upProj},
-			{p + "mlp.down_proj.weight", &L.downProj},
 			{p + "layer_scalar", &L.layerScalar},
 		}
-		for _, f := range required {
+		for _, f := range norms {
 			if *f.dst, err = get(f.name); err != nil {
 				return nil, err
 			}
 		}
+		proj := []struct {
+			name string
+			dst  **qLinear
+		}{
+			{p + "self_attn.q_proj", &L.qProj},
+			{p + "self_attn.o_proj", &L.oProj},
+			{p + "mlp.gate_proj", &L.gateProj},
+			{p + "mlp.up_proj", &L.upProj},
+			{p + "mlp.down_proj", &L.downProj},
+		}
+		for _, f := range proj {
+			if *f.dst, err = getQ(f.name); err != nil {
+				return nil, err
+			}
+		}
 		if args.HasKV(i) {
-			if L.kProj, err = get(p + "self_attn.k_proj.weight"); err != nil {
+			if L.kProj, err = getQ(p + "self_attn.k_proj"); err != nil {
 				return nil, err
 			}
 			if L.kNorm, err = get(p + "self_attn.k_norm.weight"); err != nil {
 				return nil, err
 			}
 			if !args.UseKEqV(i) {
-				if L.vProj, err = get(p + "self_attn.v_proj.weight"); err != nil {
+				if L.vProj, err = getQ(p + "self_attn.v_proj"); err != nil {
 					return nil, err
 				}
 			}
 		}
 		if args.HasPerLayerInputs() {
-			if L.perLayerInputGate, err = get(p + "per_layer_input_gate.weight"); err != nil {
+			if L.perLayerInputGate, err = getQ(p + "per_layer_input_gate"); err != nil {
 				return nil, err
 			}
-			if L.perLayerProjection, err = get(p + "per_layer_projection.weight"); err != nil {
+			if L.perLayerProjection, err = getQ(p + "per_layer_projection"); err != nil {
 				return nil, err
 			}
 			if L.postPerLayerInputNorm, err = get(p + "post_per_layer_input_norm.weight"); err != nil {
@@ -151,7 +164,7 @@ func NewGemma4TextModel(args *Gemma4TextArgs, weights map[string]*mlxgo.Array) (
 
 	if args.TieWordEmbeddings {
 		m.lmHead = nil
-	} else if m.lmHead, err = get("lm_head.weight"); err != nil {
+	} else if m.lmHead, err = getQ("lm_head"); err != nil {
 		return nil, err
 	}
 
@@ -294,7 +307,7 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	}
 
 	// Token embedding, scaled by sqrt(hidden_size), with a leading batch axis.
-	h := b.take(m.embedTokens, ids, 0)
+	h := b.qembed(m.embedTokens, ids)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 	h = b.scalarMul(h, float32(a.EmbedScale()))
 
@@ -306,11 +319,11 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		hp := a.HiddenSizePerLayerIn
 		embedScale, gateScale, projScale := a.PerLayerInputScales()
 
-		pin := b.take(m.embedTokensPerLayer, ids, 0)
+		pin := b.qembed(m.embedTokensPerLayer, ids)
 		pin = b.reshape(pin, []int{batch, L, nl, hp})
 		pin = b.scalarMul(pin, float32(embedScale))
 
-		proj := b.linear(h, m.perLayerModelProjection)
+		proj := b.qlinear(h, m.perLayerModelProjection)
 		proj = b.scalarMul(proj, float32(projScale))
 		proj = b.reshape(proj, []int{batch, L, nl, hp})
 		proj = b.rmsNorm(proj, m.perLayerProjectionNorm, eps)
@@ -354,7 +367,7 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 
 		// Attention.
 		x := b.rmsNorm(h, layer.inputLayernorm, eps)
-		q := b.linear(x, layer.qProj)
+		q := b.qlinear(x, layer.qProj)
 		q = b.reshape(q, []int{batch, L, nh, hd})
 		q = b.rmsNorm(q, layer.qNorm, eps)
 		q = b.transpose(q, []int{0, 2, 1, 3})
@@ -363,7 +376,7 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		var offset int
 		if a.HasKV(i) {
 			offset = caches[i].Offset
-			k := b.linear(x, layer.kProj)
+			k := b.qlinear(x, layer.kProj)
 			k = b.reshape(k, []int{batch, L, nkv, hd})
 			k = b.rmsNorm(k, layer.kNorm, eps)
 			k = b.transpose(k, []int{0, 2, 1, 3})
@@ -376,9 +389,9 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 			vSrc := layer.vProj
 			var v *mlxgo.Array
 			if vSrc == nil { // K-eq-V: values are the keys, before the key norm and rope.
-				v = b.linear(x, layer.kProj)
+				v = b.qlinear(x, layer.kProj)
 			} else {
-				v = b.linear(x, vSrc)
+				v = b.qlinear(x, vSrc)
 			}
 			v = b.reshape(v, []int{batch, L, nkv, hd})
 			v = b.rmsNorm(v, nil, eps) // v_norm is scale-free (no weight).
@@ -406,14 +419,14 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		attn := b.sdpaWith(q, keys, values, 1.0, maskMode, mask)
 		attn = b.transpose(attn, []int{0, 2, 1, 3})
 		attn = b.reshape(attn, []int{batch, L, nh * hd})
-		attn = b.linear(attn, layer.oProj)
+		attn = b.qlinear(attn, layer.oProj)
 		attn = b.rmsNorm(attn, layer.postAttentionLayernorm, eps)
 		h = b.add(h, attn)
 
 		// Gated MLP, wrapped in the pre/post feedforward norms.
 		residual := h
 		y := b.rmsNorm(h, layer.preFeedforwardLayernorm, eps)
-		y = b.linear(b.geglu(b.linear(y, layer.gateProj), b.linear(y, layer.upProj)), layer.downProj)
+		y = b.qlinear(b.geglu(b.qlinear(y, layer.gateProj), b.qlinear(y, layer.upProj)), layer.downProj)
 		y = b.rmsNorm(y, layer.postFeedforwardLayernrm, eps)
 		h = b.add(residual, y)
 
@@ -421,9 +434,9 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 		if a.HasPerLayerInputs() {
 			pli := b.takeAt(perLayerInputs, i, 2)
 			pli = b.reshape(pli, []int{batch, L, a.HiddenSizePerLayerIn})
-			gate := b.geluApprox(b.linear(h, layer.perLayerInputGate))
+			gate := b.geluApprox(b.qlinear(h, layer.perLayerInputGate))
 			gate = b.mul(gate, pli)
-			gate = b.linear(gate, layer.perLayerProjection)
+			gate = b.qlinear(gate, layer.perLayerProjection)
 			gate = b.rmsNorm(gate, layer.postPerLayerInputNorm, eps)
 			h = b.add(h, gate)
 		}
@@ -436,7 +449,7 @@ func (m *Gemma4TextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTe
 	if head == nil {
 		head = m.embedTokens
 	}
-	logits := b.linear(h, head)
+	logits := b.qlinear(h, head)
 	if a.FinalLogitSoftcapping > 0 {
 		logits = b.softcap(logits, float32(a.FinalLogitSoftcapping))
 	}
