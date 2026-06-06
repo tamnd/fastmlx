@@ -20,16 +20,16 @@ type qwen3NextLinear struct {
 	aLog       *mlxgo.Array // per value head log-decay, shape [num_v_heads]
 	conv1d     *mlxgo.Array // depthwise conv weight, shape [conv_dim, kernel, 1]
 	dtBias     *mlxgo.Array // per value head softplus bias, shape [num_v_heads]
-	inProjBA   *mlxgo.Array // fused beta/alpha projection
-	inProjQKVZ *mlxgo.Array // fused q/k/v/gate projection
+	inProjBA   *qLinear     // fused beta/alpha projection
+	inProjQKVZ *qLinear     // fused q/k/v/gate projection
 	norm       *mlxgo.Array // gated output RMS norm weight, shape [head_v_dim]
-	outProj    *mlxgo.Array
+	outProj    *qLinear
 }
 
 // qwen3NextAttn holds one full-attention block's weights. The query projection is
 // double width: half is the query, half is the output gate.
 type qwen3NextAttn struct {
-	qProj, kProj, vProj, oProj *mlxgo.Array
+	qProj, kProj, vProj, oProj *qLinear
 	qNorm, kNorm               *mlxgo.Array
 	qBias, kBias, vBias, oBias *mlxgo.Array // nil unless attention_bias
 }
@@ -38,13 +38,13 @@ type qwen3NextAttn struct {
 // sparse mixture with a shared expert, chosen by isMoE.
 type qwen3NextMLP struct {
 	isMoE                      bool
-	gateProj, upProj, downProj *mlxgo.Array // dense SwiGLU
-	gate                       *mlxgo.Array // router
-	switchGate, switchUp       *mlxgo.Array // stacked experts
-	switchDown                 *mlxgo.Array
-	sharedGate, sharedUp       *mlxgo.Array // shared expert SwiGLU
-	sharedDown                 *mlxgo.Array
-	sharedExpertGate           *mlxgo.Array // shared expert sigmoid gate
+	gateProj, upProj, downProj *qLinear // dense SwiGLU
+	gate                       *qLinear // router
+	switchGate, switchUp       *qLinear // stacked experts
+	switchDown                 *qLinear
+	sharedGate, sharedUp       *qLinear // shared expert SwiGLU
+	sharedDown                 *qLinear
+	sharedExpertGate           *qLinear // shared expert sigmoid gate
 }
 
 // qwen3NextLayer is one decoder block: the two layernorms, one of the two token
@@ -62,17 +62,26 @@ type qwen3NextLayer struct {
 // the per-layer weights wired into typed fields.
 type Qwen3NextModel struct {
 	args        *Qwen3NextArgs
-	embedTokens *mlxgo.Array
+	embedTokens *qLinear
 	layers      []qwen3NextLayer
 	norm        *mlxgo.Array
-	lmHead      *mlxgo.Array // nil when the head is tied to the embedding table
+	lmHead      *qLinear // nil when the head is tied to the embedding table
 }
 
-// weightField pairs a weight-map key with the model field it loads into, so the
-// constructor can list a layer's tensors and pull them in one loop.
+// weightField pairs a weight-map key with the dense model field it loads into, so
+// the constructor can list a layer's plain tensors and pull them in one loop.
 type weightField struct {
 	name string
 	dst  **mlxgo.Array
+}
+
+// qField pairs a module name (without the trailing ".weight") with the possibly
+// quantized model field it loads into, the qLinear twin of weightField. Each is
+// resolved through loadQLinear, so the module loads dense or affine-quantized by
+// whether the checkpoint carries its sibling scales.
+type qField struct {
+	name string
+	dst  **qLinear
 }
 
 // NewQwen3NextModel wires a sanitized weight map into a runnable model. Every key
@@ -91,9 +100,12 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 		}
 		return w, nil
 	}
+	getQ := func(name string) (*qLinear, error) {
+		return loadQLinear(weights, name, args.quant)
+	}
 	m := &Qwen3NextModel{args: args, layers: make([]qwen3NextLayer, args.NumLayers())}
 	var err error
-	if m.embedTokens, err = get("model.embed_tokens.weight"); err != nil {
+	if m.embedTokens, err = getQ("model.embed_tokens"); err != nil {
 		return nil, err
 	}
 	if m.norm, err = get("model.norm.weight"); err != nil {
@@ -106,6 +118,7 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 			{p + "input_layernorm.weight", &layer.inputLayernorm},
 			{p + "post_attention_layernorm.weight", &layer.postAttentionLayernorm},
 		}
+		var qfields []qField
 		layer.isLinear = args.IsLinear(i)
 		if layer.isLinear {
 			lp := p + "linear_attn."
@@ -113,20 +126,24 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 				weightField{lp + "A_log", &layer.linear.aLog},
 				weightField{lp + "conv1d.weight", &layer.linear.conv1d},
 				weightField{lp + "dt_bias", &layer.linear.dtBias},
-				weightField{lp + "in_proj_ba.weight", &layer.linear.inProjBA},
-				weightField{lp + "in_proj_qkvz.weight", &layer.linear.inProjQKVZ},
 				weightField{lp + "norm.weight", &layer.linear.norm},
-				weightField{lp + "out_proj.weight", &layer.linear.outProj},
+			)
+			qfields = append(qfields,
+				qField{lp + "in_proj_ba", &layer.linear.inProjBA},
+				qField{lp + "in_proj_qkvz", &layer.linear.inProjQKVZ},
+				qField{lp + "out_proj", &layer.linear.outProj},
 			)
 		} else {
 			ap := p + "self_attn."
 			fields = append(fields,
-				weightField{ap + "q_proj.weight", &layer.attn.qProj},
-				weightField{ap + "k_proj.weight", &layer.attn.kProj},
-				weightField{ap + "v_proj.weight", &layer.attn.vProj},
-				weightField{ap + "o_proj.weight", &layer.attn.oProj},
 				weightField{ap + "q_norm.weight", &layer.attn.qNorm},
 				weightField{ap + "k_norm.weight", &layer.attn.kNorm},
+			)
+			qfields = append(qfields,
+				qField{ap + "q_proj", &layer.attn.qProj},
+				qField{ap + "k_proj", &layer.attn.kProj},
+				qField{ap + "v_proj", &layer.attn.vProj},
+				qField{ap + "o_proj", &layer.attn.oProj},
 			)
 			if args.AttentionBias {
 				layer.attn.qBias = weights[ap+"q_proj.bias"]
@@ -138,21 +155,21 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 		mp := p + "mlp."
 		if args.IsMoELayer(i) {
 			layer.mlp.isMoE = true
-			fields = append(fields,
-				weightField{mp + "gate.weight", &layer.mlp.gate},
-				weightField{mp + "switch_mlp.gate_proj.weight", &layer.mlp.switchGate},
-				weightField{mp + "switch_mlp.up_proj.weight", &layer.mlp.switchUp},
-				weightField{mp + "switch_mlp.down_proj.weight", &layer.mlp.switchDown},
-				weightField{mp + "shared_expert.gate_proj.weight", &layer.mlp.sharedGate},
-				weightField{mp + "shared_expert.up_proj.weight", &layer.mlp.sharedUp},
-				weightField{mp + "shared_expert.down_proj.weight", &layer.mlp.sharedDown},
-				weightField{mp + "shared_expert_gate.weight", &layer.mlp.sharedExpertGate},
+			qfields = append(qfields,
+				qField{mp + "gate", &layer.mlp.gate},
+				qField{mp + "switch_mlp.gate_proj", &layer.mlp.switchGate},
+				qField{mp + "switch_mlp.up_proj", &layer.mlp.switchUp},
+				qField{mp + "switch_mlp.down_proj", &layer.mlp.switchDown},
+				qField{mp + "shared_expert.gate_proj", &layer.mlp.sharedGate},
+				qField{mp + "shared_expert.up_proj", &layer.mlp.sharedUp},
+				qField{mp + "shared_expert.down_proj", &layer.mlp.sharedDown},
+				qField{mp + "shared_expert_gate", &layer.mlp.sharedExpertGate},
 			)
 		} else {
-			fields = append(fields,
-				weightField{mp + "gate_proj.weight", &layer.mlp.gateProj},
-				weightField{mp + "up_proj.weight", &layer.mlp.upProj},
-				weightField{mp + "down_proj.weight", &layer.mlp.downProj},
+			qfields = append(qfields,
+				qField{mp + "gate_proj", &layer.mlp.gateProj},
+				qField{mp + "up_proj", &layer.mlp.upProj},
+				qField{mp + "down_proj", &layer.mlp.downProj},
 			)
 		}
 		for _, f := range fields {
@@ -160,10 +177,15 @@ func NewQwen3NextModel(args *Qwen3NextArgs, weights map[string]*mlxgo.Array) (*Q
 				return nil, err
 			}
 		}
+		for _, f := range qfields {
+			if *f.dst, err = getQ(f.name); err != nil {
+				return nil, err
+			}
+		}
 	}
 	if args.TieWordEmbeddings {
 		m.lmHead = nil
-	} else if m.lmHead, err = get("lm_head.weight"); err != nil {
+	} else if m.lmHead, err = getQ("lm_head"); err != nil {
 		return nil, err
 	}
 	return m, nil
@@ -209,10 +231,7 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 	if err != nil {
 		return nil, err
 	}
-	h, err := mlxgo.Take(m.embedTokens, idx, 0, s)
-	if err != nil {
-		return nil, err
-	}
+	h := b.qembed(m.embedTokens, idx)
 	h = b.reshape(h, []int{batch, L, a.HiddenSize})
 
 	// The full-attention layers read their mask and per-row rope offset from the
@@ -245,7 +264,7 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 		if layer.mlp.isMoE {
 			y = b.qwen3NextMoE(y, &layer.mlp, a, batch, L)
 		} else {
-			y = b.swiglu(y, layer.mlp.gateProj, layer.mlp.upProj, layer.mlp.downProj)
+			y = b.qswiglu(y, layer.mlp.gateProj, layer.mlp.upProj, layer.mlp.downProj)
 		}
 		h = b.add(h, y)
 	}
@@ -255,7 +274,7 @@ func (m *Qwen3NextModel) forwardBL(tokens []int32, batch, L int, caches []*KVTen
 	if head == nil {
 		head = m.embedTokens
 	}
-	logits := b.linear(h, head)
+	logits := b.qlinear(h, head)
 	if b.err != nil {
 		return nil, b.err
 	}
@@ -275,14 +294,14 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 	ropeDims := a.RopeDims()
 	offset := cache.Offset
 
-	qpo := b.linearBias(x, attn.qProj, attn.qBias)
+	qpo := b.qlinearBias(x, attn.qProj, attn.qBias)
 	qpo = b.reshape(qpo, []int{batch, L, nh, 2 * hd})
 	parts := b.splitLast(qpo, []int{hd})
 	queries := parts[0]
 	gate := b.reshape(parts[1], []int{batch, L, nh * hd})
 
-	keys := b.linearBias(x, attn.kProj, attn.kBias)
-	values := b.linearBias(x, attn.vProj, attn.vBias)
+	keys := b.qlinearBias(x, attn.kProj, attn.kBias)
+	values := b.qlinearBias(x, attn.vProj, attn.vBias)
 
 	queries = b.rmsNorm(queries, attn.qNorm, eps)
 	queries = b.transpose(queries, []int{0, 2, 1, 3})
@@ -307,7 +326,7 @@ func (b *fb) qwen3NextAttention(x *mlxgo.Array, attn *qwen3NextAttn, a *Qwen3Nex
 	out = b.transpose(out, []int{0, 2, 1, 3})
 	out = b.reshape(out, []int{batch, L, nh * hd})
 	out = b.mul(out, b.sigmoidArr(gate))
-	return b.linearBias(out, attn.oProj, attn.oBias)
+	return b.qlinearBias(out, attn.oProj, attn.oBias)
 }
 
 // gatedDeltaNet is the recurrent token mixer. It projects the input into per-head
@@ -337,7 +356,7 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 
 	// Fused input projections, then fix_query_key_value_ordering: carve the
 	// per-key-head qkvz block into q, k, v, and the output gate z.
-	qkvz := b.linear(x, layer.inProjQKVZ)
+	qkvz := b.qlinear(x, layer.inProjQKVZ)
 	qkvz = b.reshape(qkvz, []int{batch, L, nk, 2*dk + 2*vPerK*dv})
 	qkvzParts := b.splitLast(qkvz, []int{dk, 2 * dk, 2*dk + vPerK*dv})
 	q := qkvzParts[0]
@@ -345,7 +364,7 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 	v := b.reshape(qkvzParts[2], []int{batch, L, nv, dv})
 	z := b.reshape(qkvzParts[3], []int{batch, L, nv, dv})
 
-	ba := b.linear(x, layer.inProjBA)
+	ba := b.qlinear(x, layer.inProjBA)
 	ba = b.reshape(ba, []int{batch, L, nk, 2 * vPerK})
 	baParts := b.splitLast(ba, []int{vPerK})
 	betaPre := b.reshape(baParts[0], []int{batch, L, nv})
@@ -431,7 +450,7 @@ func (b *fb) gatedDeltaNet(x *mlxgo.Array, layer *qwen3NextLinear, a *Qwen3NextA
 
 	out = b.mul(b.silu(z), b.rmsNorm(out, layer.norm, gatedDeltaEps))
 	out = b.reshape(out, []int{batch, L, valueDim})
-	return b.linear(out, layer.outProj)
+	return b.qlinear(out, layer.outProj)
 }
 
 // ssmLeftPadMask builds the gated delta net's per-position validity mask for a
@@ -491,26 +510,28 @@ func (b *fb) computeG(aLog, alpha, dtBias *mlxgo.Array) *mlxgo.Array {
 func (b *fb) qwen3NextMoE(x *mlxgo.Array, mlp *qwen3NextMLP, a *Qwen3NextArgs, batch, L int) *mlxgo.Array {
 	ne := a.NumExperts
 	k := a.NumExpertsPerTok
-	gates := b.softmax(b.linear(x, mlp.gate), -1)
+	gates := b.softmax(b.qlinear(x, mlp.gate), -1)
 	inds := b.sliceLastK(b.argpartition(gates, -k, -1), k, ne, 2)
 	scores := b.takeAlongAxis(gates, inds, 2)
 	if a.NormTopkProb {
 		scores = b.div(scores, b.sumAxis(scores, 2, true))
 	}
-	y := b.switchGLU(x, mlp.switchGate, mlp.switchUp, mlp.switchDown, inds)
+	y := b.switchGLUFor(x, mlp.switchGate, mlp.switchUp, mlp.switchDown, inds)
 	y = b.sumAxis(b.mul(y, b.reshape(scores, []int{batch, L, k, 1})), 2, false)
 
-	shared := b.swiglu(x, mlp.sharedGate, mlp.sharedUp, mlp.sharedDown)
-	shared = b.mul(b.sigmoidArr(b.linear(x, mlp.sharedExpertGate)), shared)
+	shared := b.qswiglu(x, mlp.sharedGate, mlp.sharedUp, mlp.sharedDown)
+	shared = b.mul(b.sigmoidArr(b.qlinear(x, mlp.sharedExpertGate)), shared)
 	return b.add(y, shared)
 }
 
-// swiglu is the SwiGLU feed-forward down_proj(silu(gate_proj(x)) * up_proj(x)),
-// the dense MLP and the shared expert both use.
-func (b *fb) swiglu(x, gateW, upW, downW *mlxgo.Array) *mlxgo.Array {
-	gate := b.silu(b.linear(x, gateW))
-	up := b.linear(x, upW)
-	return b.linear(b.mul(gate, up), downW)
+// qswiglu is the SwiGLU feed-forward down_proj(silu(gate_proj(x)) * up_proj(x)) over
+// three possibly-quantized projections, the dense MLP and the shared expert both
+// use. Each projection routes through qlinear, so a dense checkpoint takes the plain
+// matmuls and a quantized one takes QuantizedMatMul, with no change to this body.
+func (b *fb) qswiglu(x *mlxgo.Array, gateW, upW, downW *qLinear) *mlxgo.Array {
+	gate := b.silu(b.qlinear(x, gateW))
+	up := b.qlinear(x, upW)
+	return b.qlinear(b.mul(gate, up), downW)
 }
 
 // sliceLastK gathers the last k positions along axis (the top-k slots an

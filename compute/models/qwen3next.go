@@ -50,6 +50,7 @@ type Qwen3NextArgs struct {
 	AttentionBias                bool
 	FullAttentionInterval        int
 	RopeScaling                  map[string]any
+	quant                        quantConfig
 }
 
 type qwen3NextConfig struct {
@@ -130,6 +131,11 @@ func ParseQwen3NextArgs(configJSON []byte) (*Qwen3NextArgs, error) {
 	if a.MLPOnlyLayers == nil {
 		a.MLPOnlyLayers = []int{}
 	}
+	quant, err := parseQuantConfig(configJSON)
+	if err != nil {
+		return nil, fmt.Errorf("qwen3next: decode config: %w", err)
+	}
+	a.quant = quant
 	if err := a.validate(); err != nil {
 		return nil, err
 	}

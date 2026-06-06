@@ -336,6 +336,144 @@ func TestQwen3NextCacheState(t *testing.T) {
 	}
 }
 
+// qwen3NextQuantModule reports whether a "*.weight" key names a module the
+// reference packs. It extends the shared quantizableModule (which already covers
+// the attention projections, every gate_proj/up_proj/down_proj, the embedding, and
+// the head) with the family-local linears: the gated delta net input and output
+// projections, the router, and the shared-expert sigmoid gate. The conv weight and
+// every norm stay dense.
+func qwen3NextQuantModule(name string) bool {
+	if quantizableModule(name) {
+		return true
+	}
+	for _, suffix := range []string{
+		"in_proj_ba.weight", "in_proj_qkvz.weight", "out_proj.weight", "gate.weight",
+	} {
+		if strings.HasSuffix(name, suffix) {
+			return true
+		}
+	}
+	return false
+}
+
+// quantQwen3NextWeights builds the dense weights plus a scales/biases sibling for
+// every quantizable module, the key layout a packed checkpoint loads from.
+func quantQwen3NextWeights(t *testing.T, a *Qwen3NextArgs) map[string]*mlxgo.Array {
+	t.Helper()
+	w := fabricateWeights(t, a.WeightNames())
+	for _, name := range a.WeightNames() {
+		if !qwen3NextQuantModule(name) {
+			continue
+		}
+		base := name[:len(name)-len(".weight")]
+		for _, comp := range []string{".scales", ".biases"} {
+			arr, err := mlxgo.NewFloat32([]float32{0}, 1)
+			if err != nil {
+				t.Fatalf("NewFloat32: %v", err)
+			}
+			w[base+comp] = arr
+		}
+	}
+	return w
+}
+
+// quantOverride is the affine quantization block a packed checkpoint ships.
+var quantOverride = map[string]any{
+	"quantization": map[string]any{"group_size": 64, "bits": 4, "mode": "affine"},
+}
+
+func TestParseQwen3NextArgsCapturesQuantization(t *testing.T) {
+	a := parseQwen3Next(t, quantOverride)
+	if a.quant != (quantConfig{GroupSize: 64, Bits: 4}) {
+		t.Errorf("quant = %+v, want {64 4}", a.quant)
+	}
+	if d := parseQwen3Next(t, nil).quant; d.quantized() {
+		t.Errorf("dense config reported quantized: %+v", d)
+	}
+}
+
+func TestNewQwen3NextModelQuantizedWiring(t *testing.T) {
+	a := parseQwen3Next(t, quantOverride)
+	m, err := NewQwen3NextModel(a, quantQwen3NextWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewQwen3NextModel: %v", err)
+	}
+	if !m.embedTokens.isQuantized() || !m.lmHead.isQuantized() {
+		t.Error("embedding / head not loaded quantized")
+	}
+	check := func(what string, qs ...*qLinear) {
+		for _, q := range qs {
+			if !q.isQuantized() {
+				t.Fatalf("%s not loaded quantized", what)
+			}
+			if q.groupSize != 64 || q.bits != 4 {
+				t.Fatalf("%s geometry = gs%d/b%d, want 64/4", what, q.groupSize, q.bits)
+			}
+		}
+	}
+	for i := range m.layers {
+		l := &m.layers[i]
+		if l.isLinear {
+			check("gated delta net linears", l.linear.inProjBA, l.linear.inProjQKVZ, l.linear.outProj)
+			if l.linear.conv1d.Shape() == nil {
+				t.Fatalf("layer %d conv weight not loaded", i)
+			}
+		} else {
+			check("attention projections", l.attn.qProj, l.attn.kProj, l.attn.vProj, l.attn.oProj)
+		}
+		// Base config makes every layer a mixture: router, stacked experts, shared
+		// expert, and the shared-expert gate all load quantized.
+		check("mixture linears",
+			l.mlp.gate, l.mlp.switchGate, l.mlp.switchUp, l.mlp.switchDown,
+			l.mlp.sharedGate, l.mlp.sharedUp, l.mlp.sharedDown, l.mlp.sharedExpertGate)
+	}
+}
+
+func TestNewQwen3NextModelQuantizedMissingBiases(t *testing.T) {
+	a := parseQwen3Next(t, quantOverride)
+	w := quantQwen3NextWeights(t, a)
+	// Layer 0 is a gated delta net layer in the base config; drop one packed
+	// module's biases while its scales remain.
+	delete(w, "model.layers.0.linear_attn.in_proj_qkvz.biases")
+	if _, err := NewQwen3NextModel(a, w); err == nil {
+		t.Error("expected an error for a quantized module missing its biases")
+	}
+}
+
+func TestQwen3NextQuantizedForwardReachesSeam(t *testing.T) {
+	a := parseQwen3Next(t, quantOverride)
+	m, err := NewQwen3NextModel(a, quantQwen3NextWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewQwen3NextModel: %v", err)
+	}
+	caches := newQwen3NextCaches(a.NumLayers())
+	if _, err := m.Forward([]int32{1, 2, 3}, caches, mlxgo.DefaultStream()); !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Errorf("Forward err = %v, want ErrMLXUnavailable", err)
+	}
+}
+
+func TestQwen3NextMoEQuantizedGraceful(t *testing.T) {
+	// The mixture block routes through the quantized SwitchGLU (gather_qmm) and the
+	// quantized shared expert, reaching the seam at the first kernel under the stub.
+	a := parseQwen3Next(t, quantOverride)
+	m, err := NewQwen3NextModel(a, quantQwen3NextWeights(t, a))
+	if err != nil {
+		t.Fatalf("NewQwen3NextModel: %v", err)
+	}
+	mlp := &m.layers[0].mlp
+	if !mlp.switchGate.isQuantized() {
+		t.Fatal("switch experts not quantized in the base config")
+	}
+	b := &fb{}
+	x := hostArray(t, 1, 2, a.HiddenSize)
+	if got := b.qwen3NextMoE(x, mlp, a, 1, 2); got != nil {
+		t.Fatalf("qwen3NextMoE result = %v, want nil on the stub", got)
+	}
+	if !errors.Is(b.err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("qwen3NextMoE err = %v, want ErrMLXUnavailable", b.err)
+	}
+}
+
 func BenchmarkNewQwen3NextModel(b *testing.B) {
 	a, err := ParseQwen3NextArgs(baseQwen3NextConfig(nil))
 	if err != nil {

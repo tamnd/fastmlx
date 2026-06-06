@@ -53,6 +53,25 @@ type switchQuant struct {
 	groupSize, bits   int
 }
 
+// switchQuant builds the quantized stacked-expert view of this weight, the
+// gather_qmm triple switchGLUQuantized consumes. It is only meaningful when the
+// weight carries scales; switchGLUFor checks that before calling.
+func (q *qLinear) switchQuant() switchQuant {
+	return switchQuant{w: q.w, scales: q.scales, biases: q.biases, groupSize: q.groupSize, bits: q.bits}
+}
+
+// switchGLUFor runs the SwitchGLU over three stacked-expert projections that may be
+// affine-quantized, dispatching to the dense or gather_qmm path by whether the
+// experts carry scales. A checkpoint packs the three projections the same kind
+// together, so the gate's kind decides for all three. This is the qLinear-keyed
+// entry every routed family calls so the quantization choice rides the checkpoint.
+func (b *fb) switchGLUFor(x *mlxgo.Array, gate, up, down *qLinear, inds *mlxgo.Array) *mlxgo.Array {
+	if gate.isQuantized() {
+		return b.switchGLUQuantized(x, gate.switchQuant(), up.switchQuant(), down.switchQuant(), inds)
+	}
+	return b.switchGLU(x, gate.w, up.w, down.w, inds)
+}
+
 // switchGLUQuantized is switchGLU over affine-quantized experts: identical routing
 // choreography, but each projection is a quantized gather-matmul (gather_qmm)
 // against the packed weight and its scales/biases instead of a dense gather-matmul.
