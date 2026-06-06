@@ -32,13 +32,17 @@ type KVTensorCache struct {
 	// both mixer kinds so the per-layer cache list stays a single slice.
 	convState *mlxgo.Array
 	ssmState  *mlxgo.Array
-	// leftPad carries the per-row left padding of a ragged cohort merged into
-	// this batched cache: leftPad[b] is how many padding tokens were prepended to
-	// row b so a short prompt's real tokens align, at the right edge, with the
-	// longest prompt's. It is nil for a single sequence and for a uniform
-	// (equal-length) cohort, the synchronized path that needs neither per-row
-	// RoPE offsets nor an explicit attention mask. SetLeftPad records it once, at
-	// admission, before the batched prefill.
+	// leftPad carries the left padding this cache holds. On a merged batched cache
+	// it is per-row: leftPad[b] is how many padding tokens were prepended to row b
+	// so a short prompt's real tokens align, at the right edge, with the longest
+	// prompt's. On a single-sequence cache it is the one-element slice of that
+	// sequence's own padding, which is how a batch-prefilled row carries its dead
+	// front positions across steps: mergeCachesAlongBatch reassembles the per-row
+	// slice from each sequence's element and splitCachesAlongBatch writes each row's
+	// element back. It is nil for a sequence with no padding and for a uniform
+	// (equal-length) cohort, the synchronized path that needs neither per-row RoPE
+	// offsets nor an explicit attention mask. SetLeftPad records it, normalizing an
+	// all-zero slice to nil so those fast paths stay engaged.
 	leftPad []int
 }
 
@@ -180,10 +184,20 @@ func splitAlongBatch(a *mlxgo.Array, n int, s *mlxgo.Stream) ([]*mlxgo.Array, er
 // whose key, value, and recurrent-state tensors are the sequences concatenated
 // along the batch axis, with the shared decode offset carried through. The
 // generator only batches a synchronized cohort (every row at one offset), so a
-// single offset describes every row.
+// single offset describes every row. Each sequence's own left padding (the
+// one-element leftPad a batch-prefilled row carries) is reassembled into the
+// merged per-row slice, so a cohort prefilled together keeps masking its front
+// padding on every subsequent batched decode; an all-zero slice normalizes to nil,
+// keeping a no-padding cohort on the uniform fast path.
 func mergeCachesAlongBatch(seqs [][]*KVTensorCache, s *mlxgo.Stream) ([]*KVTensorCache, error) {
 	layers := len(seqs[0])
 	merged := make([]*KVTensorCache, layers)
+	pad := make([]int, len(seqs))
+	for i, seq := range seqs {
+		if lp := seq[0].leftPad; len(lp) > 0 {
+			pad[i] = lp[0]
+		}
+	}
 	for l := range layers {
 		keys := make([]*mlxgo.Array, len(seqs))
 		values := make([]*mlxgo.Array, len(seqs))
@@ -209,6 +223,7 @@ func mergeCachesAlongBatch(seqs [][]*KVTensorCache, s *mlxgo.Stream) ([]*KVTenso
 		if mc.ssmState, err = concatAlongBatch(ssm, s); err != nil {
 			return nil, err
 		}
+		mc.SetLeftPad(pad)
 		merged[l] = mc
 	}
 	return merged, nil
@@ -218,9 +233,12 @@ func mergeCachesAlongBatch(seqs [][]*KVTensorCache, s *mlxgo.Stream) ([]*KVTenso
 // caches after a batched forward has grown it. merged[l] holds the layer's batched
 // key, value, and recurrent-state tensors and its advanced offset; this carves each
 // back along the batch axis into seqs[i][l], so every sequence resumes with its own
-// grown cache. It is the inverse of mergeCachesAlongBatch and runs only after the
-// forward returns, so on the default stub the forward has already errored and this
-// is never reached.
+// grown cache. Each row's own left padding travels with it as a one-element leftPad
+// (nil when that row has none), so a sequence that prefilled in a cohort keeps
+// masking its dead front positions whether its next step is batched or runs alone.
+// It is the inverse of mergeCachesAlongBatch and runs only after the forward
+// returns, so on the default stub the forward has already errored and this is never
+// reached.
 func splitCachesAlongBatch(merged []*KVTensorCache, seqs [][]*KVTensorCache, s *mlxgo.Stream) error {
 	n := len(seqs)
 	for l, mc := range merged {
@@ -246,6 +264,11 @@ func splitCachesAlongBatch(merged []*KVTensorCache, seqs [][]*KVTensorCache, s *
 			seq[l].convState = conv[i]
 			seq[l].ssmState = ssm[i]
 			seq[l].Offset = mc.Offset
+			p := 0
+			if mc.leftPad != nil {
+				p = mc.leftPad[i]
+			}
+			seq[l].SetLeftPad([]int{p})
 		}
 	}
 	return nil

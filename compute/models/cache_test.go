@@ -139,3 +139,82 @@ func TestAttnMaskLeftPaddedDecode(t *testing.T) {
 	}
 	eqFloats(t, data, batchLeftPadCausalData(leftPad, 1, 5), "left-padded decode mask data")
 }
+
+// mergeCachesAlongBatch reassembles each sequence's own one-element leftPad into
+// the merged per-row slice and splitCachesAlongBatch writes each row's element
+// back, so a cohort prefilled together keeps masking its front padding across
+// steps. Fresh (nil-tensor) caches exercise the bookkeeping without a kernel.
+func TestMergeSplitCarriesLeftPad(t *testing.T) {
+	// Two layers, three sequences; seq 1 and 2 carry front padding, seq 0 none.
+	seqs := [][]*KVTensorCache{
+		{{Offset: 5}, {Offset: 5}},
+		{{Offset: 5}, {Offset: 5}},
+		{{Offset: 5}, {Offset: 5}},
+	}
+	seqs[1][0].SetLeftPad([]int{2})
+	seqs[1][1].SetLeftPad([]int{2})
+	seqs[2][0].SetLeftPad([]int{1})
+	seqs[2][1].SetLeftPad([]int{1})
+
+	merged, err := mergeCachesAlongBatch(seqs, nil)
+	if err != nil {
+		t.Fatalf("merge: %v", err)
+	}
+	for l, mc := range merged {
+		if want := []int{0, 2, 1}; !eqInts(mc.LeftPad(), want) {
+			t.Fatalf("layer %d merged leftPad = %v, want %v", l, mc.LeftPad(), want)
+		}
+	}
+
+	// Grow the offset and wipe each sequence's leftPad, so the split has to rewrite
+	// both from the merged cache.
+	for _, mc := range merged {
+		mc.Offset = 6
+	}
+	for _, seq := range seqs {
+		for _, c := range seq {
+			c.SetLeftPad(nil)
+		}
+	}
+	if err := splitCachesAlongBatch(merged, seqs, nil); err != nil {
+		t.Fatalf("split: %v", err)
+	}
+	wantPad := []int{0, 2, 1}
+	for i, seq := range seqs {
+		for l, c := range seq {
+			if c.Offset != 6 {
+				t.Fatalf("seq %d layer %d offset = %d, want 6", i, l, c.Offset)
+			}
+			lp := c.LeftPad()
+			if wantPad[i] == 0 {
+				if lp != nil {
+					t.Fatalf("seq %d layer %d leftPad = %v, want nil", i, l, lp)
+				}
+			} else if len(lp) != 1 || lp[0] != wantPad[i] {
+				t.Fatalf("seq %d layer %d leftPad = %v, want [%d]", i, l, lp, wantPad[i])
+			}
+		}
+	}
+}
+
+// A cohort with no padding merges to a nil leftPad (the uniform fast path), and
+// the split leaves every sequence's leftPad nil, so a normally-prefilled batched
+// decode is byte for byte unchanged by the carry.
+func TestMergeSplitNoPaddingStaysUniform(t *testing.T) {
+	seqs := [][]*KVTensorCache{{{Offset: 4}}, {{Offset: 4}}}
+	merged, err := mergeCachesAlongBatch(seqs, nil)
+	if err != nil {
+		t.Fatalf("merge: %v", err)
+	}
+	if merged[0].LeftPad() != nil {
+		t.Fatalf("no-padding cohort merged leftPad = %v, want nil", merged[0].LeftPad())
+	}
+	if err := splitCachesAlongBatch(merged, seqs, nil); err != nil {
+		t.Fatalf("split: %v", err)
+	}
+	for i, seq := range seqs {
+		if seq[0].LeftPad() != nil {
+			t.Fatalf("seq %d leftPad = %v, want nil", i, seq[0].LeftPad())
+		}
+	}
+}

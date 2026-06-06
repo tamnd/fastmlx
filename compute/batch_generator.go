@@ -178,6 +178,9 @@ func (g *BatchGenerator) Step() ([]pipeline.TokenResult, error) {
 	if batched, results, err := g.tryBatchedStep(live); batched {
 		return results, err
 	}
+	if batched, results, err := g.tryBatchedPrefill(live); batched {
+		return results, err
+	}
 
 	results := make([]pipeline.TokenResult, 0, len(live))
 	for _, uid := range live {
@@ -197,11 +200,10 @@ func (g *BatchGenerator) Step() ([]pipeline.TokenResult, error) {
 // token at the same cache offset, and the model implementing BatchDecoder. That
 // is exactly the state a batch reaches once every prompt has been prefilled and
 // the rows step in lockstep, which is the regime the throughput goal targets. It
-// returns batched=false to fall back to the per-sequence path on any prefill
-// step, a ragged cohort (sequences at different offsets, the heterogeneous-length
-// case a right-pad-prefill admission redesign will fold in later), a lone
-// sequence, or a backend without the capability. When it returns batched=true the
-// step is fully handled, error included.
+// returns batched=false to fall back to the per-sequence path on a prefill step
+// (the cohort admission tryBatchedPrefill handles), a cohort split across offsets,
+// a lone sequence, or a backend without the capability. When it returns
+// batched=true the step is fully handled, error included.
 func (g *BatchGenerator) tryBatchedStep(live []int) (bool, []pipeline.TokenResult, error) {
 	bd, ok := g.model.(BatchDecoder)
 	if !ok || len(live) < 2 {
@@ -231,6 +233,67 @@ func (g *BatchGenerator) tryBatchedStep(live []int) (bool, []pipeline.TokenResul
 	for i, uid := range live {
 		seq := g.active[uid]
 		results[i] = g.consume(uid, seq, rows[i], 1)
+	}
+	return true, results, nil
+}
+
+// tryBatchedPrefill admits a cohort of fresh prompts in one left-padded batched
+// forward when the model implements BatchPrefiller. It fires when at least two
+// live sequences are still at offset zero (their whole prompt pending, the prefill
+// state tryBatchedStep does not cover) and at least one carries more than a single
+// token, so it is not the all-one-token case that path already batches. The
+// prompts are gathered in UID order and handed to BatchPrefill, which left-pads
+// them to the longest length, runs them together, and records each row's padding
+// on its cache; every row then advances to that padded width, the post-prefill
+// cache length, so the next step finds the cohort synchronized and decodes it
+// through tryBatchedStep, which is the front half of the throughput path the 2x
+// goal rests on.
+//
+// It returns batched=false to leave the existing paths in charge of a lone
+// sequence, a backend without the capability, or any cohort not all at offset zero
+// (a mid-stream sequence, or a prefix-cache hit whose padding would not sit at the
+// front where the left-pad mask skips it). When it returns batched=true the step
+// is fully handled, error included, and on a batched error the cohort is left in
+// place for retry, the same as tryBatchedStep.
+func (g *BatchGenerator) tryBatchedPrefill(live []int) (bool, []pipeline.TokenResult, error) {
+	bp, ok := g.model.(BatchPrefiller)
+	if !ok || len(live) < 2 {
+		return false, nil, nil
+	}
+	width := 0
+	multi := false
+	for _, uid := range live {
+		seq := g.active[uid]
+		if seq.offset != 0 {
+			return false, nil, nil
+		}
+		if len(seq.pending) > width {
+			width = len(seq.pending)
+		}
+		if len(seq.pending) > 1 {
+			multi = true
+		}
+	}
+	if !multi {
+		return false, nil, nil
+	}
+
+	prompts := make([][]int32, len(live))
+	caches := make([]any, len(live))
+	for i, uid := range live {
+		seq := g.active[uid]
+		prompts[i] = seq.pending
+		caches[i] = seq.cache
+	}
+	rows, err := bp.BatchPrefill(prompts, caches, g.s)
+	if err != nil {
+		return true, nil, err
+	}
+
+	results := make([]pipeline.TokenResult, len(live))
+	for i, uid := range live {
+		seq := g.active[uid]
+		results[i] = g.consume(uid, seq, rows[i], width)
 	}
 	return true, results, nil
 }

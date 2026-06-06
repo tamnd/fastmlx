@@ -72,6 +72,36 @@ func (m *batchModel) BatchDecode(tokens []int32, caches []any, s *mlxgo.Stream) 
 	return rows, nil
 }
 
+// prefillModel adds the ragged-cohort admission capability to batchModel. It
+// records each BatchPrefill cohort's prompts so a test can confirm the generator
+// admits an unsynchronized set of prompts through one left-padded forward rather
+// than a Forward per sequence, then steps the cohort in lockstep through
+// BatchDecode. Embedding batchModel keeps every other path identical, so the only
+// difference under test is the extra BatchPrefill admission.
+type prefillModel struct {
+	batchModel
+	prefillCalls [][][]int32 // one entry per BatchPrefill, the cohort's prompts in order
+	prefillEr    error       // when set, BatchPrefill returns it (the admission mlx seam)
+}
+
+func (m *prefillModel) BatchPrefill(prompts [][]int32, caches []any, s *mlxgo.Stream) ([]any, error) {
+	if m.prefillEr != nil {
+		return nil, m.prefillEr
+	}
+	cp := make([][]int32, len(prompts))
+	for i, p := range prompts {
+		row := make([]int32, len(p))
+		copy(row, p)
+		cp[i] = row
+	}
+	m.prefillCalls = append(m.prefillCalls, cp)
+	rows := make([]any, len(caches))
+	for i := range rows {
+		rows[i] = []float32{1, 2, 3}
+	}
+	return rows, nil
+}
+
 // scriptSampler returns a pre-planned token per call, ignoring the logits. It
 // records the logits it was handed so a test can confirm processors ran first.
 type scriptSampler struct {
@@ -359,10 +389,11 @@ func TestBatchGeneratorBatchedCohortDispatch(t *testing.T) {
 	}
 }
 
-// TestBatchGeneratorRaggedCohortFallsBack pins the limit of the first cut: two
-// prompts of different lengths never share an offset, so the cohort stays ragged
-// and every step uses the per-sequence path. The general heterogeneous-length case
-// awaits a right-pad-prefill admission redesign.
+// TestBatchGeneratorRaggedCohortFallsBack pins the fallback for a backend that
+// decodes a synchronized cohort but cannot admit a ragged one: without
+// BatchPrefill, two prompts of different lengths never reach a shared offset, so
+// every step takes the per-sequence path. A BatchPrefiller model admits them
+// instead, which TestBatchGeneratorRaggedCohortAdmitted covers.
 func TestBatchGeneratorRaggedCohortFallsBack(t *testing.T) {
 	m := &batchModel{fakeModel: fakeModel{eos: -1, record: true}}
 	g := newGen(t, m)
@@ -375,6 +406,119 @@ func TestBatchGeneratorRaggedCohortFallsBack(t *testing.T) {
 	}
 	if len(m.batchCalls) != 0 {
 		t.Fatalf("ragged cohort used the batched path: %v", m.batchCalls)
+	}
+}
+
+// TestBatchGeneratorRaggedCohortAdmitted is the ragged-admission counterpart: a
+// BatchPrefiller model takes two different-length prompts on their prefill step
+// through one left-padded BatchPrefill instead of a Forward per sequence, after
+// which the cohort is synchronized at the padded width and decodes in lockstep
+// through one BatchDecode per step.
+func TestBatchGeneratorRaggedCohortAdmitted(t *testing.T) {
+	m := &prefillModel{batchModel: batchModel{fakeModel: fakeModel{eos: -1, record: true}}}
+	g := newGen(t, m)
+	uidA, _ := g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2, 3}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{20, 21, 22}}})
+	uidB, _ := g.Insert(pipeline.DecodeRequest{Tokens: []int{4}, MaxTokens: 3, Sampler: &scriptSampler{plan: []int{30, 31, 32}}})
+
+	// Step 1 is the ragged prefill: one BatchPrefill with both prompts in UID order,
+	// no per-sequence Forward, no BatchDecode.
+	r1, err := g.Step()
+	if err != nil {
+		t.Fatalf("Step 1: %v", err)
+	}
+	if len(m.prefillCalls) != 1 {
+		t.Fatalf("ragged prefill made %d BatchPrefill calls, want 1", len(m.prefillCalls))
+	}
+	if len(m.fedTokens) != 0 {
+		t.Fatalf("ragged prefill ran %d per-sequence Forwards, want 0", len(m.fedTokens))
+	}
+	if len(m.batchCalls) != 0 {
+		t.Fatalf("ragged prefill ran %d BatchDecode calls, want 0", len(m.batchCalls))
+	}
+	checkFed(t, m.prefillCalls[0][0], []int32{1, 2, 3})
+	checkFed(t, m.prefillCalls[0][1], []int32{4})
+	if r1[0].UID != uidA || r1[1].UID != uidB {
+		t.Fatalf("prefill uids out of order: %d then %d", r1[0].UID, r1[1].UID)
+	}
+	if r1[0].Token != 20 || r1[1].Token != 30 {
+		t.Fatalf("prefill tokens = %d, %d, want 20, 30", r1[0].Token, r1[1].Token)
+	}
+
+	// Step 2 finds the cohort synchronized at the padded width (offset 3 for both),
+	// so it decodes through one BatchDecode and no new prefill.
+	r2, err := g.Step()
+	if err != nil {
+		t.Fatalf("Step 2: %v", err)
+	}
+	if len(m.prefillCalls) != 1 {
+		t.Fatalf("decode step ran another BatchPrefill, total %d", len(m.prefillCalls))
+	}
+	if len(m.batchCalls) != 1 {
+		t.Fatalf("decode step made %d BatchDecode calls, want 1", len(m.batchCalls))
+	}
+	if len(m.fedTokens) != 0 {
+		t.Fatalf("decode step ran %d per-sequence Forwards, want 0", len(m.fedTokens))
+	}
+	checkFed(t, m.batchCalls[0], []int32{20, 30}) // prefill's sampled tokens, UID order
+	if r2[0].Token != 21 || r2[1].Token != 31 {
+		t.Fatalf("decode tokens = %d, %d, want 21, 31", r2[0].Token, r2[1].Token)
+	}
+}
+
+// TestBatchGeneratorUniformPromptsAdmitted confirms equal-length prompts also take
+// the BatchPrefill admission, not the per-sequence path: a multi-token cohort at
+// offset zero is a prefill whatever the lengths, and left-padding an already-equal
+// cohort is the identity, so one forward still serves it.
+func TestBatchGeneratorUniformPromptsAdmitted(t *testing.T) {
+	m := &prefillModel{batchModel: batchModel{fakeModel: fakeModel{eos: -1, record: true}}}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2}, MaxTokens: 2, Sampler: &scriptSampler{plan: []int{20, 21}}})
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{3, 4}, MaxTokens: 2, Sampler: &scriptSampler{plan: []int{30, 31}}})
+	if _, err := g.Step(); err != nil {
+		t.Fatalf("Step 1: %v", err)
+	}
+	if len(m.prefillCalls) != 1 {
+		t.Fatalf("uniform prefill made %d BatchPrefill calls, want 1", len(m.prefillCalls))
+	}
+	if len(m.fedTokens) != 0 {
+		t.Fatalf("uniform prefill ran %d per-sequence Forwards, want 0", len(m.fedTokens))
+	}
+	checkFed(t, m.prefillCalls[0][0], []int32{1, 2})
+	checkFed(t, m.prefillCalls[0][1], []int32{3, 4})
+}
+
+// TestBatchGeneratorBatchPrefillErrorSurfaces is the admission seam test: on the
+// default stub BatchPrefill returns ErrMLXUnavailable, and Step surfaces it without
+// advancing or dropping the cohort, the same contract as the decode seam.
+func TestBatchGeneratorBatchPrefillErrorSurfaces(t *testing.T) {
+	m := &prefillModel{batchModel: batchModel{fakeModel: fakeModel{eos: -1}}, prefillEr: mlxgo.ErrMLXUnavailable}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2, 3}, MaxTokens: 5, Sampler: &scriptSampler{plan: []int{7}}})
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{4}, MaxTokens: 5, Sampler: &scriptSampler{plan: []int{8}}})
+	_, err := g.Step()
+	if !errors.Is(err, mlxgo.ErrMLXUnavailable) {
+		t.Fatalf("Step err = %v, want ErrMLXUnavailable from the prefill seam", err)
+	}
+	if !g.HasActive() {
+		t.Fatal("cohort dropped on a prefill error; it should remain for retry")
+	}
+}
+
+// TestBatchGeneratorLonePromptNotAdmitted confirms a single fresh prompt never
+// takes BatchPrefill: a batch of one is just the per-sequence prefill Forward, and
+// routing it through the cohort machinery would be pure overhead.
+func TestBatchGeneratorLonePromptNotAdmitted(t *testing.T) {
+	m := &prefillModel{batchModel: batchModel{fakeModel: fakeModel{eos: -1, record: true}}}
+	g := newGen(t, m)
+	g.Insert(pipeline.DecodeRequest{Tokens: []int{1, 2, 3}, MaxTokens: 1, Sampler: &scriptSampler{plan: []int{9}}})
+	if _, err := g.Step(); err != nil {
+		t.Fatalf("Step: %v", err)
+	}
+	if len(m.prefillCalls) != 0 {
+		t.Fatalf("a lone prompt was admitted through BatchPrefill: %v", m.prefillCalls)
+	}
+	if len(m.fedTokens) != 1 {
+		t.Fatalf("lone prompt made %d Forward calls, want 1", len(m.fedTokens))
 	}
 }
 
