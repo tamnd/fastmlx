@@ -31,6 +31,61 @@ func errBadSwitchShape(xShape, indShape []int) error {
 // sort is only a memory-access win. expand_dims, squeeze, flatten and unflatten
 // are all layout-preserving, so they are plain reshapes over host-known shapes.
 func (b *fb) switchGLU(x, gateW, upW, downW, inds *mlxgo.Array) *mlxgo.Array {
+	return b.switchGLUCore(x, inds, func(xe, idx *mlxgo.Array, which gluProj, sorted bool) *mlxgo.Array {
+		switch which {
+		case projGate:
+			return b.switchLinear(xe, gateW, idx, sorted)
+		case projUp:
+			return b.switchLinear(xe, upW, idx, sorted)
+		default:
+			return b.switchLinear(xe, downW, idx, sorted)
+		}
+	})
+}
+
+// switchQuant is one affine-quantized stacked-expert projection: the packed
+// weight, its per-group scales and biases, and the group_size/bits that describe
+// the packing. It is the quantized twin of the dense weight switchGLU consumes,
+// the QuantizedSwitchLinear the reference swaps in when a checkpoint stores its
+// experts int4.
+type switchQuant struct {
+	w, scales, biases *mlxgo.Array
+	groupSize, bits   int
+}
+
+// switchGLUQuantized is switchGLU over affine-quantized experts: identical routing
+// choreography, but each projection is a quantized gather-matmul (gather_qmm)
+// against the packed weight and its scales/biases instead of a dense gather-matmul.
+// The routed experts carry no bias, matching QuantizedSwitchLinear(bias=False).
+func (b *fb) switchGLUQuantized(x *mlxgo.Array, gate, up, down switchQuant, inds *mlxgo.Array) *mlxgo.Array {
+	return b.switchGLUCore(x, inds, func(xe, idx *mlxgo.Array, which gluProj, sorted bool) *mlxgo.Array {
+		q := gate
+		switch which {
+		case projUp:
+			q = up
+		case projDown:
+			q = down
+		}
+		return b.switchLinearQuantized(xe, q, idx, sorted)
+	})
+}
+
+// gluProj names the three stacked-expert projections so switchGLUCore can ask the
+// projection callback for the right weight without threading three arrays through.
+type gluProj int
+
+const (
+	projGate gluProj = iota
+	projUp
+	projDown
+)
+
+// switchGLUCore is the shared SwitchGLU choreography: it runs the sort/gather
+// bookkeeping and the silu(gate)*up gating, deferring each per-expert projection
+// to proj, which selects the dense or quantized weight for gluProj which and
+// applies it to x with the given sorted hint. switchGLU and switchGLUQuantized are
+// the two instantiations; the host-side reshape math is identical for both.
+func (b *fb) switchGLUCore(x, inds *mlxgo.Array, proj func(x, idx *mlxgo.Array, which gluProj, sorted bool) *mlxgo.Array) *mlxgo.Array {
 	if b.err != nil {
 		return nil
 	}
@@ -48,10 +103,10 @@ func (b *fb) switchGLU(x, gateW, upW, downW, inds *mlxgo.Array) *mlxgo.Array {
 	xe := b.reshape(x, []int{bsz, seqLen, 1, 1, dim})
 
 	if slots < 64 {
-		up := b.switchLinear(xe, upW, inds, false)
-		gate := b.switchLinear(xe, gateW, inds, false)
+		up := proj(xe, inds, projUp, false)
+		gate := proj(xe, inds, projGate, false)
 		h := b.mul(b.silu(gate), up)
-		down := b.switchLinear(h, downW, inds, false)
+		down := proj(h, inds, projDown, false)
 		// squeeze the matmul-row dim: [B, L, top_k, 1, D] -> [B, L, top_k, D].
 		return b.reshape(down, []int{bsz, seqLen, topK, dim})
 	}
@@ -68,10 +123,10 @@ func (b *fb) switchGLU(x, gateW, upW, downW, inds *mlxgo.Array) *mlxgo.Array {
 	xSorted := b.take(xFlat, rows, 0)
 	idx := b.take(indFlat, order, 0)
 
-	up := b.switchLinear(xSorted, upW, idx, true)
-	gate := b.switchLinear(xSorted, gateW, idx, true)
+	up := proj(xSorted, idx, projUp, true)
+	gate := proj(xSorted, idx, projGate, true)
 	h := b.mul(b.silu(gate), up)
-	down := b.switchLinear(h, downW, idx, true)
+	down := proj(h, idx, projDown, true)
 
 	unsorted := b.take(down, invOrder, 0)
 	// unflatten to [B, L, top_k, 1, D] and squeeze: [B, L, top_k, D].
@@ -93,6 +148,20 @@ func (b *fb) gatherMM(a, w, rhsIndices *mlxgo.Array, sorted bool) *mlxgo.Array {
 		return nil
 	}
 	r, err := mlxgo.GatherMM(a, w, nil, rhsIndices, sorted, b.s)
+	b.err = err
+	return r
+}
+
+// switchLinearQuantized is the quantized twin of switchLinear: one stacked-expert
+// projection through gather_qmm. The reference QuantizedSwitchLinear keeps its
+// packed weight in [num_experts, out, in] and passes transpose=true to the kernel
+// rather than pre-swapping the axes the way the dense switchLinear does, so no
+// host transpose runs here. The routed experts carry no bias.
+func (b *fb) switchLinearQuantized(x *mlxgo.Array, q switchQuant, idx *mlxgo.Array, sorted bool) *mlxgo.Array {
+	if b.err != nil {
+		return nil
+	}
+	r, err := mlxgo.GatherQMM(x, q.w, q.scales, q.biases, nil, idx, true, q.groupSize, q.bits, sorted, b.s)
 	b.err = err
 	return r
 }
