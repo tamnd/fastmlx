@@ -289,6 +289,18 @@ func QuantizedMatMul(x, w, scales, biases *Array, transpose bool, groupSize, bit
 	return nil, ErrMLXUnavailable
 }
 
+// GatherQMM is the quantized gather-matmul a mixture-of-experts block uses when
+// its stacked expert weights are affine-quantized: it multiplies each row of x by
+// the quantized expert matrix (w with its scales/biases) that rhsIndices selects,
+// the quantized twin of GatherMM. lhsIndices and biases may be nil (no left gather,
+// and the bias-free quant modes). transpose, groupSize and bits describe the
+// packing; sorted tells the kernel the rows are pre-grouped by expert. The pinned
+// mlx-c mlx_gather_qmm has no mode argument, so this is the affine path the routed
+// int4 DeepSeek experts use; a later mxfp4 mode awaits an mlx-c bump.
+func GatherQMM(x, w, scales, biases, lhsIndices, rhsIndices *Array, transpose bool, groupSize, bits int, sorted bool, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
 // Exp is the elementwise natural exponential. The Qwen3-Next gated-delta
 // recurrence builds its decay gate from it: compute_g is the exp of a negated,
 // softplus-shaped term.

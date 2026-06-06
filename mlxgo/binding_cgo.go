@@ -628,6 +628,36 @@ func QuantizedMatMul(x, w, scales, biases *Array, transpose bool, groupSize, bit
 	return wrap(out), nil
 }
 
+func GatherQMM(x, w, scales, biases, lhsIndices, rhsIndices *Array, transpose bool, groupSize, bits int, sorted bool, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	var bc C.mlx_array
+	if biases != nil {
+		bc = biases.c
+	} else {
+		bc = C.mlx_array_new()
+		defer C.mlx_array_free(bc)
+	}
+	var lc C.mlx_array
+	if lhsIndices != nil {
+		lc = lhsIndices.c
+	} else {
+		lc = C.mlx_array_new()
+		defer C.mlx_array_free(lc)
+	}
+	var rc C.mlx_array
+	if rhsIndices != nil {
+		rc = rhsIndices.c
+	} else {
+		rc = C.mlx_array_new()
+		defer C.mlx_array_free(rc)
+	}
+	if C.mlx_gather_qmm(&out, x.c, w.c, scales.c, bc, lc, rc, C._Bool(transpose), C.int(groupSize), C.int(bits), C._Bool(sorted), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
 func Exp(a *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_exp(&out, a.c, s.stream()) != 0 {
