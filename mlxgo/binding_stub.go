@@ -301,6 +301,22 @@ func GatherQMM(x, w, scales, biases, lhsIndices, rhsIndices *Array, transpose bo
 	return nil, ErrMLXUnavailable
 }
 
+// Dequantize reconstructs the full-precision weight from an affine-quantized
+// triple (the packed weight, its per-group scales and biases). The DeepSeek
+// pre-load patch uses it to widen an int4 checkpoint back to bf16 before it
+// stacks and rewrites the expert tensors.
+func Dequantize(w, scales, biases *Array, groupSize, bits int, s *Stream) (*Array, error) {
+	return nil, ErrMLXUnavailable
+}
+
+// Quantize packs a full-precision weight into the affine-quantized triple the
+// quantized matmul and gather paths consume: the packed weight, the per-group
+// scales, and the per-group biases. It is the inverse of Dequantize and the
+// requantize step of the DeepSeek pre-load patch.
+func Quantize(w *Array, groupSize, bits int, s *Stream) (packed, scales, biases *Array, err error) {
+	return nil, nil, nil, ErrMLXUnavailable
+}
+
 // Exp is the elementwise natural exponential. The Qwen3-Next gated-delta
 // recurrence builds its decay gate from it: compute_g is the exp of a negated,
 // softplus-shaped term.

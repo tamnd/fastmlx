@@ -658,6 +658,28 @@ func GatherQMM(x, w, scales, biases, lhsIndices, rhsIndices *Array, transpose bo
 	return wrap(out), nil
 }
 
+func Dequantize(w, scales, biases *Array, groupSize, bits int, s *Stream) (*Array, error) {
+	var out C.mlx_array = C.mlx_array_new()
+	if C.mlx_dequantize(&out, w.c, scales.c, biases.c, C.int(groupSize), C.int(bits), s.stream()) != 0 {
+		C.mlx_array_free(out)
+		return nil, ErrMLXUnavailable
+	}
+	return wrap(out), nil
+}
+
+func Quantize(w *Array, groupSize, bits int, s *Stream) (packed, scales, biases *Array, err error) {
+	var pc C.mlx_array = C.mlx_array_new()
+	var sc C.mlx_array = C.mlx_array_new()
+	var bc C.mlx_array = C.mlx_array_new()
+	if C.mlx_quantize(&pc, &sc, &bc, w.c, C.int(groupSize), C.int(bits), s.stream()) != 0 {
+		C.mlx_array_free(pc)
+		C.mlx_array_free(sc)
+		C.mlx_array_free(bc)
+		return nil, nil, nil, ErrMLXUnavailable
+	}
+	return wrap(pc), wrap(sc), wrap(bc), nil
+}
+
 func Exp(a *Array, s *Stream) (*Array, error) {
 	var out C.mlx_array = C.mlx_array_new()
 	if C.mlx_exp(&out, a.c, s.stream()) != 0 {

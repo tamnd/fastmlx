@@ -158,6 +158,7 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 		func() (*Array, error) { return QuantizedMatMul(a, b, a, b, true, 64, 4, s) },
 		func() (*Array, error) { return GatherQMM(a, b, a, b, nil, b, true, 64, 4, false, s) },
 		func() (*Array, error) { return GatherQMM(a, b, a, nil, a, b, true, 64, 4, true, s) },
+		func() (*Array, error) { return Dequantize(a, b, a, 64, 4, s) },
 		func() (*Array, error) { return Exp(a, s) },
 		func() (*Array, error) { return Logaddexp(a, b, s) },
 		func() (*Array, error) { return Repeat(a, 2, 0, s) },
@@ -172,6 +173,9 @@ func TestComputeOpsUnavailableInStub(t *testing.T) {
 	}
 	if _, err := SplitSections(a, []int{1}, -1, s); !errors.Is(err, ErrMLXUnavailable) {
 		t.Errorf("SplitSections: err = %v, want ErrMLXUnavailable", err)
+	}
+	if _, _, _, err := Quantize(a, 64, 4, s); !errors.Is(err, ErrMLXUnavailable) {
+		t.Errorf("Quantize: err = %v, want ErrMLXUnavailable", err)
 	}
 }
 
